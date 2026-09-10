@@ -1,0 +1,110 @@
+{
+  "issues": [
+    {
+      "reviewer": "R1",
+      "severity": "P2",
+      "title": "Novelty is measurement-first not a new ranker",
+      "detail": "Contribution is honest provider-side formulation; make this explicit in intro.",
+      "auto_resolvable": true,
+      "status": "open"
+    },
+    {
+      "reviewer": "R1",
+      "severity": "P1",
+      "title": "Demo must not outrun claims",
+      "detail": "Manager copy must cite Claims Ledger; DESCRIPTIVE unless predictive claim SUPPORTED.",
+      "auto_resolvable": true,
+      "status": "resolved_in_code"
+    },
+    {
+      "reviewer": "R1",
+      "severity": "P2",
+      "title": "No logged policy",
+      "detail": "Do not wrap offline evaluation as IPS/SNIPS.",
+      "auto_resolvable": true,
+      "status": "open"
+    },
+    {
+      "reviewer": "R2",
+      "severity": "P1",
+      "title": "Events are not treatments",
+      "detail": "Keep 'review-perceived aspect change'; overnight 5774 is legacy_permissive only.",
+      "auto_resolvable": true,
+      "status": "resolved_in_code"
+    },
+    {
+      "reviewer": "R2",
+      "severity": "P1",
+      "title": "Peer exposure definition",
+      "detail": "Main predictive peer features must be same-aspect measured peers, not only overall score.",
+      "auto_resolvable": true,
+      "status": "resolved_in_code"
+    },
+    {
+      "reviewer": "R2",
+      "severity": "P2",
+      "title": "Common shocks",
+      "detail": "City×quarter patterns can mimic peer effects; shuffled graphs required.",
+      "auto_resolvable": true,
+      "status": "open"
+    },
+    {
+      "reviewer": "R2",
+      "severity": "P1",
+      "title": "Hotel-clustered uncertainty",
+      "detail": "Bootstrap/SE must cluster on hotel.",
+      "auto_resolvable": true,
+      "status": "resolved_in_code"
+    },
+    {
+      "reviewer": "R3",
+      "severity": "P0",
+      "title": "CI matplotlib import",
+      "detail": "Fixed by extracting classify_gate; must stay green.",
+      "auto_resolvable": true,
+      "status": "resolved_in_code"
+    },
+    {
+      "reviewer": "R3",
+      "severity": "P1",
+      "title": "Partial quarter in test",
+      "detail": "2017Q3 excluded from main complete-period analyses.",
+      "auto_resolvable": true,
+      "status": "resolved_in_analysis"
+    },
+    {
+      "reviewer": "R3",
+      "severity": "P1",
+      "title": "Zero-mention as neutral",
+      "detail": "has_measurement=false; raw_net NaN.",
+      "auto_resolvable": true,
+      "status": "resolved_in_analysis"
+    },
+    {
+      "reviewer": "R3",
+      "severity": "P2",
+      "title": "Weak labels",
+      "detail": "ABSA agreement is vs weak labels; HUMAN_VALIDATION_REQUIRED.",
+      "auto_resolvable": false,
+      "status": "open"
+    },
+    {
+      "reviewer": "R3",
+      "severity": "P3",
+      "title": "No operational events",
+      "detail": "FUTURE_EXTERNAL_EVIDENCE.",
+      "auto_resolvable": false,
+      "status": "open"
+    }
+  ],
+  "open_auto_p0": 0,
+  "open_auto_p1": 0,
+  "HUMAN_VALIDATION_REQUIRED": [
+    "human ABSA gold labels"
+  ],
+  "FUTURE_EXTERNAL_EVIDENCE": [
+    "operational renovations",
+    "bookings/demand",
+    "logged manager actions"
+  ]
+}
