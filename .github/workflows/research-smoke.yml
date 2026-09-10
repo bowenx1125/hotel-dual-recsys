@@ -14,7 +14,13 @@ jobs:
       - name: Install minimal deps
         run: |
           python -m pip install --upgrade pip
-          pip install numpy pandas pyarrow
+          pip install numpy pandas pyarrow scikit-learn scipy
       - name: Run synthetic/unit tests (no 515K download)
         run: |
-          python -m unittest tests.test_demo_actionability tests.test_temporal_research -v
+          python -m unittest tests.test_demo_actionability tests.test_temporal_research tests.test_autonomous_unit tests.test_no_leakage -v
+      - name: Small-fixture research pipeline
+        run: |
+          python run_research.py --small-fixture --verify-only
+      - name: Secret and raw-text leakage scan
+        run: |
+          python -m unittest tests.test_no_leakage -v

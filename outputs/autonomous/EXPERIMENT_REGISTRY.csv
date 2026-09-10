@@ -1,0 +1,2 @@
+experiment_id,wave,name,preregistered,status,artifact,result_summary,claim_ids
+W0-legacy-reproduce,0,reproduce_permissive_events,yes,PASS,outputs/autonomous/wave0/findings.json,n=5774 match=true,C4

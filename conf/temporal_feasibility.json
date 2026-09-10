@@ -40,7 +40,7 @@
     ]
   },
   "shrinkage": {
-    "method": "beta_binomial_empirical_bayes",
+    "method": "symmetric_beta_binomial_bayesian_shrinkage",
     "prior_strength_main": 10,
     "prior_strength_sensitivity": [5, 10, 20],
     "note": "Main prior fixed a priori for feasibility; not claimed optimal."

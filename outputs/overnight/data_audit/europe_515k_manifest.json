@@ -8,7 +8,7 @@
   "sha256": "a4810c2757934f0a826a1b16a437eb67a38be45b1a22ad56772afce0b6c11af9",
   "n_rows": 515738,
   "n_hotels_by_name": 1492,
-  "n_cities_parsed": 373,
+  "n_cities_parsed": 6,
   "lat_lng_ok": 512470,
   "lat_lng_coverage": 0.9936634492707538,
   "date_min": "2015-08-04",
@@ -34,5 +34,8 @@
     "lng"
   ],
   "committed_to_git": false,
-  "note": "Local cache only; not committed."
+  "note": "Local cache only; not committed.",
+  "n_cities_known6": 6,
+  "n_cities_parsed_legacy_bug": 373,
+  "correction_note": "n_cities_parsed=373 was a last-token parser bug. Correct city count under known-6 detector is 6. Original buggy field retained as n_cities_parsed_legacy_bug."
 }

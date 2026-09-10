@@ -1,0 +1,146 @@
+{
+  "wave": 0,
+  "questions": {
+    "q9_hotel_names_vs_ids": {
+      "fact": "Panel has 1493 hotel_id and 1491 hotel_name. Overnight FACTS used CSV unique Hotel_Name≈1492 vs hashed addresses=1493. Hotel Regina maps to 3 address-based IDs (distinct properties / cities).",
+      "not_a_join_error": true
+    },
+    "q1_events_inflated_by_zero_mention": {
+      "legacy_events": 5774,
+      "prev_mentions_eq0": 78,
+      "prev_mentions_lt5": 1047,
+      "current_mentions_lt5": 0,
+      "location_events": 800,
+      "interpretation": "5774 uses smoothed_net deltas; zero-mention cells have smoothed_net=0 (symmetric prior mean) and were treated as observed neutral. Current mentions>=5 was required; previous mentions were not. 1047 / 5774 events have prev_mentions<5."
+    },
+    "q2_2pre2post_row_vs_valid": {
+      "legacy_frac_row_exists": 1.0,
+      "n_row_exists": 5774,
+      "n_valid_mentions_on_all_4_neighbors": 5525,
+      "frac_valid_measurement": 0.9568756494631105,
+      "interpretation": "Overnight frac_events_2pre_2post=1.0 counts row presence. Panel emits all 7 aspects for every hotel-period with reviews, including zero-mention cells. Valid-measurement 2pre+2post = 5525/5774."
+    },
+    "q3_incomplete_quarters": {
+      "dataset_date_min": "2015-08-04",
+      "dataset_date_max": "2017-08-03",
+      "expected_partial": [
+        "2015Q3",
+        "2017Q3"
+      ],
+      "expected_complete": [
+        "2015Q4",
+        "2016Q1",
+        "2016Q2",
+        "2016Q3",
+        "2016Q4",
+        "2017Q1",
+        "2017Q2"
+      ],
+      "note": "Wave 1 recomputes from actual Review_Date min/max and unique dates per quarter."
+    },
+    "q4_2017Q3_in_test": {
+      "test_periods": [
+        "2017Q2",
+        "2017Q3"
+      ],
+      "val_periods": [
+        "2016Q4",
+        "2017Q1"
+      ],
+      "train_periods": [
+        "2015Q3",
+        "2015Q4",
+        "2016Q1",
+        "2016Q2",
+        "2016Q3"
+      ],
+      "problem": "2017Q3 is a partial quarter and was included in the predictive test y-period set."
+    },
+    "q5_peer_exposure_overall_score": {
+      "fact": "scripts/run_predictive_pilot.py defines peer_exposure as the share of peers whose overall mean_reviewer_score rose by >=0.15, not same-aspect posterior change.",
+      "supported_as_same_aspect": false
+    },
+    "q6_validation_unused": {
+      "fact": "val split is created but Ridge l2=5.0 is hardcoded; validation is not used for alpha selection.",
+      "val_n": 2842
+    },
+    "q7_ridge_fairness": {
+      "issues": [
+        "fillna(0.0) for missing features without missingness indicators",
+        "no train-only standardization",
+        "l2 applied to intercept (closed-form adds l2 to all diagonal entries)",
+        "alpha not selected on validation",
+        "own features omit current score / volume / reliability as first-class fields in a documented spec"
+      ]
+    },
+    "q8_bootstrap_not_clustered": {
+      "fact": "bootstrap_delta resamples observation rows iid; not hotel-clustered.",
+      "n_boot_overnight": 500
+    },
+    "q10_stale_373_city_manifest": {
+      "manifest_n_cities_parsed": 373,
+      "panel_cities": 6,
+      "stale": true,
+      "correction": "373 came from last-token city parser; known-6-city detector is the research parser."
+    },
+    "q11_stale_handoff_sha": {
+      "handoff_final_sha_line_present": true,
+      "actual_research_head_at_branch_creation": "2586827f40a9028177061fdf16daf170fb35f9d6",
+      "commits_after_365b548": [
+        "63b0286 chore(demo): sync snapshot",
+        "2586827 docs(handoff): note tip"
+      ]
+    },
+    "q12_failures_omitted": {
+      "file_says_none_yet": true,
+      "actual_failures": [
+        "CI research-smoke: ModuleNotFoundError matplotlib in test_classify_green",
+        "City parser initially invented 373 cities (fixed, but manifest stale)",
+        "facts_sha256 empty",
+        "handoff Final SHA stale vs HEAD"
+      ]
+    },
+    "q13_review_only_phase0": {
+      "only_phase0": false
+    },
+    "q14_facts_sha256_empty": {
+      "facts_sha256": ""
+    },
+    "q15_github_actions": {
+      "cause": "tests.test_temporal_research.test_classify_green imported scripts.run_temporal_feasibility which imported matplotlib; CI only installed numpy/pandas/pyarrow.",
+      "run_ids": [
+        34510724491,
+        34500261999,
+        34500257453,
+        34500234958
+      ],
+      "repair": "classify_gate moved to src/temporal/gates.py; matplotlib is lazy-imported in scripts; CI expanded."
+    }
+  },
+  "panel_rows": 89075,
+  "n_hotel_id": 1493,
+  "n_hotel_name": 1491,
+  "n_cities": 6,
+  "periods": [
+    "2015Q3",
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q3",
+    "2016Q4",
+    "2017Q1",
+    "2017Q2",
+    "2017Q3"
+  ],
+  "names_with_multiple_ids": 1,
+  "multi_id_names": {
+    "Hotel Regina": 3
+  },
+  "zero_mention_cells": 8389,
+  "zero_mention_smoothed_unique": [
+    0.0
+  ],
+  "legacy_event_count_reproduced": 5774,
+  "legacy_event_count_artifact": 5774,
+  "legacy_reproduced_match": true
+}

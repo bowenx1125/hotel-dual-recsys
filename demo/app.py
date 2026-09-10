@@ -324,17 +324,54 @@ calling sentiment deltas managerial interventions.
             st.markdown(gate_path.read_text(encoding="utf-8")[:6000])
 
 
+def render_research_evidence_tab(st):
+    st.subheader("Research Evidence")
+    st.caption("Numbers come from outputs/autonomous/FACTS.json. Demo does not invent metrics.")
+    facts_p = ROOT / "outputs" / "autonomous" / "FACTS.json"
+    claims_p = ROOT / "FINAL_CLAIMS_LEDGER.md"
+    if not claims_p.exists():
+        claims_p = ROOT / "outputs" / "autonomous" / "CLAIMS_LEDGER.md"
+    if facts_p.exists():
+        facts = json.loads(facts_p.read_text(encoding="utf-8"))
+        waves = facts.get("waves") or {}
+        w1, w2, w4, w6 = waves.get("1") or {}, waves.get("2") or {}, waves.get("4") or {}, waves.get("6") or {}
+        st.info("Manager page remains DESCRIPTIVE unless the claims ledger upgrades it. No causal effect / ROI / demand lift.")
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("Measurement", w1.get("measurement_verdict", "n/a"))
+        c2.metric("Strict events", w2.get("strict_crossfit_events", "n/a"))
+        c3.metric("Peer prediction", w4.get("peer_predictive_claim", "n/a"))
+        c4.metric("Paper track", w6.get("selected_track", "n/a"))
+        st.caption(f"FACTS sha256 `{str(facts.get('facts_sha256') or '')[:16]}…` · legacy permissive events = {w2.get('legacy_permissive_event_count')}")
+        st.json({
+            "complete_periods": w1.get("complete_periods"),
+            "partial_periods": w1.get("partial_periods"),
+            "strict_verdict": w2.get("verdict"),
+            "not_causal": True,
+        })
+    else:
+        st.warning("Autonomous FACTS.json not built yet.")
+    if claims_p.exists():
+        with st.expander("Claims Ledger"):
+            st.markdown(claims_p.read_text(encoding="utf-8")[:8000])
+
+
 def main():
     import streamlit as st
 
     st.set_page_config(page_title="Provider Demo + Temporal Lab", layout="wide")
     snap, cfg = _load()
     st.title("Actionability-Aware Manager Demo + Temporal Feasibility Lab")
-    tab1, tab2 = st.tabs(["Manager Diagnostic Demo", "Temporal Research Feasibility Lab"])
+    tab1, tab2, tab3 = st.tabs([
+        "Manager Diagnostic Demo",
+        "Temporal Research Feasibility Lab",
+        "Research Evidence",
+    ])
     with tab1:
         render_manager_tab(st, snap, cfg)
     with tab2:
         render_temporal_tab(st)
+    with tab3:
+        render_research_evidence_tab(st)
 
 
 if __name__ == "__main__":
