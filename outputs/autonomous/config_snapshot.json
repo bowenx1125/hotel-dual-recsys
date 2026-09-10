@@ -1,0 +1,209 @@
+{
+  "config": {
+    "schema_version": "2.0",
+    "seed": 42,
+    "dataset": {
+      "primary": "515k_europe",
+      "dataset_code": "d1_europe",
+      "cache_env": "FYP_DATA_CACHE_ROOT",
+      "relative_path": "d1_europe/Hotel_Reviews.csv",
+      "expected_sha256": "a4810c2757934f0a826a1b16a437eb67a38be45b1a22ad56772afce0b6c11af9",
+      "expected_bytes": 238154765,
+      "expected_rows": 515738
+    },
+    "aspects": [
+      "location",
+      "cleanliness",
+      "breakfast",
+      "service",
+      "noise",
+      "room",
+      "value"
+    ],
+    "actionable_aspects": [
+      "cleanliness",
+      "breakfast",
+      "service",
+      "noise",
+      "room",
+      "value"
+    ],
+    "immutable_negative_control_aspect": "location",
+    "shrinkage": {
+      "method": "symmetric_beta_binomial_bayesian_shrinkage",
+      "not": "empirical_bayes_unless_prior_estimated_from_training_data",
+      "prior_strength_main": 10,
+      "prior_strength_sensitivity": [
+        5,
+        10,
+        20
+      ],
+      "p_delta_draws": 2000
+    },
+    "periods": {
+      "primary": "quarter",
+      "expected_partial": [
+        "2015Q3",
+        "2017Q3"
+      ],
+      "expected_complete": [
+        "2015Q4",
+        "2016Q1",
+        "2016Q2",
+        "2016Q3",
+        "2016Q4",
+        "2017Q1",
+        "2017Q2"
+      ]
+    },
+    "crossfit": {
+      "n_folds": 2,
+      "fold_names": [
+        "A",
+        "B"
+      ],
+      "assignment": "sha1_review_fingerprint_mod_2",
+      "rule": "detect_on_one_fold_measure_outcome_on_the_other"
+    },
+    "events": {
+      "term": "review-perceived aspect change",
+      "forbidden_term": "managerial intervention",
+      "main": {
+        "complete_quarters_only": true,
+        "min_current_mentions": 5,
+        "min_previous_mentions": 5,
+        "min_pre2_mentions": 3,
+        "delta_posterior_net": 0.15,
+        "min_p_delta_gt0": 0.9,
+        "min_eligible_measured_peers": 5,
+        "cooldown_quarters": 2,
+        "primary": "earliest_per_hotel_aspect_fold",
+        "exclude_location_from_main": true
+      },
+      "sensitivity": {
+        "delta": [
+          0.1,
+          0.15,
+          0.2
+        ],
+        "prior": [
+          5,
+          10,
+          20
+        ]
+      },
+      "legacy_permissive_label": "legacy_permissive_event_count"
+    },
+    "peers": {
+      "terminology": "candidate peers / geo reference set",
+      "forbidden_terms": [
+        "validated competitors",
+        "economic substitutes"
+      ],
+      "main": {
+        "method": "same_city_knn",
+        "k": 10
+      },
+      "definitions": [
+        {
+          "method": "same_city_knn",
+          "k": 5
+        },
+        {
+          "method": "same_city_knn",
+          "k": 10
+        },
+        {
+          "method": "same_city_knn",
+          "k": 20
+        },
+        {
+          "method": "mutual_knn",
+          "k": 10
+        },
+        {
+          "method": "radius_km",
+          "radius_km": 1.5
+        },
+        {
+          "method": "random_same_city",
+          "k": 10
+        },
+        {
+          "method": "shuffled_same_city",
+          "k": 10
+        },
+        {
+          "method": "non_local_random",
+          "k": 10
+        }
+      ],
+      "n_shuffled_graphs": 100
+    },
+    "prediction": {
+      "complete_quarters_only": true,
+      "ridge_alphas": [
+        0.01,
+        0.1,
+        1.0,
+        10.0,
+        100.0
+      ],
+      "bootstrap_hotel_cluster": 1000,
+      "n_shuffled_peer_runs": 100,
+      "target": "next_complete_quarter_mean_reviewer_score"
+    },
+    "event_study": {
+      "min_events_to_run": 100,
+      "event_times": [
+        -2,
+        -1,
+        0,
+        1,
+        2
+      ],
+      "reference": -1,
+      "matching": "1nn_without_replacement_pre_event_only"
+    },
+    "green_strict": {
+      "min_action_events": 300,
+      "min_unique_hotels": 200,
+      "min_cities": 4,
+      "min_actionable_aspects": 4,
+      "min_exposure_gt0": 100,
+      "min_exposure_eq0": 100,
+      "min_frac_valid_2pre_2post": 0.7
+    },
+    "wording": {
+      "forbidden": [
+        "causal effect",
+        "causal attenuation",
+        "ROI",
+        "demand lift",
+        "guaranteed improvement",
+        "managerial intervention",
+        "validated competitors",
+        "empirical Bayes",
+        "gold accuracy"
+      ]
+    }
+  },
+  "small_fixture": false,
+  "verify_only": false,
+  "synthetic": {
+    "synthetic_only": true,
+    "not_paper_evidence": true,
+    "positive_direction_recovered": true,
+    "null_no_false_effect": true,
+    "pos_beta": [
+      -0.03713521711187043,
+      0.34243876463092005,
+      0.01724387981466216,
+      0.366417736743253
+    ],
+    "null_interaction_t": 0.48427780317103014
+  },
+  "screenshots": {
+    "status": "SKIPPED_NO_PLAYWRIGHT"
+  }
+}

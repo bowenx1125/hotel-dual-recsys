@@ -1,0 +1,14 @@
+{
+  "status": "OK",
+  "git_sha": "935245926fe20916f6aea2841bfe799d136e9a7b",
+  "captured_at": "2026-09-11T03:12:29",
+  "pages": {
+    "manager_live.png": "Manager Diagnostic Demo",
+    "measurement_live.png": "Temporal Research Feasibility Lab",
+    "research_evidence_live.png": "Research Evidence"
+  },
+  "facts_sha256": "51f6658173d17860fe1c6bcc3ead8422fbff374ec4cd72bdffc8970fe2ccb517",
+  "evidence_level": "DESCRIPTIVE",
+  "not_from_0f5ebd5": true,
+  "python": "/Users/xubosmell/Desktop/FYP1/.venv-demo/bin/python"
+}

@@ -1,12 +1,21 @@
 {
   "schema_version": "2.0",
-  "wave": 0,
-  "status": "WAVE0_AUDITED",
+  "wave": 8,
+  "status": "WAVE8_DONE",
   "iterations": {
     "0": 1
   },
   "blockers": [],
-  "facts_sha256": "0ab9ca14682fdcf9286c221bcda6c5e8ea6f57d0bae9688c7d34b4c232a45e54",
-  "updated_at": "2026-09-11T02:29:19",
-  "last_wave": "0"
+  "facts_sha256": "03d1ac060245fc0402043f1dd4022c52597a30b2bc4200e16b74dcdf9f8f1d65",
+  "updated_at": "2026-09-11T03:15:01",
+  "last_wave": "0",
+  "measurement_verdict": "MEASUREMENT_STRONG",
+  "strict_verdict": "AMBER_ASSOCIATIONAL",
+  "peer_verdict": "PEER_SIGNAL_STRONG",
+  "peer_predictive_claim": "PARTIAL",
+  "event_study": "WEAK",
+  "paper_track": "B",
+  "robustness": "STABLE",
+  "open_auto_p0": 0,
+  "open_auto_p1": 0
 }
