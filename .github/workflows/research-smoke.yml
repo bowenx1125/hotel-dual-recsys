@@ -1,0 +1,20 @@
+name: research-smoke
+on:
+  push:
+    branches: ["research/**", "demo/**"]
+  pull_request:
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install minimal deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy pandas pyarrow
+      - name: Run synthetic/unit tests (no 515K download)
+        run: |
+          python -m unittest tests.test_demo_actionability tests.test_temporal_research -v
