@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-09-10T23:45:00+08:00",
+  "generated_at": "2026-09-11T00:10:00+08:00",
   "repo": {
     "base_commit": "c6a33d79d3441028a3d54292bcc96f0a763d1f37",
     "branch": "research/temporal-feasibility-20260910-grok",
@@ -10,20 +10,76 @@
     "evidence_level": "DESCRIPTIVE",
     "eligible_hotels": 22,
     "compsets": 3,
-    "default_heuristic_name_before": "Competition-Aware (heuristic)",
-    "weights_before": {
-      "gap": 0.45,
-      "criticism": 0.35,
-      "unreliable": 0.2
-    },
-    "location_was_actionable_before": true
+    "heuristic_name": "Peer-Relative Evidence-Weighted (heuristic)",
+    "weights": {"gap": 0.45, "criticism": 0.35, "unreliable": 0.2},
+    "location_direct_action": false
   },
   "phase1": {
     "location_as_largest_diagnostic": 4,
-    "explained_cases": 4,
     "never_action_location": true,
     "weight_stable_hotels": 12,
-    "weight_switching_rate": 0.4545,
-    "tests_passed": 23
+    "weight_switching_rate": 0.4545
+  },
+  "belgium_raw_audit": {
+    "rows": 26675,
+    "hotels": 822,
+    "date_min": "2018-07-31",
+    "date_max": "2021-07-19",
+    "join_match_rate_aspects": 1.0,
+    "aspect_hotels": 24
+  },
+  "europe_515k": {
+    "rows": 515738,
+    "hotels_by_name": 1492,
+    "cities": 6,
+    "date_min": "2015-08-04",
+    "date_max": "2017-08-03",
+    "sha256": "a4810c2757934f0a826a1b16a437eb67a38be45b1a22ad56772afce0b6c11af9",
+    "bytes": 238154765,
+    "git_committed": false
+  },
+  "panel": {
+    "labeling": "structurally_weak_labeled_aspect_sentiment",
+    "prior_strength_main": 10,
+    "month_rows": 233485,
+    "quarter_rows": 89075,
+    "quarter_hotels": 1493,
+    "quarter_periods": 9,
+    "cities": 6,
+    "valid_mention_cells_quarter": 80686
+  },
+  "peers": {
+    "method": "same_city_knn",
+    "k": 10,
+    "n_hotels": 1476,
+    "n_cities": 6,
+    "n_edges": 14760,
+    "self_edges": 0,
+    "cross_city_errors": 0,
+    "median_distance_km": 0.37005
+  },
+  "feasibility": {
+    "verdict": "GREEN",
+    "main_delta_threshold": 0.15,
+    "hotels_with_enough_coverage": 1458,
+    "valid_cells": 80686,
+    "candidate_events": 5774,
+    "event_hotels": 1288,
+    "event_cities": 6,
+    "event_aspects": 7,
+    "events_exposure_gt0": 4894,
+    "events_exposure_eq0": 880,
+    "frac_events_2pre_2post": 1.0
+  },
+  "predictive_pilot": {
+    "executed": true,
+    "target": "next_quarter_mean_reviewer_score",
+    "test_mae_persistence": 0.4916,
+    "test_mae_own_features": 0.4593,
+    "test_mae_own_plus_peer_exposure": 0.4581,
+    "peer_improves_on_persistence": true,
+    "peer_gain_over_own_features": "negligible",
+    "not_causal": true,
+    "manager_demo_still_descriptive": true
   }
 }
