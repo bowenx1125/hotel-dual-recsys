@@ -1,0 +1,9 @@
+# Local path placeholders only. Do not put real absolute paths here.
+# Export env vars instead:
+#   FYP_PRIVATE_DATA_ROOT
+#   FYP_PRIVATE_MODEL_ROOT
+#   FYP_DATA_CACHE_ROOT
+
+private_data_root: "${FYP_PRIVATE_DATA_ROOT}"
+private_model_root: "${FYP_PRIVATE_MODEL_ROOT}"
+data_cache_root: "${FYP_DATA_CACHE_ROOT}"
