@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
-from src.autonomous.common import atomic_write_json, load_config, out_dir, sha256_file, update_state
+from src.autonomous.common import atomic_write_json, load_config, out_dir, panel_v2_path, peers_v2_path, update_state
 from src.autonomous.ledger import index_artifact, init_ledgers, merge_facts
 from src.autonomous.panel import build_measurement_v2, run_wave0
 from src.autonomous.absa import run_absa_audit
@@ -49,7 +49,7 @@ def _mark(root: Path, wave: int, payload: dict) -> None:
 
 def _load_panel(root: Path):
     import pandas as pd
-    path = root / "data" / "processed" / "hotel_aspect_quarter_v2.parquet"
+    path = panel_v2_path(root)
     if not path.exists():
         raise FileNotFoundError(path)
     return pd.read_parquet(path)
@@ -85,7 +85,7 @@ def run_wave(root: Path, wave: int, *, small_fixture: bool, verify_only: bool, f
 
     panel = _load_panel(root)
     peers = build_main_peers(panel, k=10)
-    peer_path = root / "data" / "processed" / "geo_reference_sets_v2.parquet"
+    peer_path = peers_v2_path(root)
     peers.to_parquet(peer_path, index=False)
 
     if wave == 2:
@@ -158,6 +158,13 @@ def main() -> int:
     os.environ.setdefault("FYP_DATA_CACHE_ROOT", "/Users/xubosmell/Desktop/FYP_DATA_CACHE")
     os.environ.setdefault("FYP_PRIVATE_DATA_ROOT", "/Users/xubosmell/Desktop/FYP1/data")
     os.environ.setdefault("FYP_PRIVATE_MODEL_ROOT", "/Users/xubosmell/Desktop/FYP1/models")
+    if args.small_fixture:
+        os.environ["FYP_AUTONOMOUS_OUT"] = "outputs/autonomous/fixtures/out"
+        os.environ["FYP_PANEL_V2"] = "outputs/autonomous/fixtures/hotel_aspect_quarter_v2.parquet"
+        os.environ["FYP_PEERS_V2"] = "outputs/autonomous/fixtures/geo_reference_sets_v2.parquet"
+        os.environ["FYP_PAPER_DIR"] = "outputs/autonomous/fixtures/paper"
+        os.environ["FYP_FINALS_DIR"] = "outputs/autonomous/fixtures"
+        os.environ["FYP_SMALL_FIXTURE"] = "1"
     init_ledgers(root)
     waves = [args.wave] if args.wave is not None else list(range(args.from_wave, args.to_wave + 1))
     for w in waves:

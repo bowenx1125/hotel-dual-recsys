@@ -6,7 +6,7 @@ import os
 from datetime import datetime
 from pathlib import Path
 
-from src.autonomous.common import atomic_write_json, atomic_write_text, load_config, out_dir, sha256_file, sha256_json, update_state
+from src.autonomous.common import atomic_write_json, atomic_write_text, load_config, out_dir, paper_dir, finals_dir, sha256_file, sha256_json, update_state
 from src.autonomous.ledger import merge_facts
 
 
@@ -23,7 +23,7 @@ def _w(facts: dict, wave: str, key: str, default=None):
 
 def generate_paper(root: Path) -> dict:
     facts = _facts(root)
-    paper = root / "paper" / "autonomous"
+    paper = paper_dir(root)
     paper.mkdir(parents=True, exist_ok=True)
     track = _w(facts, "6", "selected_track", "B")
     titles = _w(facts, "6", "track_titles") or {}
@@ -99,6 +99,7 @@ We do not copy wording from `RESEARCH_MASTER_PLAN.md` Part 9 as if it were verif
 5. Fair predictive benchmark: rolling origin, train-only imputation/standardization, Ridge alpha on validation, hotel-clustered bootstrap, shuffled-peer falsification.
 6. Exploratory matched event-time differences if n≥100; otherwise scientifically skipped.
 7. Track-specific policy: currently Track {track}.
+8. ABSA vs structurally weak section labels only (never gold accuracy); HUMAN_VALIDATION_REQUIRED remains.
 """,
         "EXPERIMENTS.md": f"""# Experiments
 
@@ -114,6 +115,7 @@ ABSA audit vs weak section labels (not gold): status={absa.get('status')}, agree
 | Object | Result | Source |
 |---|---|---|
 | Measurement | {n(meas)} | FACTS waves.1 |
+| ABSA vs weak labels (not gold) | status={absa.get('status')} n={absa.get('n_pairs')} agree={absa.get('agreement_vs_weak_section_label')} kappa={absa.get('cohens_kappa_vs_weak')} | FACTS waves.1b_absa |
 | Legacy permissive events | {n(legacy)} | FACTS waves.2 |
 | Strict cross-fit events | {n(evn)} | FACTS waves.2 |
 | Peer validity | {n(peer)} | FACTS waves.3 |
@@ -221,6 +223,8 @@ def adversarial_review(root: Path) -> dict:
 
 def write_finals(root: Path) -> None:
     facts = _facts(root)
+    fdir = finals_dir(root)
+    fdir.mkdir(parents=True, exist_ok=True)
     track = _w(facts, "6", "selected_track", "UNDECIDED")
     titles = _w(facts, "6", "track_titles") or {}
     title = titles.get(track, "Working paper")
@@ -271,15 +275,22 @@ def write_finals(root: Path) -> None:
 | C9 | Causal wording | FORBIDDEN | Wave 5 {es} |
 | C10 | Selected track {track} | DECISION | Wave 6 |
 """
-    atomic_write_text(root / "FINAL_CLAIMS_LEDGER.md", claims)
+    facts = merge_facts(root, "final", {
+        "readiness": readiness,
+        "title": title,
+        "track": track,
+        "strongest_claim": strongest_claim,
+        "strongest_null": strongest_null,
+    })
+    atomic_write_text(fdir / "FINAL_CLAIMS_LEDGER.md", claims)
     atomic_write_text(out_dir(root) / "CLAIMS_LEDGER.md", claims)
-    atomic_write_json(root / "FINAL_FACTS.json", facts)
+    atomic_write_json(fdir / "FINAL_FACTS.json", facts)
     idx_path = out_dir(root) / "ARTIFACT_INDEX.json"
     idx = json.loads(idx_path.read_text()) if idx_path.exists() else {"artifacts": []}
-    atomic_write_json(root / "FINAL_ARTIFACT_INDEX.json", idx)
+    atomic_write_json(fdir / "FINAL_ARTIFACT_INDEX.json", idx)
 
     atomic_write_text(
-        root / "FINAL_SUBMISSION_READINESS.md",
+        fdir / "FINAL_SUBMISSION_READINESS.md",
         f"""# Submission readiness
 
 **{readiness}**
@@ -291,13 +302,13 @@ Do not mark READY_FOR_FULL_PAPER without confirmatory identification and human l
 """,
     )
     atomic_write_text(
-        root / "FINAL_REVIEWER_REPORT.md",
+        fdir / "FINAL_REVIEWER_REPORT.md",
         (out_dir(root) / "wave9" / "ADVERSARIAL_REVIEW.md").read_text(encoding="utf-8")
         if (out_dir(root) / "wave9" / "ADVERSARIAL_REVIEW.md").exists()
         else "# Reviewer report pending\n",
     )
     atomic_write_text(
-        root / "FINAL_RESEARCH_REPORT.md",
+        fdir / "FINAL_RESEARCH_REPORT.md",
         f"""# Final research report
 
 Track **{track}**. Measurement **{meas}**. Strict events **{evn}** ({verd}).
@@ -310,7 +321,7 @@ Strongest null/refuted: {strongest_null}
 """,
     )
     atomic_write_text(
-        root / "FINAL_RESEARCH_HANDOFF.md",
+        fdir / "FINAL_RESEARCH_HANDOFF.md",
         f"""# FINAL RESEARCH HANDOFF
 
 工作树：`/Users/xubosmell/Desktop/FYP1-autonomous`
@@ -336,13 +347,6 @@ FACTS：`outputs/autonomous/FACTS.json`（sha `{facts.get('facts_sha256')}`）
 论文：`paper/autonomous/`
 """,
     )
-    merge_facts(root, "final", {
-        "readiness": readiness,
-        "title": title,
-        "track": track,
-        "strongest_claim": strongest_claim,
-        "strongest_null": strongest_null,
-    })
 
 
 def capture_demo_screenshots(root: Path, *, skip: bool) -> dict:
@@ -355,6 +359,16 @@ def capture_demo_screenshots(root: Path, *, skip: bool) -> dict:
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
+        demo_py = Path(os.environ.get("FYP_DEMO_PYTHON") or "/Users/xubosmell/Desktop/FYP1/.venv-demo/bin/python")
+        script = root / "scripts" / "capture_autonomous_screenshots.py"
+        if demo_py.exists() and script.exists():
+            import subprocess
+            print(f"  screenshots falling back to {demo_py}", flush=True)
+            r = subprocess.run([str(demo_py), str(script)], cwd=str(root), env={**os.environ})
+            man_p = odir / "screenshot_manifest.json"
+            if man_p.exists():
+                return json.loads(man_p.read_text(encoding="utf-8"))
+            return {"status": "SKIPPED_NO_PLAYWRIGHT", "subprocess_rc": r.returncode}
         man = {"status": "SKIPPED_NO_PLAYWRIGHT"}
         atomic_write_json(odir / "screenshot_manifest.json", man)
         return man
