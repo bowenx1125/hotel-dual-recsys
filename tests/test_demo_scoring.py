@@ -34,5 +34,8 @@ class TestScoring(unittest.TestCase):
 
     def test_four_strategies(self):
         pol = all_policies(self.hotel, self.cfg, 0.0)
-        self.assertEqual(set(pol), {"fix_weakest", "largest_peer_gap", "most_criticized", "competition_aware"})
-        self.assertTrue(pol["competition_aware"].get("heuristic"))
+        required = {"fix_weakest", "largest_peer_gap", "most_criticized", "peer_relative"}
+        self.assertTrue(required.issubset(set(pol)))
+        self.assertTrue(pol["peer_relative"].get("heuristic"))
+        # alias retained for compatibility
+        self.assertEqual(pol["competition_aware"]["chosen_aspect"], pol["peer_relative"]["chosen_aspect"])

@@ -1,0 +1,28 @@
+test_descriptive_wording (tests.test_demo_actionability.TestActionability.test_descriptive_wording) ... ok
+test_explanation_when_diag_is_location (tests.test_demo_actionability.TestActionability.test_explanation_when_diag_is_location) ... ok
+test_heuristic_name (tests.test_demo_actionability.TestActionability.test_heuristic_name) ... ok
+test_location_immutable (tests.test_demo_actionability.TestActionability.test_location_immutable) ... ok
+test_location_visible_but_not_default_action (tests.test_demo_actionability.TestActionability.test_location_visible_but_not_default_action) ... ok
+test_yaml_header_marks_generated (tests.test_demo_actionability.TestConfigParity.test_yaml_header_marks_generated) ... ok
+test_finite_scores (tests.test_demo_scoring.TestScoring.test_finite_scores) ... ok
+test_four_strategies (tests.test_demo_scoring.TestScoring.test_four_strategies) ... ok
+test_reproducible (tests.test_demo_scoring.TestScoring.test_reproducible) ... ok
+test_descriptive_forbids_causal_wording (tests.test_demo_evidence.TestEvidence.test_descriptive_forbids_causal_wording) ... ok
+test_never_causal_without_checks (tests.test_demo_evidence.TestEvidence.test_never_causal_without_checks) ... ok
+test_real_snapshot_is_descriptive (tests.test_demo_evidence.TestEvidence.test_real_snapshot_is_descriptive) ... ok
+test_missing_optional_fields_do_not_crash (tests.test_demo_data_adapter.TestDataAdapter.test_missing_optional_fields_do_not_crash) ... ok
+test_reads_real_tables (tests.test_demo_data_adapter.TestDataAdapter.test_reads_real_tables) ... ok
+test_schema_and_finite_numbers (tests.test_demo_data_adapter.TestDataAdapter.test_schema_and_finite_numbers) ... ok
+test_build_script (tests.test_demo_smoke.TestSmoke.test_build_script) ... ok
+test_end_to_end_snapshot_roundtrip (tests.test_demo_smoke.TestSmoke.test_end_to_end_snapshot_roundtrip) ... ok
+test_descriptive_wording (tests.test_demo_actionability.TestActionability.test_descriptive_wording) ... ok
+test_explanation_when_diag_is_location (tests.test_demo_actionability.TestActionability.test_explanation_when_diag_is_location) ... ok
+test_heuristic_name (tests.test_demo_actionability.TestActionability.test_heuristic_name) ... ok
+test_location_immutable (tests.test_demo_actionability.TestActionability.test_location_immutable) ... ok
+test_location_visible_but_not_default_action (tests.test_demo_actionability.TestActionability.test_location_visible_but_not_default_action) ... ok
+test_yaml_header_marks_generated (tests.test_demo_actionability.TestConfigParity.test_yaml_header_marks_generated) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 0.227s
+
+OK

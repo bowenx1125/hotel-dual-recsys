@@ -1,0 +1,156 @@
+[
+  {
+    "hotel": "B&B Place Jourdan",
+    "diagnostic": "location",
+    "fix_weakest": "room",
+    "peer_relative": "room",
+    "explained": true
+  },
+  {
+    "hotel": "Novotel Brussels City Centre",
+    "diagnostic": "service",
+    "fix_weakest": "noise",
+    "peer_relative": "noise",
+    "explained": false
+  },
+  {
+    "hotel": "Pillows Grand Boutique Hotel Place Rouppe Brussels",
+    "diagnostic": "noise",
+    "fix_weakest": "noise",
+    "peer_relative": "noise",
+    "explained": false
+  },
+  {
+    "hotel": "Aloft Brussels Schuman",
+    "diagnostic": "breakfast",
+    "fix_weakest": "breakfast",
+    "peer_relative": "breakfast",
+    "explained": false
+  },
+  {
+    "hotel": "Mercure Hotel Brussels Centre Midi",
+    "diagnostic": "cleanliness",
+    "fix_weakest": "noise",
+    "peer_relative": "cleanliness",
+    "explained": false
+  },
+  {
+    "hotel": "NH Brussels EU Berlaymont",
+    "diagnostic": "room",
+    "fix_weakest": "noise",
+    "peer_relative": "noise",
+    "explained": false
+  },
+  {
+    "hotel": "NEW Design apartment in Brussels",
+    "diagnostic": "location",
+    "fix_weakest": "cleanliness",
+    "peer_relative": "cleanliness",
+    "explained": true
+  },
+  {
+    "hotel": "Flat Brussels center",
+    "diagnostic": "location",
+    "fix_weakest": null,
+    "peer_relative": null,
+    "explained": true
+  },
+  {
+    "hotel": "Thon Hotel Brussels City Centre",
+    "diagnostic": "noise",
+    "fix_weakest": "noise",
+    "peer_relative": "noise",
+    "explained": false
+  },
+  {
+    "hotel": "Motel One Brussels",
+    "diagnostic": "room",
+    "fix_weakest": "noise",
+    "peer_relative": "noise",
+    "explained": false
+  },
+  {
+    "hotel": "Hotel Ramada Brussels Woluwe",
+    "diagnostic": "location",
+    "fix_weakest": "noise",
+    "peer_relative": "service",
+    "explained": true
+  },
+  {
+    "hotel": "NH Collection Brussels Grand Sablon",
+    "diagnostic": "breakfast",
+    "fix_weakest": "noise",
+    "peer_relative": "breakfast",
+    "explained": false
+  },
+  {
+    "hotel": "nhow Brussels Bloom",
+    "diagnostic": "noise",
+    "fix_weakest": "noise",
+    "peer_relative": "noise",
+    "explained": false
+  },
+  {
+    "hotel": "Citadines Sainte Catherine Brussels",
+    "diagnostic": "cleanliness",
+    "fix_weakest": "noise",
+    "peer_relative": "cleanliness",
+    "explained": false
+  },
+  {
+    "hotel": "Renaissance Brussels Hotel",
+    "diagnostic": "noise",
+    "fix_weakest": "noise",
+    "peer_relative": "noise",
+    "explained": false
+  },
+  {
+    "hotel": "Sofitel Brussels Le Louise",
+    "diagnostic": "value",
+    "fix_weakest": "room",
+    "peer_relative": "value",
+    "explained": false
+  },
+  {
+    "hotel": "Diamant Suites Brussels EU",
+    "diagnostic": "breakfast",
+    "fix_weakest": "noise",
+    "peer_relative": "value",
+    "explained": false
+  },
+  {
+    "hotel": "Best Western Plus Park Hotel Brussels",
+    "diagnostic": "breakfast",
+    "fix_weakest": "breakfast",
+    "peer_relative": "breakfast",
+    "explained": false
+  },
+  {
+    "hotel": "Warwick Brussels - Grand Place",
+    "diagnostic": "breakfast",
+    "fix_weakest": "noise",
+    "peer_relative": "breakfast",
+    "explained": false
+  },
+  {
+    "hotel": "Aparthotel Adagio Access Bruxelles Europe Aparthotel",
+    "diagnostic": "value",
+    "fix_weakest": "noise",
+    "peer_relative": "cleanliness",
+    "explained": false
+  },
+  {
+    "hotel": "NH Brussels Carrefour de L\u2019Europe",
+    "diagnostic": "cleanliness",
+    "fix_weakest": "noise",
+    "peer_relative": "noise",
+    "explained": false
+  },
+  {
+    "hotel": "Hotel Euro Capital Brussels",
+    "diagnostic": "room",
+    "fix_weakest": "noise",
+    "peer_relative": "room",
+    "explained": false
+  }
+]
