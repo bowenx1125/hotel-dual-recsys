@@ -7,7 +7,7 @@
 | Worktree | `/Users/xubosmell/Desktop/FYP1-temporal` |
 | Branch | `research/temporal-feasibility-20260910-grok` |
 | Base SHA | `c6a33d79d3441028a3d54292bcc96f0a763d1f37` |
-| Final SHA | see tip after docs commit / push |
+| Final SHA | 365b5488011abf02613f2647d1345318f6dc1dcc |
 | Original Demo checkout | `/Users/xubosmell/Desktop/FYP1` left untouched |
 | Push policy | feature branch only; no force; no merge to default |
 
