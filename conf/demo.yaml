@@ -1,0 +1,43 @@
+# Competition-aware provider Demo — transparent heuristic config.
+# All weights and thresholds shown in the UI. Nothing is estimated from a causal model.
+
+aspects:
+  - location
+  - cleanliness
+  - breakfast
+  - service
+  - noise
+  - room
+  - value
+
+aspect_labels:
+  location: Location
+  cleanliness: Cleanliness
+  breakfast: Breakfast
+  service: Service
+  noise: Noise / quiet
+  room: Room
+  value: Value
+
+min_mentions: 5
+min_reviews_hotel: 10
+reliability_k: 10.0
+
+# Competition-Aware heuristic (DESCRIPTIVE):
+#   score = w_gap * gap_norm + w_criticism * crit_norm
+#         - w_unreliable * (1 - reliability)
+#         - assumed_intensity * crowding_weight * peer_weakest_share
+# gap_norm / crit_norm are min-max scaled across eligible aspects of the same hotel.
+weights:
+  gap: 0.45
+  criticism: 0.35
+  unreliable: 0.20
+
+# Scenario analysis only. Not an empirical crowding elasticity.
+scenario:
+  crowding_weight: 0.50
+  default_intensity: 0.0
+  intensity_min: 0.0
+  intensity_max: 1.0
+
+tie_break: aspect_name_asc
