@@ -1,0 +1,30 @@
+test_missing_optional_fields_do_not_crash (tests.test_demo_data_adapter.TestDataAdapter.test_missing_optional_fields_do_not_crash) ... ok
+test_reads_real_tables (tests.test_demo_data_adapter.TestDataAdapter.test_reads_real_tables) ... ok
+test_schema_and_finite_numbers (tests.test_demo_data_adapter.TestDataAdapter.test_schema_and_finite_numbers) ... ok
+test_finite_scores (tests.test_demo_scoring.TestScoring.test_finite_scores) ... ok
+test_four_strategies (tests.test_demo_scoring.TestScoring.test_four_strategies) ... ok
+test_reproducible (tests.test_demo_scoring.TestScoring.test_reproducible) ... ok
+test_descriptive_forbids_causal_wording (tests.test_demo_evidence.TestEvidence.test_descriptive_forbids_causal_wording) ... ok
+test_never_causal_without_checks (tests.test_demo_evidence.TestEvidence.test_never_causal_without_checks) ... ok
+test_real_snapshot_is_descriptive (tests.test_demo_evidence.TestEvidence.test_real_snapshot_is_descriptive) ... ok
+test_build_script (tests.test_demo_smoke.TestSmoke.test_build_script) ... ok
+test_end_to_end_snapshot_roundtrip (tests.test_demo_smoke.TestSmoke.test_end_to_end_snapshot_roundtrip) ... ok
+test_config_loads (tests.test_demo.TestConfig.test_config_loads) ... ok
+test_missing_optional_fields_do_not_crash (tests.test_demo.TestDataAdapter.test_missing_optional_fields_do_not_crash) ... ok
+test_reads_real_tables (tests.test_demo.TestDataAdapter.test_reads_real_tables) ... ok
+test_schema_and_finite_numbers (tests.test_demo.TestDataAdapter.test_schema_and_finite_numbers) ... ok
+test_descriptive_forbids_causal_wording (tests.test_demo.TestEvidence.test_descriptive_forbids_causal_wording) ... ok
+test_filename_does_not_upgrade (tests.test_demo.TestEvidence.test_filename_does_not_upgrade) ... ok
+test_never_causal_without_checks (tests.test_demo.TestEvidence.test_never_causal_without_checks) ... ok
+test_real_snapshot_is_descriptive (tests.test_demo.TestEvidence.test_real_snapshot_is_descriptive) ... ok
+test_hotel_compset_aspect_traceable (tests.test_demo.TestProvenance.test_hotel_compset_aspect_traceable) ... ok
+test_finite_scores (tests.test_demo.TestScoring.test_finite_scores) ... ok
+test_intensity_is_scenario_only (tests.test_demo.TestScoring.test_intensity_is_scenario_only) ... ok
+test_reproducible (tests.test_demo.TestScoring.test_reproducible) ... ok
+test_cli_scripts_exist (tests.test_demo.TestSmoke.test_cli_scripts_exist) ... ok
+test_end_to_end_snapshot_roundtrip (tests.test_demo.TestSmoke.test_end_to_end_snapshot_roundtrip) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 0.392s
+
+OK

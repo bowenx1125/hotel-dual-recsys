@@ -1,0 +1,43 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Provider Demo</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;margin:24px;color:#222}
+.banner{background:#FDECEC;border:1px solid #C0392B;padding:12px 16px;border-radius:8px}
+.sel{margin:12px 0;padding:10px;background:#f4f6f8;border-radius:8px}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.card{flex:1;min-width:180px;border:1px solid #ddd;border-radius:8px;padding:12px}
+.k{font-size:12px;color:#666} .v{font-size:20px;font-weight:600}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border:1px solid #ddd;padding:6px 8px;text-align:left}
+.warn{background:#fff6d6;border:1px solid #e0c35a;padding:10px;border-radius:8px}
+h1{margin-bottom:4px}
+</style></head><body>
+<h1>Competition-Aware Provider-Side Hotel Improvement</h1>
+<p>Manager Demo · NOT SYNTHETIC · no external API</p>
+<div class="banner"><b>DESCRIPTIVE EVIDENCE — recommendations are based on relative aspect gaps and review evidence; they are not validated cause-and-effect estimates.</b><br>level=DESCRIPTIVE · Only cross-sectional aspect scores and researcher-defined peer sets are available. There is no time-split predictive model and no identified treatment effect with CI.</div>
+<div class="sel"><b>Hotel Selector</b> · city=Brussels ·
+compset=geo0_low · hotel=B&amp;B Place Jourdan
+· hotel_id=b-amp-b-place-jourdan · peers=10
+· labelled reviews=24<br>
+sources: aspect_features.csv · compsets.csv · review_aspects.jsonl</div>
+<h2>Hotel vs peers</h2>
+<table><thead><tr>
+<th>aspect</th><th>hotel_net</th><th>peer_median</th><th>gap</th><th>percentile</th>
+<th>mentions</th><th>neg_mentions</th><th>neg_rate</th><th>reliability</th><th>peer_weakest_share</th>
+</tr></thead><tbody><tr><td>Location</td><td>0.667</td><td>0.6745</td><td>0.007499999999999951</td><td>50.0</td><td>15</td><td>1</td><td>0.067</td><td>0.6</td><td>0.1</td></tr><tr><td>Cleanliness</td><td>0.75</td><td>0.4665</td><td>-0.2835</td><td>68.2</td><td>8</td><td>1</td><td>0.125</td><td>0.444</td><td>0</td></tr><tr><td>Breakfast</td><td>0.769</td><td>0.3745</td><td>-0.3945</td><td>94.4</td><td>13</td><td>0</td><td>0.0</td><td>0.565</td><td>0.1</td></tr><tr><td>Service</td><td>0.857</td><td>0.597</td><td>-0.26</td><td>86.4</td><td>14</td><td>1</td><td>0.071</td><td>0.583</td><td>0</td></tr><tr><td>Noise / quiet</td><td>1.0</td><td>-0.143</td><td>-1.143</td><td>95.0</td><td>4</td><td>0</td><td>0.0</td><td>0.286</td><td>0.7</td></tr><tr><td>Room</td><td>0.4</td><td>0.305</td><td>-0.09500000000000003</td><td>68.2</td><td>10</td><td>1</td><td>0.1</td><td>0.5</td><td>0</td></tr><tr><td>Value</td><td>missing</td><td>0.3435</td><td>missing</td><td>missing</td><td>0</td><td>0</td><td>missing</td><td>0</td><td>0</td></tr></tbody></table>
+<h2>Four strategies (assumed_intensity=0)</h2>
+<div class="row"><div class='card'><div class='k'>Fix Weakest</div><div class='v'>Room</div></div><div class='card'><div class='k'>Largest Peer Gap</div><div class='v'>Location</div></div><div class='card'><div class='k'>Most Criticized</div><div class='v'>Cleanliness</div></div><div class='card'><div class='k'>Competition-Aware (heuristic)</div><div class='v'>Location</div></div></div>
+<p>Weights: gap=0.45, criticism=0.35,
+unreliable=0.2. Formula is a heuristic, not a fitted model.</p>
+<h2>Peer-exposure scenario</h2>
+<div class="warn">SCENARIO ANALYSIS — assumed / illustrative. Not an empirical crowding elasticity.</div>
+<table><thead><tr><th>assumed_intensity</th><th>top aspect</th><th>top score</th></tr></thead>
+<tbody><tr><td>0.0</td><td>Location</td><td>0.5567</td></tr><tr><td>0.25</td><td>Location</td><td>0.5442</td></tr><tr><td>0.5</td><td>Location</td><td>0.5317</td></tr><tr><td>0.75</td><td>Location</td><td>0.5192</td></tr><tr><td>1.0</td><td>Room</td><td>0.5153</td></tr></tbody></table>
+<h2>Limitations</h2>
+<ul>
+<li>Review counts are not bookings.</li>
+<li>Sentiment is not a verified management intervention.</li>
+<li>Peer sets are labelled, not validated substitutes.</li>
+<li>No causal estimate or CI is available in this repository.</li>
+</ul>
+</body></html>
