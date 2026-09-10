@@ -31,25 +31,30 @@ COUNTRY_SUFFIXES = [
 ]
 
 
+# 515K Europe Hotel Reviews is the classic 6-city Booking corpus.
+KNOWN_CITIES = ["London", "Paris", "Amsterdam", "Barcelona", "Vienna", "Milan"]
+
+
 def parse_city_country(address: str) -> tuple[str, str]:
     addr = re.sub(r"\s+", " ", (address or "").strip())
     country = ""
-    rest = addr
     for c in COUNTRY_SUFFIXES:
         if addr.endswith(c):
             country = c
-            rest = addr[: -len(c)].strip()
             break
     if not country:
         parts = addr.split(" ")
         country = parts[-1] if parts else ""
-        rest = " ".join(parts[:-1]) if len(parts) > 1 else ""
-    # city is last token of rest (handles "Amsterdam", "Paris", "Barcelona", "Milan", "Vienna", "London")
-    toks = rest.split(" ")
-    city = toks[-1] if toks else ""
-    # Special: "The Hague" / "Den Haag" rare; "Edinburgh" etc ok
-    if city.lower() in {"kingdom"}:
-        city = toks[-2] if len(toks) >= 2 else city
+    city = ""
+    for c in KNOWN_CITIES:
+        if c in addr:
+            city = c
+            break
+    if not city:
+        # fallback: token before country suffix
+        rest = addr[: -len(country)].strip() if country and addr.endswith(country) else addr
+        toks = rest.split(" ")
+        city = toks[-1] if toks else ""
     return city, country
 
 

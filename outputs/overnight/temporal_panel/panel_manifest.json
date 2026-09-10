@@ -1,0 +1,49 @@
+{
+  "source_csv": "Hotel_Reviews.csv",
+  "source_sha256": "a4810c2757934f0a826a1b16a437eb67a38be45b1a22ad56772afce0b6c11af9",
+  "source_bytes": 238154765,
+  "labeling": "structurally_weak_labeled_aspect_sentiment",
+  "prior_strength_main": 10.0,
+  "stream_stats": {
+    "rows_read": 515738,
+    "rows_date_ok": 515738,
+    "rows_date_fail": 0,
+    "pos_section_used": 477668,
+    "neg_section_used": 361304,
+    "pos_placeholder": 38070,
+    "neg_placeholder": 154434,
+    "aspect_hits_pos": 885805,
+    "aspect_hits_neg": 450680,
+    "hotels_seen": 1493
+  },
+  "month_rows": 233485,
+  "quarter_rows": 89075,
+  "month_hotels": 1493,
+  "quarter_hotels": 1493,
+  "month_periods": 25,
+  "quarter_periods": 9,
+  "cities": 6,
+  "valid_mention_cells_quarter": 80686,
+  "month_parquet": "data/interim/hotel_aspect_month.parquet",
+  "quarter_parquet": "data/processed/hotel_aspect_quarter.parquet",
+  "month_sha256": "3e3f300788333b38478c1b18695fd8a61cebef099555d5cbd6616384ab643b64",
+  "quarter_sha256": "6f4835759ec677076a472b74e3af3ced544ff7a53f3c6aa30b5820f790df842f",
+  "prior_sensitivity": {
+    "5": {
+      "mean_smoothed_net": 0.15706444388497925,
+      "std_smoothed_net": 0.301494557561217,
+      "corr_with_main": 0.9879045167707076
+    },
+    "10": {
+      "mean_smoothed_net": 0.12525785770861642,
+      "std_smoothed_net": 0.23988144014715124,
+      "corr_with_main": 1.0
+    },
+    "20": {
+      "mean_smoothed_net": 0.09281923671110176,
+      "std_smoothed_net": 0.18221518095116343,
+      "corr_with_main": 0.9876001884624508
+    }
+  },
+  "date_note": "Review_Date parsed as M/D/YYYY from 515K Europe file"
+}
