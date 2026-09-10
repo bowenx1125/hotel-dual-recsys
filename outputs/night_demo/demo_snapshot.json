@@ -38,6 +38,33 @@
       "criticism": 0.35,
       "unreliable": 0.2
     },
+    "weight_grids": {
+      "current-default": {
+        "gap": 0.45,
+        "criticism": 0.35,
+        "unreliable": 0.2
+      },
+      "gap-dominant": {
+        "gap": 0.7,
+        "criticism": 0.2,
+        "unreliable": 0.1
+      },
+      "criticism-dominant": {
+        "gap": 0.2,
+        "criticism": 0.7,
+        "unreliable": 0.1
+      },
+      "reliability-conservative": {
+        "gap": 0.3,
+        "criticism": 0.2,
+        "unreliable": 0.5
+      },
+      "equal-weight": {
+        "gap": 0.333333,
+        "criticism": 0.333333,
+        "unreliable": 0.333334
+      }
+    },
     "scenario": {
       "crowding_weight": 0.5,
       "default_intensity": 0.0,
@@ -45,7 +72,9 @@
       "intensity_max": 1.0
     },
     "tie_break": "aspect_name_asc",
-    "formula": "score = 0.45*gap_norm + 0.35*criticism_norm - 0.20*(1-reliability) - assumed_intensity*0.50*peer_weakest_share"
+    "heuristic_name": "Peer-Relative Evidence-Weighted (heuristic)",
+    "formula": "score = w_gap*gap_norm + w_criticism*criticism_norm - w_unreliable*(1-reliability) [design-choice weights; not learned returns]. Assumed crowding term is separate scenario analysis.",
+    "actionability_config": "conf/actionability.json"
   },
   "sources": {
     "aspect_features": "data/processed/aspect_features.csv",
