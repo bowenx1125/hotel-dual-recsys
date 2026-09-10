@@ -1,0 +1,61 @@
+{
+  "verdict": "PEER_SIGNAL_STRONG",
+  "terminology": "candidate peers / geo reference set",
+  "static": {
+    "knn5": {
+      "n_edges": 7380,
+      "self_edges": 0,
+      "mean_abs_aspect_diff": 0.1949152595872646,
+      "mean_abs_score_diff": 0.766139678459867
+    },
+    "knn10": {
+      "n_edges": 14760,
+      "self_edges": 0,
+      "mean_abs_aspect_diff": 0.19703597659608713,
+      "mean_abs_score_diff": 0.7753478774340502
+    },
+    "knn20": {
+      "n_edges": 29520,
+      "self_edges": 0,
+      "mean_abs_aspect_diff": 0.1976464263719701,
+      "mean_abs_score_diff": 0.7797568112362624
+    },
+    "mutual10": {
+      "n_edges": 10634,
+      "self_edges": 0,
+      "mean_abs_aspect_diff": 0.19506727979539415,
+      "mean_abs_score_diff": 0.7660765411210523
+    },
+    "radius15": {
+      "n_edges": 88024,
+      "self_edges": 0,
+      "mean_abs_aspect_diff": 0.1919852631629122,
+      "mean_abs_score_diff": 0.8071831811341547
+    },
+    "random_same_city": {
+      "n_edges": 14760,
+      "self_edges": 0,
+      "mean_abs_aspect_diff": 0.20539007549175264,
+      "mean_abs_score_diff": 0.8346549278242166
+    },
+    "non_local_random": {
+      "n_edges": 14760,
+      "self_edges": 0,
+      "mean_abs_aspect_diff": 0.2151619522589671,
+      "mean_abs_score_diff": 0.8383622236321995
+    }
+  },
+  "temporal_delta_corr": {
+    "knn5": 0.035381201424126416,
+    "knn10": 0.03660866319087107,
+    "knn20": 0.033538859016233664,
+    "mutual10": 0.03850451416501898,
+    "radius15": 0.02728946369581362,
+    "random_same_city": 0.03089986159215549,
+    "non_local_random": 0.015615990190586125
+  },
+  "shuffled_n": 100,
+  "real_knn10_more_similar_than_shuffled_frac": 1.0,
+  "self_edges_knn10": 0,
+  "n_hotels_geo": 1476
+}
