@@ -1,0 +1,37 @@
+hotel_url,hotel_name,latitude,longitude,star_rating,star_type,zip,city_label,is_brussels_core,is_outlier,price,price_currency,review_score,review_count_booking,local_review_count
+https://www.booking.com/hotel/be/b-amp-b-place-jourdan.en-gb.html,B&B Place Jourdan,50.83673642627823,4.385567307472229,3,quality,1040,Brussels,1,0,,,9.0,369,24
+https://www.booking.com/hotel/be/ibisbrusselsairport.en-gb.html,ibis Hotel Brussels Airport,50.881343689755575,4.437250792980194,3,official,1831,Diegem,0,0,92,EUR,7.2,1180,80
+https://www.booking.com/hotel/be/novoteltournoire.en-gb.html,Novotel Brussels City Centre,50.85070583874663,4.350011944770813,4,official,1000,Brussels,1,0,137,EUR,8.6,4153,298
+https://www.booking.com/hotel/be/dolce-la-hulpe-brussels.en-gb.html,Hotel Dolce La Hulpe Brussels,50.7454783845326,4.455331563949585,4,official,1310,La Hulpe,0,0,328,EUR,8.4,2362,99
+https://www.booking.com/hotel/be/sandton-pillows-brussels.en-gb.html,Pillows Grand Boutique Hotel Place Rouppe Brussels,50.84238036834025,4.346093237400055,,,1000,Brussels,1,0,130,EUR,8.3,3207,74
+https://www.booking.com/hotel/be/aloft-brussels-schuman.en-gb.html,Aloft Brussels Schuman,50.84054097739892,4.380776882171631,3,official,1040,Brussels,1,0,148,EUR,8.9,2528,223
+https://www.booking.com/hotel/be/frites-at-the-european-center.en-gb.html,Brussels Cosy Appartments2,50.8482744792179,4.352557234415144,,,1000,Brussels,1,0,,,3.9,22,7
+https://www.booking.com/hotel/be/mercure-brussels-centre-midi-brussels.en-gb.html,Mercure Hotel Brussels Centre Midi,50.839288204065156,4.3385002836475905,4,official,1060,Brussels,1,0,221,EUR,8.1,5853,98
+https://www.booking.com/hotel/be/nh-brussels-berlaymont.en-gb.html,NH Brussels EU Berlaymont,50.84486326173162,4.382513612508774,4,official,1000,Brussels,1,0,135,EUR,8.5,3492,362
+https://www.booking.com/hotel/be/new-design-apartment-in-brussels.en-gb.html,NEW Design apartment in Brussels,50.8612239374888,4.34688992540896,4,quality,1080,Brussels,1,0,,,8.9,175,15
+https://www.booking.com/hotel/be/value-stay-brussels-expo.en-gb.html,Value Stay Brussels Expo Hotel,50.9043132745785,4.353603422641754,2,official,1853,Brussels,0,0,70,EUR,7.3,1512,99
+https://www.booking.com/hotel/be/flat-brussels-center-bruxelles.en-gb.html,Flat Brussels center,50.852618869059,4.387654027477,3,quality,1030,Brussels,1,0,,,3.9,199,11
+https://www.booking.com/hotel/be/gtrainbow.en-gb.html,Thon Hotel Brussels Airport,50.88458681754172,4.4441574811935425,3,official,1831,Diegem,0,0,,,8.1,1313,49
+https://www.booking.com/hotel/be/tibrusselsboulevard.en-gb.html,Thon Hotel Brussels City Centre,50.855867019723135,4.357296824455261,4,official,1210,Brussels,1,0,135,EUR,8.3,5975,274
+https://www.booking.com/hotel/be/motel-one-brussels.en-gb.html,Motel One Brussels,50.84868669999999,4.363129100000037,3,quality,1000,Brussels,1,0,132,EUR,8.8,21543,846
+https://www.booking.com/hotel/be/appart-mons-city-concept-terrasse-amp-grand-place.en-gb.html,Appart Mons City Concept - Terrasse & Grand-Place,50.4573546,3.9551069,4,quality,7000,Mons,0,1,,,9.4,60,8
+https://www.booking.com/hotel/be/comfortinnerasme.en-gb.html,Ibis Brussels Erasmus,50.815242845821146,4.272142052650452,3,official,1070,Brussels,1,0,95,EUR,8.0,3328,49
+https://www.booking.com/hotel/be/ramada-brussels.en-gb.html,Hotel Ramada Brussels Woluwe,50.85535651497127,4.421117305755615,4,official,1200,Brussels,1,0,,,,,87
+https://www.booking.com/hotel/be/maison-de-maitre-close-to-brussels.en-gb.html,"Flemishome, The Retreat For Family And Friends",50.740988,4.239346,4,quality,1500,Halle,0,0,,,9.0,3,3
+https://www.booking.com/hotel/be/grandsablon.en-gb.html,NH Collection Brussels Grand Sablon,50.84084924134366,4.355800151824951,4,official,1000,Brussels,1,0,178,EUR,8.9,3694,43
+https://www.booking.com/hotel/be/roxi-residence-brussels.en-gb.html,ROXI The Urban Residence Brussels,50.854524,4.447797,,,1932,Brussels,0,0,83,EUR,8.0,1802,24
+https://www.booking.com/hotel/be/nh-brusselsbloom.en-gb.html,nhow Brussels Bloom,50.85516771992452,4.366520941257477,4,official,1210,Brussels,1,0,133,EUR,8.6,5042,349
+https://www.booking.com/hotel/be/adagio-access-brussels-delta.en-gb.html,Adagio access Brussels Delta,50.8161147,4.3981092,3,official,1160,Brussels,1,0,124,EUR,8.4,4104,17
+https://www.booking.com/hotel/be/citadines-apart-bruxelles-sainte-catherine.en-gb.html,Citadines Sainte Catherine Brussels,50.852912279637934,4.347779676318169,3,official,1000,Brussels,1,0,103,EUR,8.2,6607,147
+https://www.booking.com/hotel/be/renaissance-brussels.en-gb.html,Renaissance Brussels Hotel,50.83806717018711,4.371776729822159,4,official,1050,Brussels,1,0,162,EUR,8.0,1428,123
+https://www.booking.com/hotel/be/sofitelbrusselstoisondor.en-gb.html,Sofitel Brussels Le Louise,50.83622845617756,4.3571895360946655,5,official,1050,Brussels,1,0,183,EUR,8.6,682,34
+https://www.booking.com/hotel/be/the-livorno-ixelles.en-gb.html,The Livorno,50.8273228,4.36151310000002,4,quality,1050,Brussels,1,0,390,EUR,9.3,269,5
+https://www.booking.com/hotel/be/van-der-valk-hotel-brussels-airport.en-gb.html,Van der Valk Hotel Brussels Airport,50.887605540715576,4.452606439590454,4,official,1831,Diegem,0,0,115,EUR,8.0,1957,149
+https://www.booking.com/hotel/be/guest-house-la-maison-chantecler-brussels.en-gb.html,Guest house La Maison Chantecler,50.79899775368215,4.355991771163872,4,quality,1180,Brussels,1,0,201,EUR,8.8,157,24
+https://www.booking.com/hotel/be/brussel-lounge.en-gb.html,Diamant Suites Brussels EU,50.847916977776976,4.403886795043945,3,quality,1030,Brussels,1,0,97,EUR,7.7,1291,54
+https://www.booking.com/hotel/be/parkhotel.en-gb.html,Best Western Plus Park Hotel Brussels,50.84157754916729,4.396371245384216,4,official,1040,Brussels,1,0,96,EUR,8.2,1147,94
+https://www.booking.com/hotel/be/warwick-brussels.en-gb.html,Warwick Brussels - Grand Place,50.8451376251997,4.3544067442417145,4,official,1000,Brussels,1,0,219,EUR,8.5,10005,196
+https://www.booking.com/hotel/be/adagio-access-bruxelles-europe.en-gb.html,Aparthotel Adagio Access Bruxelles Europe Aparthotel,50.84190274340808,4.369479417800903,4,quality,1000,Brussels,1,0,144,EUR,8.5,3091,172
+https://www.booking.com/hotel/be/bed-and-breakfast-sablon-antwerp-antwerpen.en-gb.html,B&B Sablon Antwerp,51.218992724532214,4.396272129447766,4,quality,2000,Antwerp,0,1,171,EUR,8.4,264,21
+https://www.booking.com/hotel/be/carrefour.en-gb.html,NH Brussels Carrefour de L’Europe,50.846337523013524,4.355365633964539,4,official,1000,Brussels,1,0,181,EUR,8.4,1294,56
+https://www.booking.com/hotel/be/euro-capital-brussels.en-gb.html,Hotel Euro Capital Brussels,50.836773895251696,4.339575469493866,4,official,1060,Brussels,1,0,136,EUR,8.3,928,31

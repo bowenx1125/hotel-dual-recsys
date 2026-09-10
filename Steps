@@ -1,0 +1,38 @@
+Phase 0  数据补全(URL 爬取)
+         → 爬 821 个 hotel_url:价格(统一条件)+ 经纬度 + 星级 + 装修年份
+         → 解决"无价格 + 无坐标"两大短板
+
+Phase 1  竞争集构建                              【创新点 ②】
+         → 用经纬度做地理聚类(同城 + 半径,如 1km)
+         → 组内按价格分位数切档(低/中/高)
+         → comp set = 同地理组 ∩ 同价格档 ∩ 同星级
+         → 过滤掉 <N 家的无效组
+
+Phase 2  Aspect 提取                             【创新点 ③】
+         → 固定 aspect 集:位置/卫生/早餐/服务/隔音/房间/性价比
+         → 对差评单独做 aspect 情感
+         → 每家酒店 → aspect 向量 + 差评热点分布
+
+Phase 3  双视角共享底层表征                        【创新点 ①】
+         → 每家酒店统一向量:
+           [价格相对位置, aspect分数, 位置便利性, 评论可信度, 差评热点]
+         → Tourist 和 Manager 读同一个底层
+
+Phase 4  Tourist 侧                              【创新点 ①】
+         → 输入预算档位 → 该档位内综合最优排序
+         → 模型:LightGBM ranker 或加权打分
+         → ground truth:高评分/高评论数作 relevance
+
+Phase 5  Manager 侧                          【创新点 ① + ③】
+         → 输入某酒店 → comp set 内相对位置 + aspect 诊断
+         → 差评热点 vs 竞争集对比 + 定价/改进建议
+         → 用 LLM 生成可解释诊断
+
+Phase 6  Evaluation
+         → Tourist:NDCG@K / Precision@K / Recall@K vs baseline
+           (baseline:纯评分排序、纯价格过滤、纯CF)
+         → Manager:LLM-as-judge + case study + 人工评估
+         → Ablation:去掉差评分析 / 去掉价格相对位置 / 去掉竞争集
+
+Phase 7  论文写作
+         → Related Work / Method / Experiments / Case Study

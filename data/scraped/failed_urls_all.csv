@@ -1,0 +1,78 @@
+hotel_url,hotel_name,scraped_at,reason
+https://www.booking.com/hotel/be/villa-pura-vida.en-gb.html,Villa Pura Vida,2026-06-16T18:50:27+00:00,重试耗尽
+https://www.booking.com/hotel/be/hydro-palace.en-gb.html,Hydro Palace Apartment,2026-06-16T18:51:09+00:00,重试耗尽
+https://www.booking.com/hotel/be/chambres-d-hotes-heysel-laeken-atomium.en-gb.html,Guest house Heysel Laeken Atomium,2026-06-16T19:02:03+00:00,重试耗尽
+https://www.booking.com/hotel/be/pegasus-apparthotel-brussels-city.en-gb.html,Pegasus Studioflats Brussels City Aparthotel,2026-06-16T19:05:43+00:00,重试耗尽
+https://www.booking.com/hotel/be/louise-sur-cour.en-gb.html,Louise sur Cour,2026-06-16T20:55:38+00:00,重试耗尽
+https://www.booking.com/hotel/be/smartflats-les-postiers.en-gb.html,Smartflats Design - Les Postiers,2026-06-16T21:42:40+00:00,重试耗尽
+https://www.booking.com/hotel/be/chez-poussin-brussels.en-gb.html,Room at CHICKEN'S Shared Appartment,2026-06-16T21:55:12+00:00,重试耗尽
+https://www.booking.com/hotel/be/eurocitadin.en-gb.html,EuroCitadin,2026-06-16T22:04:28+00:00,重试耗尽
+https://www.booking.com/hotel/be/classy-apartment-at-european-quarter.en-gb.html,Classy apartment at European Quarter,2026-06-16T22:13:38+00:00,重试耗尽
+https://www.booking.com/hotel/be/chambre-dans-un-appartement-de-charme-au-coeur-de-bruxelles.en-gb.html,Chambre dans un appartement de charme au coeur de Bruxelles,2026-06-16T22:20:11+00:00,重试耗尽
+https://www.booking.com/hotel/be/appartement-style-dans-maison-bourgeoise.en-gb.html,appartement stylé dans maison bourgeoise,2026-06-16T22:21:05+00:00,重试耗尽
+https://www.booking.com/hotel/be/city-center-sainte-catherine-grand-place.en-gb.html,City Center Sainte-Catherine Grand Place,2026-06-16T22:39:30+00:00,重试耗尽
+https://www.booking.com/hotel/be/luxury-residence-charvet-bruxelles-midi-app1.en-gb.html,Luxury Residence Charvet Bruxelles-Midi (APP1),2026-06-16T23:51:09+00:00,重试耗尽
+https://www.booking.com/hotel/be/aparthotel-brusselsmidi.en-gb.html,Apart Hotel Brussels Midi,2026-06-17T00:04:28+00:00,重试耗尽
+https://www.booking.com/hotel/be/ideal-room.en-gb.html,Ideal Room,2026-06-17T00:34:45+00:00,重试耗尽
+https://www.booking.com/hotel/be/de-witte-leirsse-1557.en-gb.html,De Witte Leirsse 1557,2026-06-17T00:49:25+00:00,重试耗尽
+https://www.booking.com/hotel/be/the-good-house.en-gb.html,B&B The Good House,2026-06-17T01:06:07+00:00,重试耗尽
+https://www.booking.com/hotel/be/smartflats-monnaie.en-gb.html,Smartflats Design - Monnaie,2026-06-17T01:12:03+00:00,重试耗尽
+https://www.booking.com/hotel/be/domus-latina-schumann-jourdan.en-gb.html,Domus Latina Schumann-Jourdan,2026-06-17T02:09:13+00:00,重试耗尽
+https://www.booking.com/hotel/be/cocoon-brussels.en-gb.html,Cocoon Brussels,2026-06-17T02:09:40+00:00,重试耗尽
+https://www.booking.com/hotel/be/ilot-sacre-d14.en-gb.html,Ilot Sacre Apartments,2026-06-17T03:03:47+00:00,重试耗尽
+https://www.booking.com/hotel/be/living-in-bra-sel.en-gb.html,"B&B Living in Brûsel, Urban B&B",2026-06-17T03:44:39+00:00,重试耗尽
+https://www.booking.com/hotel/be/mirabeau-bruxelles.en-gb.html,Hotel Mirabeau,2026-06-17T04:02:15+00:00,重试耗尽
+https://www.booking.com/hotel/be/bungalow-bell-vue.en-gb.html,Bungalow Belle Vue & Chalet International,2026-06-17T04:15:03+00:00,重试耗尽
+https://www.booking.com/hotel/be/ferienhaus-lorea.en-gb.html,Ferienhaus Lorea,2026-06-17T04:16:45+00:00,重试耗尽
+https://www.booking.com/hotel/be/carolusmech.en-gb.html,Hotel Brouwerij Het Anker,2026-06-17T04:18:26+00:00,重试耗尽
+https://www.booking.com/hotel/be/au-chat-39-rme-des-blanches-pierres.en-gb.html,Au Chat'rme des Blanches Pierres,2026-06-17T04:20:07+00:00,重试耗尽
+https://www.booking.com/hotel/be/la-petite-louve.en-gb.html,La Petite Louve,2026-06-17T04:21:50+00:00,重试耗尽
+https://www.booking.com/hotel/be/van-der-valk-hotel-brussels-airport.en-gb.html,Van der Valk Hotel Brussels Airport,2026-06-17T04:23:33+00:00,重试耗尽
+https://www.booking.com/hotel/be/henrietta.en-gb.html,Henriëtta,2026-06-17T04:25:18+00:00,重试耗尽
+https://www.booking.com/hotel/be/le-relais-de-pommard.en-gb.html,Hotel Le Relais de Pommard,2026-06-17T04:27:02+00:00,重试耗尽
+https://www.booking.com/hotel/be/des-comtes.en-gb.html,Hotel des Comtes Durbuy,2026-06-17T04:28:45+00:00,重试耗尽
+https://www.booking.com/hotel/be/la-cantiniere-gerpinnes.en-gb.html,La Cantinière-Gerpinnes,2026-06-17T04:29:59+00:00,重试耗尽
+https://www.booking.com/hotel/be/b-amp-b-de-bornedrager.en-gb.html,B&B De Bornedrager,2026-06-17T04:34:09+00:00,重试耗尽
+https://www.booking.com/hotel/be/hemelse-helderheid.en-gb.html,Hemelse Helderheid,2026-06-17T04:35:34+00:00,重试耗尽
+https://www.booking.com/hotel/be/the-city.en-gb.html,Apartment The City,2026-06-17T04:36:07+00:00,重试耗尽
+https://www.booking.com/hotel/be/de-buidel.en-gb.html,De Buidel,2026-06-17T04:36:41+00:00,重试耗尽
+https://www.booking.com/hotel/be/guest-house-la-maison-chantecler-brussels.en-gb.html,Guest house La Maison Chantecler,2026-06-17T04:37:16+00:00,重试耗尽
+https://www.booking.com/hotel/be/coco-mat-residence.en-gb.html,Smartflats Design - Antwerp Central,2026-06-17T04:37:52+00:00,重试耗尽
+https://www.booking.com/hotel/be/maison-ruthier.en-gb.html,B&B Maison Ruthier,2026-06-17T04:38:27+00:00,重试耗尽
+https://www.booking.com/hotel/be/maison-d-39-hotes-quot-cerf-39-titude-quot.en-gb.html,Maison d'Hôtes Cerf'titude,2026-06-17T04:39:03+00:00,重试耗尽
+https://www.booking.com/hotel/be/albergo.en-gb.html,Hotel Albergo,2026-06-17T04:39:39+00:00,重试耗尽
+https://www.booking.com/hotel/be/le-briquemont.en-gb.html,B&B Le Briquemont,2026-06-17T04:40:20+00:00,重试耗尽
+https://www.booking.com/hotel/be/il-etait-une-fois.en-gb.html,Il était une fois,2026-06-17T04:41:16+00:00,重试耗尽
+https://www.booking.com/hotel/be/la-mode-la-mode.en-gb.html,Les lofts de Styliste,2026-06-17T04:42:06+00:00,重试耗尽
+https://www.booking.com/hotel/be/b-h-c.en-gb.html,Hotel Continental Gare du Midi,2026-06-17T04:43:00+00:00,重试耗尽
+https://www.booking.com/hotel/be/hauwaertshoeve.en-gb.html,Hauwaertshoeve,2026-06-17T04:43:50+00:00,重试耗尽
+https://www.booking.com/hotel/be/plumes-et-pinceaux.en-gb.html,Plumes et Pinceaux,2026-06-17T04:44:19+00:00,重试耗尽
+https://www.booking.com/hotel/be/le-relais-du-moulin-gedinne.en-gb.html,Le Relais du Moulin,2026-06-17T04:46:46+00:00,重试耗尽
+https://www.booking.com/hotel/be/villa-des-roses-hasselt.en-gb.html,B&B Villa des Roses,2026-06-17T04:48:49+00:00,重试耗尽
+https://www.booking.com/hotel/be/de-laurier.en-gb.html,Residentie De Laurier,2026-06-17T04:49:59+00:00,重试耗尽
+https://www.booking.com/hotel/be/brussel-lounge.en-gb.html,Diamant Suites Brussels EU,2026-06-17T04:51:42+00:00,重试耗尽
+https://www.booking.com/hotel/be/au-coq-en-pate.en-gb.html,B&B Au Coq en Pate,2026-06-17T04:53:23+00:00,重试耗尽
+https://www.booking.com/hotel/be/quartierlatin.en-gb.html,Hotel Quartier Latin,2026-06-17T04:55:06+00:00,重试耗尽
+https://www.booking.com/hotel/be/europe.en-gb.html,Hotel Europe,2026-06-17T04:56:47+00:00,重试耗尽
+https://www.booking.com/hotel/be/huyze-ter-wilgen.en-gb.html,Huyze ter Wilgen,2026-06-17T04:58:33+00:00,重试耗尽
+https://www.booking.com/hotel/be/vakantiehuisje-de-vuurtoren.en-gb.html,Vakantiehuisje De Vuurtoren,2026-06-17T05:00:16+00:00,重试耗尽
+https://www.booking.com/hotel/be/chateau-charles-pepinster.en-gb.html,Château Charles,2026-06-17T05:02:29+00:00,重试耗尽
+https://www.booking.com/hotel/be/b-amp-b-oase-braunlauf.en-gb.html,B&B Oase,2026-06-17T05:04:51+00:00,重试耗尽
+https://www.booking.com/hotel/be/la-boheme-koksijde.en-gb.html,La Bohème Koksijde,2026-06-17T05:05:21+00:00,重试耗尽
+https://www.booking.com/hotel/be/bnb-intermezzo.en-gb.html,Spacious apartment - B&B InterMezzo for business & leisure,2026-06-17T05:05:50+00:00,重试耗尽
+https://www.booking.com/hotel/be/le-petit-gite-de-durbuy.en-gb.html,Comme à la Ferme,2026-06-17T05:06:27+00:00,重试耗尽
+https://www.booking.com/hotel/be/logis-hostellerie-de-la-claire-fontaine.en-gb.html,Logis Hostellerie De La Claire Fontaine,2026-06-17T05:07:03+00:00,重试耗尽
+https://www.booking.com/hotel/be/sauveniere-2.en-gb.html,Sauveniere 2,2026-06-17T05:07:47+00:00,重试耗尽
+https://www.booking.com/hotel/be/white-princess-koksijde.en-gb.html,White Princess-Yzzis,2026-06-17T05:08:47+00:00,重试耗尽
+https://www.booking.com/hotel/be/saint-martin.en-gb.html,Hotel Saint-Martin,2026-06-17T05:09:59+00:00,重试耗尽
+https://www.booking.com/hotel/be/interbellum.en-gb.html,Interbellum,2026-06-17T05:11:44+00:00,重试耗尽
+https://www.booking.com/hotel/be/faja-lobi.en-gb.html,B&B Faja lobi,2026-06-17T05:13:28+00:00,重试耗尽
+https://www.booking.com/hotel/be/groeneveld-oostende.en-gb.html,Groeneveld,2026-06-17T05:15:13+00:00,重试耗尽
+https://www.booking.com/hotel/be/mercure-blankenberge-station.en-gb.html,Hotel Mercure Blankenberge Station,2026-06-17T05:16:56+00:00,重试耗尽
+https://www.booking.com/hotel/be/campanileantwerpen.en-gb.html,Tulip Inn Antwerpen,2026-06-17T05:18:39+00:00,重试耗尽
+https://www.booking.com/hotel/be/acropolis-middelkerke1.en-gb.html,Acropolis,2026-06-17T05:20:24+00:00,重试耗尽
+https://www.booking.com/hotel/be/au-pre-bonheur.en-gb.html,Au Pré Bonheur,2026-06-17T05:22:09+00:00,重试耗尽
+https://www.booking.com/hotel/be/smartflats-sablon.en-gb.html,Smartflats City - Grand Sablon,2026-06-17T05:26:42+00:00,重试耗尽
+https://www.booking.com/hotel/be/bel-appartement-entre-l-39-atomium-et-le-centre-ville.en-gb.html,Charmant studio entre l'atomium et le centre ville,2026-06-17T06:07:13+00:00,重试耗尽
+https://www.booking.com/hotel/be/european-institutions-apartments.en-gb.html,European institutions apartments,2026-06-17T06:08:12+00:00,重试耗尽
+https://www.booking.com/hotel/be/smartflats-royal.en-gb.html,Smartflats City - Royal,2026-06-17T06:22:58+00:00,重试耗尽
