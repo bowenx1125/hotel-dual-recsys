@@ -1,0 +1,23 @@
+{
+  "selected_track": "B",
+  "formulation": "Actionability- and Reliability-Aware Provider Recommendation: diagnosis ≠ action; Location never a direct action; abstain when evidence is insufficient.",
+  "n_hotels_scored": 1485,
+  "location_violation_rate_action_policies": 0.0,
+  "baselines": [
+    "random",
+    "fix_weakest",
+    "largest_peer_gap",
+    "most_criticized",
+    "reliability_aware",
+    "peer_relative_heuristic",
+    "abstention"
+  ],
+  "no_ips_snips": true,
+  "no_roi": true,
+  "no_demand_lift": true,
+  "track_titles": {
+    "A": "Provider-Side Recommendation under Peer Exposure",
+    "B": "From Diagnosis to Action: Actionability- and Reliability-Aware Provider Recommendation",
+    "C": "Review Sentiment Change Is Not Service Improvement: Measurement Risks in Provider-Side Recommendation"
+  }
+}
