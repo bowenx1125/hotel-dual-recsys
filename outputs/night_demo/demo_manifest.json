@@ -1,0 +1,48 @@
+{
+  "timestamp": "2026-09-10T15:17:20.086207+00:00",
+  "git_branch": "demo/provider-side-20260910-grok",
+  "git_commit_starting": "be17fc4707c772d8ef19f962c7b9a26c42ca7764",
+  "git_commit_feat": "7bcf28be416fffe2b18e1b40ed36a73a78f7030f",
+  "git_commit": "bd3198b5d7924ac20609b521170c90a09551301b",
+  "python_version": "3.12.3",
+  "evidence_level": "DESCRIPTIVE",
+  "source_files": {
+    "aspect_features": "data/processed/aspect_features.csv",
+    "compsets": "data/processed/compsets.csv",
+    "brussels_hotels": "data/processed/brussels_hotels.csv",
+    "review_aspects_jsonl": "data/processed/review_aspects.jsonl"
+  },
+  "source_file_hashes": {
+    "aspect_features": "cade2650c6edbe2181d18aaf7c58b111f039884dd9a3d8bcf650af67af5734aa",
+    "compsets": "598d4488b5a366d7eb56e6d700776800ac39a0f129b0de8dcb3cc7f6a788f6b3",
+    "brussels_hotels": "53f2d9c0fd9c215aeeb261fbcf4a8be0862b901d48ab787baeebfbe35f1a2ca2",
+    "review_aspects_jsonl": "62331a2c0b320e64b88e6e21a5771680c500d5380b2be8847ece5359ca6c03fc"
+  },
+  "eligible_hotels": 22,
+  "eligible_compsets": 3,
+  "compset_ids": [
+    "geo0_high",
+    "geo0_low",
+    "geo0_mid"
+  ],
+  "aspects": [
+    "location",
+    "cleanliness",
+    "breakfast",
+    "service",
+    "noise",
+    "room",
+    "value"
+  ],
+  "strategy_names": [
+    "fix_weakest",
+    "largest_peer_gap",
+    "most_criticized",
+    "competition_aware"
+  ],
+  "tests_passed": 25,
+  "tests_failed": 0,
+  "launch_command": ".venv-demo/bin/python -m streamlit run demo/app.py --server.headless true --server.port 8501",
+  "screenshot_path": "outputs/night_demo/demo_screenshot.png",
+  "synthetic": false
+}

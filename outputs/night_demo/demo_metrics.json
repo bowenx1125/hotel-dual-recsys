@@ -1,0 +1,227 @@
+{
+  "evidence_level": "DESCRIPTIVE",
+  "n_eligible_hotels": 22,
+  "n_compsets": 3,
+  "compset_ids": [
+    "geo0_high",
+    "geo0_low",
+    "geo0_mid"
+  ],
+  "compset_size_min": 6,
+  "compset_size_median": 7.0,
+  "compset_size_max": 11,
+  "n_reviews_min": 11,
+  "n_reviews_median": 95.5,
+  "n_reviews_max": 846,
+  "aspect_coverage": {
+    "location": {
+      "eligible_hotels_with_aspect": 22,
+      "share": 1.0
+    },
+    "cleanliness": {
+      "eligible_hotels_with_aspect": 20,
+      "share": 0.9090909090909091
+    },
+    "breakfast": {
+      "eligible_hotels_with_aspect": 19,
+      "share": 0.8636363636363636
+    },
+    "service": {
+      "eligible_hotels_with_aspect": 20,
+      "share": 0.9090909090909091
+    },
+    "noise": {
+      "eligible_hotels_with_aspect": 18,
+      "share": 0.8181818181818182
+    },
+    "room": {
+      "eligible_hotels_with_aspect": 21,
+      "share": 0.9545454545454546
+    },
+    "value": {
+      "eligible_hotels_with_aspect": 17,
+      "share": 0.7727272727272727
+    }
+  },
+  "policy_choice_counts": {
+    "fix_weakest": {
+      "room": 2,
+      "noise": 16,
+      "breakfast": 2,
+      "location": 2
+    },
+    "largest_peer_gap": {
+      "location": 4,
+      "service": 1,
+      "noise": 4,
+      "breakfast": 5,
+      "cleanliness": 3,
+      "room": 3,
+      "value": 2
+    },
+    "most_criticized": {
+      "cleanliness": 3,
+      "room": 13,
+      "breakfast": 2,
+      "location": 2,
+      "service": 1,
+      "noise": 1
+    },
+    "competition_aware": {
+      "location": 3,
+      "noise": 8,
+      "breakfast": 4,
+      "cleanliness": 3,
+      "service": 1,
+      "value": 2,
+      "room": 1
+    }
+  },
+  "pairwise_agreement": {
+    "fix_weakest__largest_peer_gap": 0.36363636363636365,
+    "fix_weakest__most_criticized": 0.22727272727272727,
+    "fix_weakest__competition_aware": 0.5454545454545454,
+    "largest_peer_gap__most_criticized": 0.3181818181818182,
+    "largest_peer_gap__competition_aware": 0.6818181818181818,
+    "most_criticized__competition_aware": 0.2727272727272727
+  },
+  "n_fix_weakest_ne_competition_aware": 10,
+  "share_fix_weakest_ne_competition_aware": 0.45454545454545453,
+  "n_fix_weakest_ne_largest_peer_gap": 14,
+  "share_fix_weakest_ne_largest_peer_gap": 0.6363636363636364,
+  "n_all_four_agree": 3,
+  "recommendations": {
+    "b-amp-b-place-jourdan": {
+      "fix_weakest": "room",
+      "largest_peer_gap": "location",
+      "most_criticized": "cleanliness",
+      "competition_aware": "location"
+    },
+    "novoteltournoire": {
+      "fix_weakest": "noise",
+      "largest_peer_gap": "service",
+      "most_criticized": "room",
+      "competition_aware": "noise"
+    },
+    "sandton-pillows-brussels": {
+      "fix_weakest": "noise",
+      "largest_peer_gap": "noise",
+      "most_criticized": "room",
+      "competition_aware": "noise"
+    },
+    "aloft-brussels-schuman": {
+      "fix_weakest": "breakfast",
+      "largest_peer_gap": "breakfast",
+      "most_criticized": "breakfast",
+      "competition_aware": "breakfast"
+    },
+    "mercure-brussels-centre-midi-brussels": {
+      "fix_weakest": "noise",
+      "largest_peer_gap": "cleanliness",
+      "most_criticized": "room",
+      "competition_aware": "cleanliness"
+    },
+    "nh-brussels-berlaymont": {
+      "fix_weakest": "noise",
+      "largest_peer_gap": "room",
+      "most_criticized": "room",
+      "competition_aware": "noise"
+    },
+    "new-design-apartment-in-brussels": {
+      "fix_weakest": "location",
+      "largest_peer_gap": "location",
+      "most_criticized": "location",
+      "competition_aware": "location"
+    },
+    "flat-brussels-center-bruxelles": {
+      "fix_weakest": "location",
+      "largest_peer_gap": "location",
+      "most_criticized": "location",
+      "competition_aware": "location"
+    },
+    "tibrusselsboulevard": {
+      "fix_weakest": "noise",
+      "largest_peer_gap": "noise",
+      "most_criticized": "room",
+      "competition_aware": "noise"
+    },
+    "motel-one-brussels": {
+      "fix_weakest": "noise",
+      "largest_peer_gap": "room",
+      "most_criticized": "room",
+      "competition_aware": "noise"
+    },
+    "ramada-brussels": {
+      "fix_weakest": "noise",
+      "largest_peer_gap": "location",
+      "most_criticized": "service",
+      "competition_aware": "service"
+    },
+    "grandsablon": {
+      "fix_weakest": "noise",
+      "largest_peer_gap": "breakfast",
+      "most_criticized": "noise",
+      "competition_aware": "breakfast"
+    },
+    "nh-brusselsbloom": {
+      "fix_weakest": "noise",
+      "largest_peer_gap": "noise",
+      "most_criticized": "room",
+      "competition_aware": "noise"
+    },
+    "citadines-apart-bruxelles-sainte-catherine": {
+      "fix_weakest": "noise",
+      "largest_peer_gap": "cleanliness",
+      "most_criticized": "cleanliness",
+      "competition_aware": "cleanliness"
+    },
+    "renaissance-brussels": {
+      "fix_weakest": "noise",
+      "largest_peer_gap": "noise",
+      "most_criticized": "breakfast",
+      "competition_aware": "noise"
+    },
+    "sofitelbrusselstoisondor": {
+      "fix_weakest": "room",
+      "largest_peer_gap": "value",
+      "most_criticized": "room",
+      "competition_aware": "value"
+    },
+    "brussel-lounge": {
+      "fix_weakest": "noise",
+      "largest_peer_gap": "breakfast",
+      "most_criticized": "cleanliness",
+      "competition_aware": "value"
+    },
+    "parkhotel": {
+      "fix_weakest": "breakfast",
+      "largest_peer_gap": "breakfast",
+      "most_criticized": "room",
+      "competition_aware": "breakfast"
+    },
+    "warwick-brussels": {
+      "fix_weakest": "noise",
+      "largest_peer_gap": "breakfast",
+      "most_criticized": "room",
+      "competition_aware": "breakfast"
+    },
+    "adagio-access-bruxelles-europe": {
+      "fix_weakest": "noise",
+      "largest_peer_gap": "value",
+      "most_criticized": "room",
+      "competition_aware": "cleanliness"
+    },
+    "carrefour": {
+      "fix_weakest": "noise",
+      "largest_peer_gap": "cleanliness",
+      "most_criticized": "room",
+      "competition_aware": "noise"
+    },
+    "euro-capital-brussels": {
+      "fix_weakest": "noise",
+      "largest_peer_gap": "room",
+      "most_criticized": "room",
+      "competition_aware": "room"
+    }
+  }
+}
