@@ -1,0 +1,61 @@
+{
+  "terminology": "geo_reference_set / candidate peer set",
+  "not": [
+    "validated competitors",
+    "economic substitutes"
+  ],
+  "construction": "same city, Haversine nearest-k, exclude self, deterministic tie-break by hotel_id",
+  "main_k": 10,
+  "n_cities": 6,
+  "n_hotels": 1476,
+  "metrics": {
+    "knn5": {
+      "n_edges": 7380,
+      "self_edges": 0,
+      "cross_city_errors": 0,
+      "n_hotels_with_peers": 1476,
+      "mean_degree": 5.0,
+      "median_distance_km": 0.2611200179833261,
+      "p90_distance_km": 1.0148510177251113
+    },
+    "knn10": {
+      "n_edges": 14760,
+      "self_edges": 0,
+      "cross_city_errors": 0,
+      "n_hotels_with_peers": 1476,
+      "mean_degree": 10.0,
+      "median_distance_km": 0.370052791789781,
+      "p90_distance_km": 1.4242080166393154
+    },
+    "knn20": {
+      "n_edges": 29520,
+      "self_edges": 0,
+      "cross_city_errors": 0,
+      "n_hotels_with_peers": 1476,
+      "mean_degree": 20.0,
+      "median_distance_km": 0.5325553882794263,
+      "p90_distance_km": 1.9008516819430044
+    },
+    "mutual10": {
+      "n_edges": 10634,
+      "self_edges": 0,
+      "cross_city_errors": 0,
+      "n_hotels_with_peers": 1473,
+      "mean_degree": 7.21928038017651,
+      "median_distance_km": 0.2859438792580072,
+      "p90_distance_km": 0.8255868024619912
+    },
+    "radius_1_5": {
+      "n_edges": 88024,
+      "self_edges": 0,
+      "cross_city_errors": 0,
+      "n_hotels_with_peers": 1452,
+      "mean_degree": 60.62258953168044,
+      "median_distance_km": 0.9589021320916912,
+      "p90_distance_km": 1.3993649814389197
+    }
+  },
+  "top1_stability_knn5_vs_knn10": 1.0,
+  "artifact": "data/processed/geo_reference_sets.parquet",
+  "sha256": "8a6802ae638134ac089084e54c7489862c1dfaac96616945e48166a66421655b"
+}
