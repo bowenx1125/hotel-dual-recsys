@@ -13,6 +13,13 @@
   "min_reviews_hotel": 10,
   "reliability_k": 10.0,
   "weights": {"gap": 0.45, "criticism": 0.35, "unreliable": 0.20},
+  "weight_grids": {
+    "current-default": {"gap": 0.45, "criticism": 0.35, "unreliable": 0.20},
+    "gap-dominant": {"gap": 0.70, "criticism": 0.20, "unreliable": 0.10},
+    "criticism-dominant": {"gap": 0.20, "criticism": 0.70, "unreliable": 0.10},
+    "reliability-conservative": {"gap": 0.30, "criticism": 0.20, "unreliable": 0.50},
+    "equal-weight": {"gap": 0.333333, "criticism": 0.333333, "unreliable": 0.333334}
+  },
   "scenario": {
     "crowding_weight": 0.50,
     "default_intensity": 0.0,
@@ -20,5 +27,7 @@
     "intensity_max": 1.0
   },
   "tie_break": "aspect_name_asc",
-  "formula": "score = 0.45*gap_norm + 0.35*criticism_norm - 0.20*(1-reliability) - assumed_intensity*0.50*peer_weakest_share"
+  "heuristic_name": "Peer-Relative Evidence-Weighted (heuristic)",
+  "formula": "score = w_gap*gap_norm + w_criticism*criticism_norm - w_unreliable*(1-reliability) [design-choice weights; not learned returns]. Assumed crowding term is separate scenario analysis.",
+  "actionability_config": "conf/actionability.json"
 }

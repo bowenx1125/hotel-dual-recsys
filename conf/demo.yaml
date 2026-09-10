@@ -1,5 +1,6 @@
-# Competition-aware provider Demo — transparent heuristic config.
-# All weights and thresholds shown in the UI. Nothing is estimated from a causal model.
+# AUTO-GENERATED from conf/demo.json — do not edit by hand.
+# Regenerate: python3 scripts/sync_demo_yaml.py
+# Canonical machine source: conf/demo.json
 
 aspects:
   - location
@@ -23,21 +24,20 @@ min_mentions: 5
 min_reviews_hotel: 10
 reliability_k: 10.0
 
-# Competition-Aware heuristic (DESCRIPTIVE):
-#   score = w_gap * gap_norm + w_criticism * crit_norm
-#         - w_unreliable * (1 - reliability)
-#         - assumed_intensity * crowding_weight * peer_weakest_share
-# gap_norm / crit_norm are min-max scaled across eligible aspects of the same hotel.
+# Peer-Relative Evidence-Weighted (heuristic) — DESCRIPTIVE design-choice weights.
+# Weights are NOT learned business returns.
 weights:
   gap: 0.45
   criticism: 0.35
-  unreliable: 0.20
+  unreliable: 0.2
 
-# Scenario analysis only. Not an empirical crowding elasticity.
 scenario:
-  crowding_weight: 0.50
+  crowding_weight: 0.5
   default_intensity: 0.0
   intensity_min: 0.0
   intensity_max: 1.0
 
 tie_break: aspect_name_asc
+heuristic_name: Peer-Relative Evidence-Weighted (heuristic)
+formula: "score = w_gap*gap_norm + w_criticism*criticism_norm - w_unreliable*(1-reliability) [design-choice weights; not learned returns]. Assumed crowding term is separate scenario analysis."
+actionability_config: conf/actionability.json

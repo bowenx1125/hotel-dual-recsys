@@ -1,0 +1,148 @@
+{
+  "n_hotels": 22,
+  "grids": [
+    "current-default",
+    "gap-dominant",
+    "criticism-dominant",
+    "reliability-conservative",
+    "equal-weight"
+  ],
+  "weights": {
+    "current-default": {
+      "gap": 0.45,
+      "criticism": 0.35,
+      "unreliable": 0.2
+    },
+    "gap-dominant": {
+      "gap": 0.7,
+      "criticism": 0.2,
+      "unreliable": 0.1
+    },
+    "criticism-dominant": {
+      "gap": 0.2,
+      "criticism": 0.7,
+      "unreliable": 0.1
+    },
+    "reliability-conservative": {
+      "gap": 0.3,
+      "criticism": 0.2,
+      "unreliable": 0.5
+    },
+    "equal-weight": {
+      "gap": 0.333333,
+      "criticism": 0.333333,
+      "unreliable": 0.333334
+    }
+  },
+  "n_fully_stable_across_grids": 12,
+  "share_fully_stable": 0.5454545454545454,
+  "top1_switching_rate": 0.4545454545454546,
+  "recommendation_counts_by_grid": {
+    "current-default": {
+      "room": 2,
+      "noise": 8,
+      "breakfast": 4,
+      "cleanliness": 4,
+      "service": 1,
+      "value": 2
+    },
+    "gap-dominant": {
+      "room": 4,
+      "service": 2,
+      "noise": 5,
+      "breakfast": 4,
+      "cleanliness": 4,
+      "value": 2
+    },
+    "criticism-dominant": {
+      "cleanliness": 4,
+      "noise": 13,
+      "breakfast": 2,
+      "value": 2
+    },
+    "reliability-conservative": {
+      "room": 5,
+      "service": 4,
+      "noise": 5,
+      "breakfast": 2,
+      "cleanliness": 4,
+      "value": 1
+    },
+    "equal-weight": {
+      "room": 3,
+      "noise": 9,
+      "breakfast": 2,
+      "cleanliness": 4,
+      "service": 2,
+      "value": 1
+    }
+  },
+  "most_unstable_hotels": [
+    {
+      "hotel_id": "brussel-lounge",
+      "hotel_name": "Diamant Suites Brussels EU",
+      "picks": {
+        "current-default": "value",
+        "gap-dominant": "value",
+        "criticism-dominant": "noise",
+        "reliability-conservative": "cleanliness",
+        "equal-weight": "noise"
+      },
+      "n_unique": 3,
+      "stable": false
+    },
+    {
+      "hotel_id": "grandsablon",
+      "hotel_name": "NH Collection Brussels Grand Sablon",
+      "picks": {
+        "current-default": "breakfast",
+        "gap-dominant": "breakfast",
+        "criticism-dominant": "noise",
+        "reliability-conservative": "service",
+        "equal-weight": "service"
+      },
+      "n_unique": 3,
+      "stable": false
+    },
+    {
+      "hotel_id": "mercure-brussels-centre-midi-brussels",
+      "hotel_name": "Mercure Hotel Brussels Centre Midi",
+      "picks": {
+        "current-default": "cleanliness",
+        "gap-dominant": "cleanliness",
+        "criticism-dominant": "value",
+        "reliability-conservative": "service",
+        "equal-weight": "cleanliness"
+      },
+      "n_unique": 3,
+      "stable": false
+    },
+    {
+      "hotel_id": "warwick-brussels",
+      "hotel_name": "Warwick Brussels - Grand Place",
+      "picks": {
+        "current-default": "breakfast",
+        "gap-dominant": "breakfast",
+        "criticism-dominant": "noise",
+        "reliability-conservative": "room",
+        "equal-weight": "room"
+      },
+      "n_unique": 3,
+      "stable": false
+    },
+    {
+      "hotel_id": "b-amp-b-place-jourdan",
+      "hotel_name": "B&B Place Jourdan",
+      "picks": {
+        "current-default": "room",
+        "gap-dominant": "room",
+        "criticism-dominant": "cleanliness",
+        "reliability-conservative": "room",
+        "equal-weight": "room"
+      },
+      "n_unique": 2,
+      "stable": false
+    }
+  ],
+  "note": "Weights are design choices, not learned business returns."
+}

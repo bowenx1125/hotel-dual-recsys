@@ -24,7 +24,8 @@ class TestSmoke(unittest.TestCase):
             self.assertGreaterEqual(data["n_eligible_hotels"], 3)
             h = eligible_hotels(data)[0]
             pol = all_policies(h, data["config"], 0.0)
-            self.assertEqual(len(pol), 4)
+            self.assertIn("peer_relative", pol)
+            self.assertGreaterEqual(len(pol), 4)
             self.assertTrue(h["hotel_id"] and h["compset_id"])
 
     def test_build_script(self):

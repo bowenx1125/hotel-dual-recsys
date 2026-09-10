@@ -1,0 +1,60 @@
+{
+  "aspects": {
+    "location": {
+      "diagnostic_visible": true,
+      "eligible_for_direct_action": false,
+      "actionability_level": "immutable",
+      "manager_interpretation": "Relative location disadvantage vs labelled peers.",
+      "possible_mitigation": "Communicate transport access; cannot physically relocate.",
+      "reason": "Site/geography is not a short-run operational lever."
+    },
+    "cleanliness": {
+      "diagnostic_visible": true,
+      "eligible_for_direct_action": true,
+      "actionability_level": "high",
+      "manager_interpretation": "Housekeeping / hygiene quality signals in reviews.",
+      "possible_mitigation": "Housekeeping standards, inspection cadence, deep-clean schedule.",
+      "reason": "Directly controllable operational process."
+    },
+    "breakfast": {
+      "diagnostic_visible": true,
+      "eligible_for_direct_action": true,
+      "actionability_level": "high",
+      "manager_interpretation": "Breakfast offering quality/variety signals.",
+      "possible_mitigation": "Menu, service hours, supplier quality.",
+      "reason": "Directly controllable F&B process."
+    },
+    "service": {
+      "diagnostic_visible": true,
+      "eligible_for_direct_action": true,
+      "actionability_level": "high",
+      "manager_interpretation": "Staff helpfulness / reception quality signals.",
+      "possible_mitigation": "Training, staffing, response scripts.",
+      "reason": "Directly controllable staffing process."
+    },
+    "noise": {
+      "diagnostic_visible": true,
+      "eligible_for_direct_action": true,
+      "actionability_level": "conditional",
+      "manager_interpretation": "Quietness / soundproofing complaints.",
+      "possible_mitigation": "Soft furnishings, window seals, room assignment; some external noise is constrained.",
+      "reason": "Partly controllable; external traffic/neighbours may limit impact."
+    },
+    "room": {
+      "diagnostic_visible": true,
+      "eligible_for_direct_action": true,
+      "actionability_level": "conditional",
+      "manager_interpretation": "Room comfort / bathroom / amenities.",
+      "possible_mitigation": "Maintenance, soft renovation, amenity packs; full refurbish is capital-heavy.",
+      "reason": "Some fixes are operational; structural room size is constrained."
+    },
+    "value": {
+      "diagnostic_visible": true,
+      "eligible_for_direct_action": true,
+      "actionability_level": "medium",
+      "manager_interpretation": "Perceived price-quality fit.",
+      "possible_mitigation": "Pricing, packages, included amenities; not only 'quality'.",
+      "reason": "Mix of pricing and quality levers."
+    }
+  }
+}
