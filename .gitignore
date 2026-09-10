@@ -35,3 +35,8 @@ future work.pptx
 
 # Demo runtime logs may be large; keep small copies under outputs/night_demo
 launch_live.log
+
+# Overnight local data (never commit raw reviews / large caches)
+data/interim/
+*.csv.bak
+.env

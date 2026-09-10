@@ -11,3 +11,9 @@
 - `conf/demo.json` is canonical for the Demo runtime.
 - `conf/demo.yaml` becomes a generated human-readable mirror; parity test required.
 - New `conf/actionability.json` is the single source for actionability metadata.
+
+
+## D-2026-09-10-phase2
+- Belgium join index↔review_id match_rate=1.0; dates usable 2018-07-31→2021-07-19 but only 24 hotels with aspects.
+- Primary temporal source: 515K Europe in FYP_DATA_CACHE_ROOT (not git).
+- Aspect gate: drop location `area`, noise bare `hear`/`heard` (false positives).
