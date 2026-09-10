@@ -1,0 +1,24 @@
+{
+  "aspects": ["location", "cleanliness", "breakfast", "service", "noise", "room", "value"],
+  "aspect_labels": {
+    "location": "Location",
+    "cleanliness": "Cleanliness",
+    "breakfast": "Breakfast",
+    "service": "Service",
+    "noise": "Noise / quiet",
+    "room": "Room",
+    "value": "Value"
+  },
+  "min_mentions": 5,
+  "min_reviews_hotel": 10,
+  "reliability_k": 10.0,
+  "weights": {"gap": 0.45, "criticism": 0.35, "unreliable": 0.20},
+  "scenario": {
+    "crowding_weight": 0.50,
+    "default_intensity": 0.0,
+    "intensity_min": 0.0,
+    "intensity_max": 1.0
+  },
+  "tie_break": "aspect_name_asc",
+  "formula": "score = 0.45*gap_norm + 0.35*criticism_norm - 0.20*(1-reliability) - assumed_intensity*0.50*peer_weakest_share"
+}
