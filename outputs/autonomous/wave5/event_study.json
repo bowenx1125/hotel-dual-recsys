@@ -1,0 +1,44 @@
+{
+  "classification": "WEAK",
+  "not_causal": true,
+  "n_treated_matched": 315,
+  "att_rel_to_m1": {
+    "-2": {
+      "mean": -0.04368673403253936,
+      "n": 481
+    },
+    "-1": {
+      "mean": 0.0,
+      "n": 488
+    },
+    "0": {
+      "mean": 0.16971589236138307,
+      "n": 488
+    },
+    "1": {
+      "mean": 0.04282576487321873,
+      "n": 479
+    },
+    "2": {
+      "mean": 0.02363754312916644,
+      "n": 476
+    }
+  },
+  "pretrend_ok_exploratory": true,
+  "observational_interaction": {
+    "beta": [
+      0.011209409291070366,
+      0.01120940929107038,
+      0.02859567931014817,
+      0.02859567931014817
+    ],
+    "se": [
+      0.007697180061864525,
+      0.007697180061864497,
+      0.035146659736618506,
+      0.035146659736618506
+    ]
+  },
+  "location_placebo": "ran_n=33",
+  "wording": "observational peer interaction / exploratory attenuation pattern"
+}
