@@ -1,10 +1,14 @@
-# Claims Ledger
+# FINAL CLAIMS LEDGER
 
-| ID | Claim | Status | Evidence | Exact metric | Allowed wording | Forbidden wording |
-|---|---|---|---|---|---|---|
-| C1 | Manager Demo is descriptive | SUPPORTED | demo/evidence.py | DESCRIPTIVE | DESCRIPTIVE EVIDENCE | causal / ROI |
-| C2 | Geo kNN are candidate peers | SUPPORTED | overnight peer sets | k=10 same-city | geo reference set | validated competitors |
-| C3 | Location is not a direct action | SUPPORTED | conf/actionability.json | immutable | diagnostic disadvantage | fix location |
-| C4 | Overnight 5774 is permissive only | SUPPORTED | Wave 0 audit | 5774 reproduced; 1047 prev_mentions<5 | legacy_permissive_event_count | strict action events |
-| C5 | Zero-mention ≠ observed neutral | SUPPORTED | Wave 0; panel smoothed_net=0 when mentions=0 | 8389 prior-only cells | prior-only / has_measurement=false | observed quality=0 |
-| C9 | Causal wording | FORBIDDEN | no identification | — | none | causal effect |
+| ID | Claim | Status | Notes |
+|---|---|---|---|
+| C1 | Demo is descriptive unless ledger upgrades it | SUPPORTED | evidence_level=DESCRIPTIVE |
+| C2 | Geo kNN are candidate peers / geo reference sets | SUPPORTED | Wave 3 PEER_SIGNAL_STRONG |
+| C3 | Location is not a direct operational action | SUPPORTED | actionability.json |
+| C4 | Overnight 5774 is legacy_permissive only | SUPPORTED | Wave 2 |
+| C5 | Zero-mention is not observed neutral | SUPPORTED | Wave 1 has_measurement |
+| C6 | Partial 2015Q3/2017Q3 excluded from main analyses | SUPPORTED | Wave 1 completeness |
+| C7 | Peer incremental prediction | PARTIAL | Wave 4 |
+| C8 | Strict events support confirmatory event-study | AMBER_ASSOCIATIONAL | Wave 2; GREEN not lowered |
+| C9 | Causal wording | FORBIDDEN | Wave 5 WEAK |
+| C10 | Selected track B | DECISION | Wave 6 |
