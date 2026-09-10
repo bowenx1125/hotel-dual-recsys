@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-09-10T23:45:00+08:00",
+  "repo": {
+    "base_commit": "c6a33d79d3441028a3d54292bcc96f0a763d1f37",
+    "branch": "research/temporal-feasibility-20260910-grok",
+    "worktree": "/Users/xubosmell/Desktop/FYP1-temporal"
+  },
+  "existing_demo": {
+    "evidence_level": "DESCRIPTIVE",
+    "eligible_hotels": 22,
+    "compsets": 3,
+    "default_heuristic_name_before": "Competition-Aware (heuristic)",
+    "weights_before": {
+      "gap": 0.45,
+      "criticism": 0.35,
+      "unreliable": 0.2
+    },
+    "location_was_actionable_before": true
+  },
+  "phase1": {
+    "location_as_largest_diagnostic": 4,
+    "explained_cases": 4,
+    "never_action_location": true,
+    "weight_stable_hotels": 12,
+    "weight_switching_rate": 0.4545,
+    "tests_passed": 23
+  }
+}
