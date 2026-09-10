@@ -1060,7 +1060,7 @@ def run_wave6(root: Path, panel: pd.DataFrame) -> dict:
         },
     }
     atomic_write_json(odir / "policy.json", out)
-    atomic_write_text(root / "outputs" / "autonomous" / "PAPER_TRACK.md", f"# Paper Track\n\nSelected: **TRACK {track}**\n\n{formulation}\n")
+    atomic_write_text(out_dir(root) / "PAPER_TRACK.md", f"# Paper Track\n\nSelected: **TRACK {track}**\n\n{formulation}\n")
     merge_facts(root, "6", out)
     update_state(root, wave=6, status="WAVE6_DONE", paper_track=track)
     print(f"  Wave6 已完成/总数/失败数 = 1/1/0 track={track}", flush=True)

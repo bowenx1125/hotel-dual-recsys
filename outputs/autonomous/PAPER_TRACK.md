@@ -1,5 +1,5 @@
 # Paper Track
 
-Selected: **TRACK C**
+Selected: **TRACK B**
 
-Uncertainty-Aware Provider Recommendation with Abstention: default output is 'Insufficient evidence to recommend an action.'
+Actionability- and Reliability-Aware Provider Recommendation: diagnosis ≠ action; Location never a direct action; abstain when evidence is insufficient.
