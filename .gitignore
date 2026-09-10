@@ -1,0 +1,36 @@
+# Environments
+.venv*/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+
+# Secrets
+.env
+.env.*
+
+# Large / raw assets (do not commit)
+node_modules/
+models/absa/model.safetensors
+models/absa/*.safetensors
+models/absa/spm.model
+data/booking_reviews copy.csv
+data/scraped/html/
+data/scraped/*.html
+*.html.gz
+Source.zip
+FYP1_Partial_Thesis.docx
+FYP-1 Projects 20XX-PartialThesis.docx
+FYP_Data_Foundation.pptx
+BNBU+Powerpoint++Presentation+Template+1.pptx
+future work.pptx
+~$*
+
+# Local editor / OS
+.idea/
+.vscode/
+*.swp
+
+# Demo runtime logs may be large; keep small copies under outputs/night_demo
+launch_live.log
