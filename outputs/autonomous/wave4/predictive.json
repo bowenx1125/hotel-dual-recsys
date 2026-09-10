@@ -1,0 +1,107 @@
+{
+  "complete_periods": [
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q3",
+    "2016Q4",
+    "2017Q1",
+    "2017Q2"
+  ],
+  "n_rolling_folds": 3,
+  "fold_table": [
+    {
+      "fold": 0,
+      "test_periods": [
+        "2016Q4"
+      ],
+      "n_train": 1331,
+      "n_val": 1379,
+      "n_test": 1412,
+      "city_time_mean_mae": 0.5894708693606611,
+      "persistence_mae": 0.43499671058360706,
+      "own_features_mae": 0.5904202067938163,
+      "own_features_alpha": 0.01,
+      "own_plus_generic_peer_mae": 0.5904202067938163,
+      "own_plus_generic_peer_alpha": 0.01,
+      "own_plus_same_aspect_peer_state_mae": 0.5904202067938163,
+      "own_plus_same_aspect_peer_state_alpha": 0.01,
+      "own_plus_same_aspect_peer_exposure_mae": 0.5904202067938163,
+      "own_plus_same_aspect_peer_exposure_alpha": 0.01
+    },
+    {
+      "fold": 1,
+      "test_periods": [
+        "2017Q1"
+      ],
+      "n_train": 2710,
+      "n_val": 1412,
+      "n_test": 1430,
+      "city_time_mean_mae": 0.5910337090889013,
+      "persistence_mae": 0.45127455344299405,
+      "own_features_mae": 0.38716059568984595,
+      "own_features_alpha": 0.01,
+      "own_plus_generic_peer_mae": 0.3912099012988055,
+      "own_plus_generic_peer_alpha": 0.01,
+      "own_plus_same_aspect_peer_state_mae": 0.39005805372656266,
+      "own_plus_same_aspect_peer_state_alpha": 0.01,
+      "own_plus_same_aspect_peer_exposure_mae": 0.39171040245954436,
+      "own_plus_same_aspect_peer_exposure_alpha": 0.01
+    },
+    {
+      "fold": 2,
+      "test_periods": [
+        "2017Q2"
+      ],
+      "n_train": 4122,
+      "n_val": 1430,
+      "n_test": 1437,
+      "city_time_mean_mae": 0.5828618977364639,
+      "persistence_mae": 0.447975929796404,
+      "own_features_mae": 0.3703841938050289,
+      "own_features_alpha": 0.01,
+      "own_plus_generic_peer_mae": 0.3697602246712266,
+      "own_plus_generic_peer_alpha": 0.01,
+      "own_plus_same_aspect_peer_state_mae": 0.3694981690336025,
+      "own_plus_same_aspect_peer_state_alpha": 0.01,
+      "own_plus_same_aspect_peer_exposure_mae": 0.3693705182306876,
+      "own_plus_same_aspect_peer_exposure_alpha": 0.01
+    }
+  ],
+  "last_fold_models": {
+    "own_features": {
+      "mae": 0.3703841938050289,
+      "rmse": 0.5175198690206229,
+      "alpha": 0.01
+    },
+    "own_plus_generic_peer": {
+      "mae": 0.3697602246712266,
+      "rmse": 0.5172166047685796,
+      "alpha": 0.01
+    },
+    "own_plus_same_aspect_peer_state": {
+      "mae": 0.3694981690336025,
+      "rmse": 0.5169702169307046,
+      "alpha": 0.01
+    },
+    "own_plus_same_aspect_peer_exposure": {
+      "mae": 0.3693705182306876,
+      "rmse": 0.5170643387839939,
+      "alpha": 0.01
+    }
+  },
+  "bootstrap_own_minus_peer": {
+    "mean": 0.0010301549277233635,
+    "ci95": [
+      -0.0013688588071684895,
+      0.003541099948903185
+    ],
+    "n_boot": 1000,
+    "n_hotels": 1437
+  },
+  "shuffled_peer_frac_real_better": 1.0,
+  "n_shuffle": 100,
+  "peer_predictive_claim": "PARTIAL",
+  "not_causal": true,
+  "2017Q3_excluded": true
+}
