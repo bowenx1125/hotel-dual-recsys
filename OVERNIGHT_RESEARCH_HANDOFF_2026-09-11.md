@@ -124,3 +124,5 @@ CI: `.github/workflows/research-smoke.yml` (no 515K download).
 3. **Hotel/city-period FE predictive check** — medium; depends on pilot code; evidence: peer lift after FE.
 4. **Operational event linkage** (renovation/news) — high for leaving review-perceived-only changes; currently unavailable.
 5. **Keep Demo DESCRIPTIVE; cite claim IDs in UI** — medium value; low cost; FACTS/CLAIMS already exist.
+
+Postscript tip after snapshot sync: 63b02865d0b00a0597b121582254fb3b78110a6d
