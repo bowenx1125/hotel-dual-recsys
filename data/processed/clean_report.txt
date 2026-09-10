@@ -1,0 +1,23 @@
+清洗完成：822 家
+  有坐标: 745 (91%) — 其中 geocoding 补回 0 家
+  无坐标(死页/无地址): 77 家
+  有价格: 321 (39%)
+  有星级: 529 (64%)
+  坐标落框定城市补充: 65 家
+
+有坐标酒店的城市分布(Top 15):
+  Unknown          96 家
+  Brussels         80 家
+  Bruges           62 家
+  Antwerp          38 家
+  Ghent            29 家
+  Ostend           25 家
+  Liège            20 家
+  Namur            18 家
+  Minsk            18 家
+  Ypres            16 家
+  De Haan          16 家
+  Blankenberge     13 家
+  Leuven           11 家
+  De Panne         11 家
+  Knokke-Heist     10 家
