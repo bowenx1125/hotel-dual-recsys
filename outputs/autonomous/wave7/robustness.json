@@ -1,0 +1,196 @@
+{
+  "event_count_stability": "STABLE",
+  "main_n": 498,
+  "cells": [
+    {
+      "delta": 0.1,
+      "prior": 5,
+      "k": 5,
+      "n_events": 421,
+      "hotels": 316
+    },
+    {
+      "delta": 0.1,
+      "prior": 5,
+      "k": 10,
+      "n_events": 683,
+      "hotels": 464
+    },
+    {
+      "delta": 0.1,
+      "prior": 5,
+      "k": 20,
+      "n_events": 689,
+      "hotels": 467
+    },
+    {
+      "delta": 0.1,
+      "prior": 10,
+      "k": 5,
+      "n_events": 316,
+      "hotels": 244
+    },
+    {
+      "delta": 0.1,
+      "prior": 10,
+      "k": 10,
+      "n_events": 511,
+      "hotels": 364
+    },
+    {
+      "delta": 0.1,
+      "prior": 10,
+      "k": 20,
+      "n_events": 514,
+      "hotels": 366
+    },
+    {
+      "delta": 0.1,
+      "prior": 20,
+      "k": 5,
+      "n_events": 202,
+      "hotels": 170
+    },
+    {
+      "delta": 0.1,
+      "prior": 20,
+      "k": 10,
+      "n_events": 320,
+      "hotels": 251
+    },
+    {
+      "delta": 0.1,
+      "prior": 20,
+      "k": 20,
+      "n_events": 321,
+      "hotels": 252
+    },
+    {
+      "delta": 0.15,
+      "prior": 5,
+      "k": 5,
+      "n_events": 435,
+      "hotels": 326
+    },
+    {
+      "delta": 0.15,
+      "prior": 5,
+      "k": 10,
+      "n_events": 689,
+      "hotels": 474
+    },
+    {
+      "delta": 0.15,
+      "prior": 5,
+      "k": 20,
+      "n_events": 695,
+      "hotels": 477
+    },
+    {
+      "delta": 0.15,
+      "prior": 10,
+      "k": 5,
+      "n_events": 312,
+      "hotels": 246
+    },
+    {
+      "delta": 0.15,
+      "prior": 10,
+      "k": 10,
+      "n_events": 498,
+      "hotels": 362
+    },
+    {
+      "delta": 0.15,
+      "prior": 10,
+      "k": 20,
+      "n_events": 501,
+      "hotels": 364
+    },
+    {
+      "delta": 0.15,
+      "prior": 20,
+      "k": 5,
+      "n_events": 196,
+      "hotels": 160
+    },
+    {
+      "delta": 0.15,
+      "prior": 20,
+      "k": 10,
+      "n_events": 314,
+      "hotels": 240
+    },
+    {
+      "delta": 0.15,
+      "prior": 20,
+      "k": 20,
+      "n_events": 315,
+      "hotels": 241
+    },
+    {
+      "delta": 0.2,
+      "prior": 5,
+      "k": 5,
+      "n_events": 409,
+      "hotels": 308
+    },
+    {
+      "delta": 0.2,
+      "prior": 5,
+      "k": 10,
+      "n_events": 651,
+      "hotels": 450
+    },
+    {
+      "delta": 0.2,
+      "prior": 5,
+      "k": 20,
+      "n_events": 656,
+      "hotels": 453
+    },
+    {
+      "delta": 0.2,
+      "prior": 10,
+      "k": 5,
+      "n_events": 284,
+      "hotels": 227
+    },
+    {
+      "delta": 0.2,
+      "prior": 10,
+      "k": 10,
+      "n_events": 461,
+      "hotels": 344
+    },
+    {
+      "delta": 0.2,
+      "prior": 10,
+      "k": 20,
+      "n_events": 464,
+      "hotels": 346
+    },
+    {
+      "delta": 0.2,
+      "prior": 20,
+      "k": 5,
+      "n_events": 189,
+      "hotels": 164
+    },
+    {
+      "delta": 0.2,
+      "prior": 20,
+      "k": 10,
+      "n_events": 296,
+      "hotels": 240
+    },
+    {
+      "delta": 0.2,
+      "prior": 20,
+      "k": 20,
+      "n_events": 297,
+      "hotels": 241
+    }
+  ],
+  "negative_results_saved": true
+}
