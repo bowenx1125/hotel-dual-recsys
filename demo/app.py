@@ -208,24 +208,120 @@ def render_manager_tab(st, snap, cfg):
 
 def render_temporal_tab(st):
     st.subheader("Temporal Research Feasibility Lab")
+    st.caption(
+        "Research lab · review-perceived aspect changes · geo reference sets · "
+        "NOT causal · NOT managerial interventions · NOT validated competitors"
+    )
     gate_path = ROOT / "outputs" / "overnight" / "feasibility" / "GO_NO_GO.md"
     metrics_path = ROOT / "outputs" / "overnight" / "feasibility" / "feasibility_metrics.json"
-    pred_path = ROOT / "outputs" / "overnight" / "predictive_pilot" / "PREDICTIVE_REPORT.md"
+    panel_manifest = ROOT / "outputs" / "overnight" / "temporal_panel" / "panel_manifest.json"
+    peer_manifest = ROOT / "outputs" / "overnight" / "peer_sets" / "peer_set_manifest.json"
+    pred_metrics = ROOT / "outputs" / "overnight" / "predictive_pilot" / "metrics.json"
+    fig_dir = ROOT / "outputs" / "overnight" / "feasibility" / "figures"
+
+    if panel_manifest.exists():
+        pm = json.loads(panel_manifest.read_text(encoding="utf-8"))
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("Quarter cells", pm.get("quarter_rows"))
+        c2.metric("Hotels", pm.get("quarter_hotels"))
+        c3.metric("Cities", pm.get("cities"))
+        c4.metric("Mention cells", pm.get("valid_mention_cells_quarter"))
+        st.caption(
+            f"Labeling: structurally weak-labeled aspect sentiment · "
+            f"prior_strength={pm.get('prior_strength_main')} · "
+            f"source sha256 `{str(pm.get('source_sha256', ''))[:12]}…` (local cache)"
+        )
+    else:
+        st.info("Panel not built yet.")
+
+    if peer_manifest.exists():
+        peers = json.loads(peer_manifest.read_text(encoding="utf-8"))
+        st.markdown("### Geo reference sets")
+        st.write(
+            f"Main: same-city Haversine k={peers.get('main_k')} · "
+            f"hotels={peers.get('n_hotels')} · cities={peers.get('n_cities')} · "
+            "terminology: **geo reference set / candidate peer set** "
+            "(not validated competitors)."
+        )
+
     if metrics_path.exists():
         metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
-        st.success(f"Feasibility verdict: **{metrics.get('verdict', 'UNKNOWN')}**")
-        st.json(metrics)
+        verdict = metrics.get("verdict", "UNKNOWN")
+        if verdict == "GREEN":
+            st.success(f"Feasibility verdict: **{verdict}**")
+        elif verdict == "AMBER":
+            st.warning(f"Feasibility verdict: **{verdict}**")
+        else:
+            st.error(f"Feasibility verdict: **{verdict}**")
+        m1, m2, m3, m4 = st.columns(4)
+        m1.metric("Candidate events", metrics.get("candidate_events"))
+        m2.metric("Event hotels", metrics.get("event_hotels"))
+        m3.metric("Exposure > 0", metrics.get("events_exposure_gt0"))
+        m4.metric("Exposure = 0", metrics.get("events_exposure_eq0"))
+        st.markdown(
+            f"- Main Δ threshold (fixed a priori): **{metrics.get('main_delta_threshold')}**\n"
+            f"- Valid hotel-quarter-aspect cells: **{metrics.get('valid_cells')}**\n"
+            f"- Hotels with ≥4 periods: **{metrics.get('hotels_with_enough_coverage')}**\n"
+            f"- Change term: **review-perceived aspect change** (not managerial intervention)"
+        )
+        cols = st.columns(3)
+        for i, name in enumerate(
+            ["verdict_summary.png", "peer_exposure_distribution.png", "delta_q_distribution.png"]
+        ):
+            p = fig_dir / name
+            if p.exists():
+                cols[i % 3].image(str(p), use_container_width=True)
+        with st.expander("Full feasibility metrics JSON"):
+            st.json(metrics)
     else:
-        st.info("Temporal feasibility artifacts not built yet in this worktree run.")
-        st.write("This tab will show panel coverage, candidate review-perceived changes, peer-exposure variation, and GREEN/AMBER/RED.")
-    if pred_path.exists():
-        st.markdown("#### Predictive pilot")
-        st.markdown(pred_path.read_text(encoding="utf-8")[:4000])
+        st.info(
+            "Temporal feasibility artifacts not built yet. "
+            "Expected: panel coverage, candidate changes, peer-exposure, GREEN/AMBER/RED."
+        )
+
+    st.markdown("### Predictive pilot on temporal holdout")
+    if pred_metrics.exists():
+        pm = json.loads(pred_metrics.read_text(encoding="utf-8"))
+        if pm.get("skipped"):
+            st.warning(
+                f"Predictive pilot not available / gate not passed. "
+                f"({pm.get('verdict') or pm.get('reason')})"
+            )
+        else:
+            st.info(
+                "Predictive association only — does **not** upgrade Manager Demo to PREDICTIVE "
+                "and is **not** a causal effect."
+            )
+            models = pm.get("models") or {}
+            st.dataframe(
+                [
+                    {"model": k, "MAE": v.get("mae"), "RMSE": v.get("rmse")}
+                    for k, v in models.items()
+                ],
+                hide_index=True,
+                use_container_width=True,
+            )
+            st.caption(
+                f"Target: {pm.get('target')} · test periods: {pm.get('test_periods')} · "
+                f"peer improves on persistence: {pm.get('peer_model_improves_on_persistence')}"
+            )
+            pred_fig = ROOT / "outputs" / "overnight" / "predictive_pilot" / "figures" / "mae_by_model.png"
+            if pred_fig.exists():
+                st.image(str(pred_fig), use_container_width=True)
     else:
         st.warning("Predictive pilot not available / gate not passed.")
+
+    st.markdown("### What this lab can / cannot claim")
+    st.markdown(
+        """
+**Can:** descriptive coverage; feasibility of temporal measurement; predictive association on holdout.
+**Cannot:** causal peer interference; ROI; demand lift; calling geo neighbors validated competitors;
+calling sentiment deltas managerial interventions.
+"""
+    )
     if gate_path.exists():
-        st.markdown("#### GO / NO-GO")
-        st.markdown(gate_path.read_text(encoding="utf-8")[:4000])
+        with st.expander("GO / NO-GO detail"):
+            st.markdown(gate_path.read_text(encoding="utf-8")[:6000])
 
 
 def main():

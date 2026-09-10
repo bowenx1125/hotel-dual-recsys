@@ -1,0 +1,4 @@
+OK live Streamlit screenshots
+url=http://127.0.0.1:8511
+manager=/Users/xubosmell/Desktop/FYP1-temporal/outputs/overnight/demo/manager_tab.png
+temporal=/Users/xubosmell/Desktop/FYP1-temporal/outputs/overnight/demo/temporal_lab_tab.png
