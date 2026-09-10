@@ -79,7 +79,9 @@ class TestScoring(unittest.TestCase):
     def test_intensity_is_scenario_only(self):
         s0 = all_policies(self.hotel, self.cfg, 0.0)["competition_aware"]
         self.assertTrue(s0.get("heuristic"))
-        self.assertIn("not causal", s0["rule"])
+        rule = s0["rule"].lower()
+        self.assertTrue("not learned" in rule or "design-choice" in rule)
+        self.assertIn("scenario", rule)
 
 
 class TestEvidence(unittest.TestCase):
@@ -129,7 +131,10 @@ class TestSmoke(unittest.TestCase):
             self.assertGreaterEqual(data["n_eligible_hotels"], 3)
             h = [x for x in data["hotels"] if x["eligible"]][0]
             pol = all_policies(h, data["config"], 0.0)
-            self.assertEqual(len(pol), 4)
+            # four strategies + competition_aware alias
+            self.assertGreaterEqual(len(pol), 4)
+            self.assertIn("peer_relative", pol)
+            self.assertIn("competition_aware", pol)
 
     def test_cli_scripts_exist(self):
         self.assertTrue((ROOT / "scripts" / "build_demo_snapshot.py").exists())
