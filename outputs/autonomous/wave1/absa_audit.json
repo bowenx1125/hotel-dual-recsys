@@ -1,0 +1,35 @@
+{
+  "attempted": true,
+  "never_gold_accuracy": true,
+  "HUMAN_VALIDATION_REQUIRED": true,
+  "status": "RAN",
+  "n_pairs": 2800,
+  "agreement_vs_weak_section_label": 0.8460714285714286,
+  "cohens_kappa_vs_weak": 0.7158872872038629,
+  "weak_reference_f1": {
+    "positive": 0.9134781109962082,
+    "negative": 0.8480909829406986
+  },
+  "per_aspect_agreement": {
+    "breakfast": 0.6808510638297872,
+    "cleanliness": 0.947242206235012,
+    "location": 0.7912371134020618,
+    "noise": 0.9679144385026738,
+    "room": 0.7995110024449877,
+    "service": 0.8851674641148325,
+    "value": 0.862533692722372
+  },
+  "per_city_agreement": {
+    "Amsterdam": 0.8854625550660793,
+    "Barcelona": 0.8134920634920635,
+    "London": 0.8205689277899344,
+    "Milan": 0.8495575221238938,
+    "Paris": 0.8717391304347826,
+    "Vienna": 0.8393234672304439
+  },
+  "mean_confidence": 0.9199210852810314,
+  "high_confidence_disagreements": 249,
+  "failures": 0,
+  "device": "mps",
+  "wording": "agreement with structurally weak section labels; not gold accuracy"
+}

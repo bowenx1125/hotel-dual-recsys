@@ -1,0 +1,24 @@
+{
+  "n_items": 126,
+  "cities": [
+    "Amsterdam",
+    "London",
+    "Paris"
+  ],
+  "aspects": [
+    "breakfast",
+    "cleanliness",
+    "location",
+    "noise",
+    "room",
+    "service",
+    "value"
+  ],
+  "sections": [
+    "negative",
+    "positive"
+  ],
+  "text_location": "outputs/autonomous/private/human_annotation_pack.json (gitignored)",
+  "HUMAN_VALIDATION_REQUIRED": true,
+  "status": "pack_generated_unannotated"
+}

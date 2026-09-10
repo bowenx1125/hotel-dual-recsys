@@ -1,0 +1,130 @@
+{
+  "source_sha256": "a4810c2757934f0a826a1b16a437eb67a38be45b1a22ad56772afce0b6c11af9",
+  "rows_read": 515738,
+  "rows_date_ok": 515738,
+  "date_min": "2015-08-04",
+  "date_max": "2017-08-03",
+  "fold_reviews": {
+    "A": 258244,
+    "B": 257494
+  },
+  "fold_review_intersection": 0,
+  "period_completeness": {
+    "2015Q3": {
+      "status": "partial",
+      "calendar_start": "2015-07-01",
+      "calendar_end": "2015-09-30",
+      "n_unique_dates": 58,
+      "first_date": "2015-08-04",
+      "last_date": "2015-09-30"
+    },
+    "2015Q4": {
+      "status": "complete",
+      "calendar_start": "2015-10-01",
+      "calendar_end": "2015-12-31",
+      "n_unique_dates": 92,
+      "first_date": "2015-10-01",
+      "last_date": "2015-12-31"
+    },
+    "2016Q1": {
+      "status": "complete",
+      "calendar_start": "2016-01-01",
+      "calendar_end": "2016-03-31",
+      "n_unique_dates": 91,
+      "first_date": "2016-01-01",
+      "last_date": "2016-03-31"
+    },
+    "2016Q2": {
+      "status": "complete",
+      "calendar_start": "2016-04-01",
+      "calendar_end": "2016-06-30",
+      "n_unique_dates": 91,
+      "first_date": "2016-04-01",
+      "last_date": "2016-06-30"
+    },
+    "2016Q3": {
+      "status": "complete",
+      "calendar_start": "2016-07-01",
+      "calendar_end": "2016-09-30",
+      "n_unique_dates": 92,
+      "first_date": "2016-07-01",
+      "last_date": "2016-09-30"
+    },
+    "2016Q4": {
+      "status": "complete",
+      "calendar_start": "2016-10-01",
+      "calendar_end": "2016-12-31",
+      "n_unique_dates": 92,
+      "first_date": "2016-10-01",
+      "last_date": "2016-12-31"
+    },
+    "2017Q1": {
+      "status": "complete",
+      "calendar_start": "2017-01-01",
+      "calendar_end": "2017-03-31",
+      "n_unique_dates": 90,
+      "first_date": "2017-01-01",
+      "last_date": "2017-03-31"
+    },
+    "2017Q2": {
+      "status": "complete",
+      "calendar_start": "2017-04-01",
+      "calendar_end": "2017-06-30",
+      "n_unique_dates": 91,
+      "first_date": "2017-04-01",
+      "last_date": "2017-06-30"
+    },
+    "2017Q3": {
+      "status": "partial",
+      "calendar_start": "2017-07-01",
+      "calendar_end": "2017-09-30",
+      "n_unique_dates": 34,
+      "first_date": "2017-07-01",
+      "last_date": "2017-08-03"
+    }
+  },
+  "complete_periods": [
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q3",
+    "2016Q4",
+    "2017Q1",
+    "2017Q2"
+  ],
+  "partial_periods": [
+    "2015Q3",
+    "2017Q3"
+  ],
+  "panel_rows": 89075,
+  "hotels": 1493,
+  "hotel_names": 1491,
+  "cities": 6,
+  "measured_cells": 80686,
+  "prior_only_cells": 8389,
+  "measured_cells_A": 72485,
+  "measured_cells_B": 72828,
+  "cells_with_both_folds_measured": 64627,
+  "prior_sensitivity": {
+    "5": {
+      "mean": 0.15706444388497925,
+      "std": 0.30149455756121707,
+      "corr_with_main": 0.9879045167707076
+    },
+    "10": {
+      "mean": 0.12525785770861642,
+      "std": 0.23988144014715124,
+      "corr_with_main": 0.9999999999999999
+    },
+    "20": {
+      "mean": 0.09281923671110177,
+      "std": 0.18221518095116343,
+      "corr_with_main": 0.9876001884624505
+    }
+  },
+  "shrinkage_name": "symmetric Beta-Binomial Bayesian shrinkage",
+  "not_empirical_bayes": true,
+  "hotel_id_format": "d1_europe:{sha1(address)[:12]}",
+  "zero_mention_raw_net_is_nan": true,
+  "measurement_verdict": "MEASUREMENT_STRONG"
+}
