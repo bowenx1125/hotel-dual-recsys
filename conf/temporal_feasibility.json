@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0",
+  "dataset": {
+    "primary": "515k_europe",
+    "cache_env": "FYP_DATA_CACHE_ROOT",
+    "relative_path": "d1_europe/Hotel_Reviews.csv",
+    "labeling": "structurally_weak_labeled_aspect_sentiment",
+    "not_gold_standard": true
+  },
+  "aspects": ["location", "cleanliness", "breakfast", "service", "noise", "room", "value"],
+  "placeholders": {
+    "negative": [
+      "no negative",
+      "nothing",
+      "nothing at all",
+      "n/a",
+      "na",
+      "none",
+      "nil",
+      "no",
+      "nothing to complain",
+      "nothing to complain about",
+      "everything was fine",
+      "everything was perfect",
+      "all good",
+      "no complaints",
+      "no complaint"
+    ],
+    "positive": [
+      "no positive",
+      "nothing",
+      "nothing at all",
+      "n/a",
+      "na",
+      "none",
+      "nil",
+      "no",
+      "nothing to say",
+      "everything was fine"
+    ]
+  },
+  "shrinkage": {
+    "method": "beta_binomial_empirical_bayes",
+    "prior_strength_main": 10,
+    "prior_strength_sensitivity": [5, 10, 20],
+    "note": "Main prior fixed a priori for feasibility; not claimed optimal."
+  },
+  "periods": {
+    "primary": "quarter",
+    "exploratory": "month"
+  },
+  "peers": {
+    "main": {"method": "same_city_knn", "k": 10},
+    "sensitivity": [
+      {"method": "same_city_knn", "k": 5},
+      {"method": "same_city_knn", "k": 10},
+      {"method": "same_city_knn", "k": 20},
+      {"method": "mutual_knn", "k": 10},
+      {"method": "radius_km", "radius_km": 1.5}
+    ],
+    "terminology": "geo_reference_set",
+    "forbidden_terms": ["validated competitors", "economic substitutes"]
+  },
+  "feasibility": {
+    "delta_thresholds": [0.10, 0.15, 0.20],
+    "main_delta_threshold": 0.15,
+    "min_mentions_for_event": 5,
+    "min_pre_periods": 2,
+    "min_post_periods": 2,
+    "gate": {
+      "green": {
+        "min_hotels_with_coverage": 500,
+        "min_valid_cells": 20000,
+        "min_candidate_events": 300,
+        "min_event_hotels": 200,
+        "min_event_cities": 4,
+        "min_event_aspects": 4,
+        "min_events_exposure_gt0": 100,
+        "min_events_exposure_eq0": 100,
+        "min_frac_events_with_2pre_2post": 0.70
+      }
+    }
+  },
+  "predictive": {
+    "run_if_verdict_in": ["GREEN", "AMBER"],
+    "target": "next_quarter_mean_reviewer_score",
+    "test_last_n_quarters": 2,
+    "val_n_quarters": 2
+  }
+}

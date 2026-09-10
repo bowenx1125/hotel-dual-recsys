@@ -1,0 +1,28 @@
+# Canonical machine-readable twin: conf/temporal_feasibility.json
+# Edit JSON; keep this file in sync for human reading.
+schema_version: "1.0"
+dataset:
+  primary: 515k_europe
+  cache_env: FYP_DATA_CACHE_ROOT
+  relative_path: d1_europe/Hotel_Reviews.csv
+  labeling: structurally_weak_labeled_aspect_sentiment
+  not_gold_standard: true
+shrinkage:
+  method: beta_binomial_empirical_bayes
+  prior_strength_main: 10
+  prior_strength_sensitivity: [5, 10, 20]
+periods:
+  primary: quarter
+  exploratory: month
+peers:
+  main: {method: same_city_knn, k: 10}
+  terminology: geo_reference_set
+feasibility:
+  delta_thresholds: [0.10, 0.15, 0.20]
+  main_delta_threshold: 0.15
+  min_mentions_for_event: 5
+  min_pre_periods: 2
+  min_post_periods: 2
+predictive:
+  run_if_verdict_in: [GREEN, AMBER]
+  target: next_quarter_mean_reviewer_score

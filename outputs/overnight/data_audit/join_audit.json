@@ -1,0 +1,11 @@
+{
+  "left": "review_aspects.jsonl.review_id",
+  "right": "booking_reviews.index",
+  "left_n": 3620,
+  "right_n": 26675,
+  "matched_unique_ids": 3620,
+  "unmatched_aspect_ids": 0,
+  "raw_ids_not_in_aspects": 23055,
+  "match_rate_of_aspects": 1.0,
+  "one_to_one_candidate": true
+}

@@ -1,0 +1,69 @@
+{
+  "raw_reviews": {
+    "path_env": "FYP_PRIVATE_DATA_ROOT/booking_reviews copy.csv",
+    "bytes": 49244888,
+    "sha256": "7dc95a900fad8f06025656dfa8943148bc7f0a9a402cd599776d504aa7d9826c",
+    "n_rows": 26675,
+    "fields": [
+      "index",
+      "review_title",
+      "reviewed_at",
+      "reviewed_by",
+      "images",
+      "crawled_at",
+      "url",
+      "hotel_name",
+      "hotel_url",
+      "avg_rating",
+      "nationality",
+      "rating",
+      "review_text",
+      "raw_review_text",
+      "tags",
+      "meta"
+    ],
+    "date_field": "reviewed_at",
+    "id_field": "index",
+    "hotel_field": "hotel_url",
+    "rating_field": "rating",
+    "text_fields": [
+      "review_text",
+      "raw_review_text"
+    ],
+    "n_unique_ids": 26675,
+    "duplicate_id_rows": 0,
+    "n_hotels": 822,
+    "date_missing": 289,
+    "date_missing_rate": 0.010834114339268978,
+    "date_min": "2018-07-31",
+    "date_max": "2021-07-19",
+    "id_unique": true
+  },
+  "aspects_jsonl": {
+    "path": "data/processed/review_aspects.jsonl",
+    "bytes": 901871,
+    "sha256": "62331a2c0b320e64b88e6e21a5771680c500d5380b2be8847ece5359ca6c03fc",
+    "n_rows": 3620,
+    "keys": [
+      "review_id",
+      "hotel_url",
+      "rating",
+      "is_negative",
+      "aspects"
+    ],
+    "n_unique_ids": 3620,
+    "duplicate_id_rows": 0,
+    "n_hotels": 24
+  },
+  "join": {
+    "left": "review_aspects.jsonl.review_id",
+    "right": "booking_reviews.index",
+    "left_n": 3620,
+    "right_n": 26675,
+    "matched_unique_ids": 3620,
+    "unmatched_aspect_ids": 0,
+    "raw_ids_not_in_aspects": 23055,
+    "match_rate_of_aspects": 1.0,
+    "one_to_one_candidate": true
+  }
+}
