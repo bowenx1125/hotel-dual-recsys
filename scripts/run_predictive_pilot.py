@@ -7,9 +7,6 @@ import json
 import sys
 from pathlib import Path
 
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
@@ -242,6 +239,10 @@ def main() -> int:
     atomic_write_json(out / "metrics.json", metrics)
     sample = test[["hotel_id", "city", "period", "y_period", "y_next", "mean_reviewer_score"]].head(200)
     sample.to_csv(out / "predictions_sample.csv", index=False)
+
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
 
     fig, ax = plt.subplots(figsize=(8, 4))
     names = list(results.keys())

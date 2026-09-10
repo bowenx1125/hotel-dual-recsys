@@ -85,7 +85,12 @@ def gate_aspects(text: str) -> list[str]:
 
 
 def smoothed_net(pos: int, neg: int, prior_strength: float) -> tuple[float, float]:
-    """Beta-Binomial EB toward 0.5; return (smoothed_net in [-1,1], reliability)."""
+    """Symmetric Beta-Binomial Bayesian shrinkage toward 0.5.
+
+    Prior is a fixed symmetric Beta(α, α) with α = prior_strength / 2.
+    This is **not** empirical Bayes unless α is estimated from training data.
+    Return (smoothed_net in [-1, 1], reliability = n / (n + prior_strength)).
+    """
     ps = float(prior_strength)
     tot = pos + neg
     p = (pos + 0.5 * ps) / (tot + ps) if (tot + ps) > 0 else 0.5

@@ -1,0 +1,14 @@
+{
+  "schema_version": "2.0",
+  "waves": {
+    "0": {
+      "legacy_reproduced_match": true,
+      "legacy_event_count_reproduced": 5774,
+      "legacy_event_count_artifact": 5774,
+      "n_hotel_id": 1493,
+      "n_hotel_name": 1491,
+      "ci_cause": "matplotlib module-level import in run_temporal_feasibility"
+    }
+  },
+  "facts_sha256": "0ab9ca14682fdcf9286c221bcda6c5e8ea6f57d0bae9688c7d34b4c232a45e54"
+}

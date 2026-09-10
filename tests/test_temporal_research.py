@@ -78,7 +78,7 @@ class TestPeerDeterminism(unittest.TestCase):
 
 class TestFeasibilityGateLogic(unittest.TestCase):
     def test_classify_green(self):
-        from scripts.run_temporal_feasibility import classify_gate
+        from src.temporal.gates import classify_gate
 
         green = {
             "min_hotels_with_coverage": 500,

@@ -40,3 +40,12 @@ launch_live.log
 data/interim/
 *.csv.bak
 .env
+
+# Autonomous research venv + private text packs (never commit review text)
+.venv-fyp/
+outputs/autonomous/private/
+outputs/autonomous/fixtures/
+outputs/autonomous/checkpoints/
+outputs/autonomous/**/human_pack_with_text.*
+*.safetensors
+Hotel_Reviews.csv

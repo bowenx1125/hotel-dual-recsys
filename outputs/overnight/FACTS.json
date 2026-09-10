@@ -11,7 +11,11 @@
     "eligible_hotels": 22,
     "compsets": 3,
     "heuristic_name": "Peer-Relative Evidence-Weighted (heuristic)",
-    "weights": {"gap": 0.45, "criticism": 0.35, "unreliable": 0.2},
+    "weights": {
+      "gap": 0.45,
+      "criticism": 0.35,
+      "unreliable": 0.2
+    },
     "location_direct_action": false
   },
   "phase1": {
@@ -30,13 +34,14 @@
   },
   "europe_515k": {
     "rows": 515738,
-    "hotels_by_name": 1492,
+    "hotels_by_name": 1491,
     "cities": 6,
     "date_min": "2015-08-04",
     "date_max": "2017-08-03",
     "sha256": "a4810c2757934f0a826a1b16a437eb67a38be45b1a22ad56772afce0b6c11af9",
     "bytes": 238154765,
-    "git_committed": false
+    "git_committed": false,
+    "hotels_by_id": 1493
   },
   "panel": {
     "labeling": "structurally_weak_labeled_aspect_sentiment",
@@ -81,5 +86,15 @@
     "peer_gain_over_own_features": "negligible",
     "not_causal": true,
     "manager_demo_still_descriptive": true
+  },
+  "audit_wave0": {
+    "legacy_permissive_event_count": 5774,
+    "legacy_reproduced": 5774,
+    "zero_mention_not_neutral": true,
+    "frac_2pre2post_valid_measurement": 0.9568756494631105,
+    "predictive_test_included_partial_2017Q3": true,
+    "peer_exposure_was_overall_score": true,
+    "bootstrap_was_not_hotel_clustered": true,
+    "validation_unused_for_ridge": true
   }
 }
