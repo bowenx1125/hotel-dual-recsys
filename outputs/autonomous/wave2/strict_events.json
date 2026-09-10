@@ -1,0 +1,22 @@
+{
+  "legacy_permissive_event_count": 5774,
+  "strict_crossfit_events": 456,
+  "strict_pooled_all_fold_events": 478,
+  "location_negative_control_events": 33,
+  "verdict": "AMBER_ASSOCIATIONAL",
+  "metrics": {
+    "n": 456,
+    "hotels": 315,
+    "cities": 6,
+    "aspects": 6,
+    "exp_gt0": 367,
+    "exp_eq0": 89,
+    "frac_valid": 0.9912280701754386
+  },
+  "terminology": "review-perceived aspect change",
+  "not": "managerial intervention",
+  "folds": {
+    "A": 247,
+    "B": 209
+  }
+}
