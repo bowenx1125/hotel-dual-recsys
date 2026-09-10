@@ -78,9 +78,9 @@
       "n_boot_overnight": 500
     },
     "q10_stale_373_city_manifest": {
-      "manifest_n_cities_parsed": 373,
+      "manifest_n_cities_parsed": 6,
       "panel_cities": 6,
-      "stale": true,
+      "stale": false,
       "correction": "373 came from last-token city parser; known-6-city detector is the research parser."
     },
     "q11_stale_handoff_sha": {
@@ -92,7 +92,7 @@
       ]
     },
     "q12_failures_omitted": {
-      "file_says_none_yet": true,
+      "file_says_none_yet": false,
       "actual_failures": [
         "CI research-smoke: ModuleNotFoundError matplotlib in test_classify_green",
         "City parser initially invented 373 cities (fixed, but manifest stale)",
@@ -104,7 +104,7 @@
       "only_phase0": false
     },
     "q14_facts_sha256_empty": {
-      "facts_sha256": ""
+      "facts_sha256": "be4f0e4c78e6b0060f228b19f9ba00d95a3287e4b420fa6b7a3fae9f95b9da88"
     },
     "q15_github_actions": {
       "cause": "tests.test_temporal_research.test_classify_green imported scripts.run_temporal_feasibility which imported matplotlib; CI only installed numpy/pandas/pyarrow.",

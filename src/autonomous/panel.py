@@ -35,6 +35,7 @@ from src.autonomous.common import (
     sha256_json,
     smoothed_net,
     update_state,
+    panel_v2_path,
     write_parquet,
 )
 from src.temporal.aspect_gate import gate_aspects, is_placeholder
@@ -541,7 +542,7 @@ def build_measurement_v2(root: Path, *, small_fixture: bool = False) -> dict:
                 "prior_strength": prior,
             })
     panel = pd.DataFrame(rows)
-    write_parquet(panel, root / "data" / "processed" / "hotel_aspect_quarter_v2.parquet", "panel_v2", PANEL_REQUIRED)
+    write_parquet(panel, panel_v2_path(root), "panel_v2", PANEL_REQUIRED)
     sample = panel.sample(n=min(500, len(panel)), random_state=42)
     sample.to_parquet(odir / "panel_sample.parquet", index=False)
 
@@ -659,7 +660,7 @@ def _build_human_pack(cands: list[dict], rng: np.random.Generator) -> dict:
 
 def _write_fixture_csv(root: Path) -> Path:
     """Tiny synthetic reviews for CI. No 515K."""
-    path = out_dir(root) / "fixtures" / "tiny_reviews.csv"
+    path = out_dir(root) / "private" / "tiny_reviews.csv"
     path.parent.mkdir(parents=True, exist_ok=True)
     cities = [
         ("London United Kingdom", "London"),

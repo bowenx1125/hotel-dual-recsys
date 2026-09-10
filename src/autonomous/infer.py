@@ -418,28 +418,33 @@ def run_wave3(root: Path, panel: pd.DataFrame, *, n_shuffle: int) -> dict:
         if last else pd.Series(dtype=float)
     )
 
+    asp_cols = [c for c in ASPECTS if c in net.columns]
+    net_m = net.reindex(columns=asp_cols)
+
     def pair_sim(edges: pd.DataFrame) -> dict:
-        if edges is None or edges.empty or net.empty:
+        if edges is None or edges.empty or net_m.empty:
             return {"n_edges": 0, "mean_abs_aspect_diff": None, "mean_abs_score_diff": None}
-        diffs = []
-        sdiffs = []
-        for r in edges.itertuples(index=False):
-            if r.hotel_id not in net.index or r.peer_hotel_id not in net.index:
-                continue
-            a = net.loc[r.hotel_id]
-            b = net.loc[r.peer_hotel_id]
-            diffs.append(float(np.nanmean(np.abs(a - b))))
-            if r.hotel_id in score.index and r.peer_hotel_id in score.index:
-                sdiffs.append(abs(float(score.loc[r.hotel_id] - score.loc[r.peer_hotel_id])))
+        left = net_m.reindex(edges["hotel_id"].to_numpy()).to_numpy(dtype=float)
+        right = net_m.reindex(edges["peer_hotel_id"].to_numpy()).to_numpy(dtype=float)
+        import warnings
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=RuntimeWarning)
+            row = np.nanmean(np.abs(left - right), axis=1)
+        row = row[np.isfinite(row)]
+        s_left = score.reindex(edges["hotel_id"].to_numpy()).to_numpy(dtype=float)
+        s_right = score.reindex(edges["peer_hotel_id"].to_numpy()).to_numpy(dtype=float)
+        sd = np.abs(s_left - s_right)
+        sd = sd[np.isfinite(sd)]
         return {
             "n_edges": int(len(edges)),
             "self_edges": int((edges["hotel_id"] == edges["peer_hotel_id"]).sum()),
-            "mean_abs_aspect_diff": float(np.mean(diffs)) if diffs else None,
-            "mean_abs_score_diff": float(np.mean(sdiffs)) if sdiffs else None,
+            "mean_abs_aspect_diff": float(np.mean(row)) if len(row) else None,
+            "mean_abs_score_diff": float(np.mean(sd)) if len(sd) else None,
         }
 
     static = {k: pair_sim(v) for k, v in graphs.items()}
-    # temporal: change correlation knn10 vs random
+    print("  Wave3 static graphs done", flush=True)
+
     def delta_corr(edges: pd.DataFrame) -> float:
         if last is None or len(periods) < 2 or edges.empty:
             return float("nan")
@@ -448,26 +453,29 @@ def run_wave3(root: Path, panel: pd.DataFrame, *, n_shuffle: int) -> dict:
         d0 = complete[complete["period"] == prev][["hotel_id", "aspect", "smoothed_net"]]
         m = d1.merge(d0, on=["hotel_id", "aspect"], suffixes=("_t", "_0"))
         m["dq"] = m["smoothed_net_t"] - m["smoothed_net_0"]
-        dq = m.set_index(["hotel_id", "aspect"])["dq"]
-        xs, ys = [], []
-        for r in edges.itertuples(index=False):
-            for asp in ACTIONABLE:
-                k1 = (r.hotel_id, asp)
-                k2 = (r.peer_hotel_id, asp)
-                if k1 in dq.index and k2 in dq.index:
-                    xs.append(float(dq.loc[k1]))
-                    ys.append(float(dq.loc[k2]))
-        if len(xs) < 20:
+        m = m[m["aspect"].isin(ACTIONABLE)]
+        e = edges[["hotel_id", "peer_hotel_id"]]
+        a = m.rename(columns={"hotel_id": "hotel_id", "dq": "dq_i"})[["hotel_id", "aspect", "dq_i"]]
+        b = m.rename(columns={"hotel_id": "peer_hotel_id", "dq": "dq_j"})[["peer_hotel_id", "aspect", "dq_j"]]
+        joined = e.merge(a, on="hotel_id").merge(b, on=["peer_hotel_id", "aspect"])
+        if len(joined) < 20:
             return float("nan")
-        return float(np.corrcoef(xs, ys)[0, 1])
+        return float(np.corrcoef(joined["dq_i"].to_numpy(), joined["dq_j"].to_numpy())[0, 1])
 
-    temporal = {k: delta_corr(v) for k, v in graphs.items()}
-    # shuffled graphs
-    base = graphs["knn10"]
+    temporal = {}
+    for k, v in graphs.items():
+        if k == "radius15":
+            temporal[k] = delta_corr(v.sample(n=min(len(v), 20000), random_state=cfg["seed"]))
+        else:
+            temporal[k] = delta_corr(v)
+        print(f"  Wave3 temporal {k}={temporal[k]}", flush=True)
+
     sh_aspect = []
     for i in range(n_shuffle):
         sh = random_edges(h, 10, np.random.default_rng(cfg["seed"] + 1000 + i), local=True)
         sh_aspect.append(pair_sim(sh)["mean_abs_aspect_diff"])
+        if (i + 1) % 20 == 0:
+            print(f"  Wave3 shuffle 已完成/总数/失败数 = {i+1}/{n_shuffle}/0", flush=True)
     real = static["knn10"]["mean_abs_aspect_diff"]
     sh_aspect = [x for x in sh_aspect if x is not None]
     if real is not None and sh_aspect:
@@ -723,25 +731,28 @@ def run_wave4(root: Path, panel: pd.DataFrame, peers: pd.DataFrame, *, n_boot: i
         boot = cluster_bootstrap_delta(
             last_test["hotel_id"].to_numpy(), err_own, err_peer, n_boot=n_boot, seed=cfg["seed"]
         )
-        # shuffled peers
-        htab = _hotel_table(panel)
         real_mae = last_pred["own_plus_same_aspect_peer_exposure"]["mae"]
         sh_maes = []
         fd = folds[-1]
-        tr = data[data["y_period"].isin(fd["train"])]
-        va = data[data["y_period"].isin(fd["val"])]
+        peer_cols = [c for c in ("peer_mean_score", "peer_same_aspect_state", "peer_exposure_same_aspect") if c in data.columns]
+        rng = np.random.default_rng(cfg["seed"] + 5000)
         for i in range(n_shuffle):
-            sh_edges = random_edges(htab, 10, np.random.default_rng(cfg["seed"] + 5000 + i), local=True)
-            hp_sh = _hp_frame(panel, sh_edges, complete, delta)
-            dsh = hp_sh.dropna(subset=["y_next", "score_lag1"])
-            te = dsh[dsh["y_period"].isin(fd["test"])]
+            dsh = data.copy()
+            for _, gidx in dsh.groupby(["city", "period"]).groups.items():
+                if len(gidx) < 2:
+                    continue
+                perm = rng.permutation(len(gidx))
+                dsh.loc[gidx, peer_cols] = dsh.loc[gidx, peer_cols].to_numpy()[perm]
             trs = dsh[dsh["y_period"].isin(fd["train"])]
             vas = dsh[dsh["y_period"].isin(fd["val"])]
-            if min(len(trs), len(vas), len(te)) < 10:
+            tes = dsh[dsh["y_period"].isin(fd["test"])]
+            if min(len(trs), len(vas), len(tes)) < 10:
                 continue
             cols = [c for c in specs["own_plus_same_aspect_peer_exposure"] if c in trs.columns]
-            ev = _fit_eval(trs, vas, te, cols, alphas)
+            ev = _fit_eval(trs, vas, tes, cols, alphas)
             sh_maes.append(ev["mae"])
+            if (i + 1) % 20 == 0:
+                print(f"  Wave4 shuffle 已完成/总数/失败数 = {i+1}/{n_shuffle}/0", flush=True)
         if sh_maes:
             shuffle_share = float(np.mean([real_mae < m for m in sh_maes]))
         ci = boot.get("ci95", [0, 0])

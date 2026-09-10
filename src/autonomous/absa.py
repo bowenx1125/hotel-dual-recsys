@@ -48,6 +48,24 @@ def run_absa_audit(root: Path, *, verify_only: bool = False) -> dict:
         from transformers import AutoModelForSequenceClassification, AutoTokenizer
         import torch
     except Exception as e:
+        absa_py = Path(os.environ.get("FYP_ABSA_PYTHON") or "/Users/xubosmell/Desktop/FYP1/.venv-absa/bin/python")
+        script = root / "scripts" / "run_absa_agreement.py"
+        if absa_py.exists() and script.exists() and not os.environ.get("FYP_SMALL_FIXTURE"):
+            import subprocess
+            env = {
+                **os.environ,
+                "HF_HUB_OFFLINE": "1",
+                "TRANSFORMERS_OFFLINE": "1",
+                "FYP_PRIVATE_MODEL_ROOT": os.environ.get("FYP_PRIVATE_MODEL_ROOT", "/Users/xubosmell/Desktop/FYP1/models"),
+                "FYP_DATA_CACHE_ROOT": os.environ.get("FYP_DATA_CACHE_ROOT", "/Users/xubosmell/Desktop/FYP_DATA_CACHE"),
+            }
+            print(f"  ABSA falling back to {absa_py}", flush=True)
+            r = subprocess.run([str(absa_py), str(script)], cwd=str(root), env=env)
+            audit_p = odir / "absa_audit.json"
+            if r.returncode == 0 and audit_p.exists():
+                out = json.loads(audit_p.read_text(encoding="utf-8"))
+                merge_facts(root, "1b_absa", {k: v for k, v in out.items() if k != "error"})
+                return out
         out["status"] = "SKIPPED_TRANSFORMERS_UNAVAILABLE"
         out["error"] = type(e).__name__
         _write(odir, out)

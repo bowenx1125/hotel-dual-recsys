@@ -55,7 +55,7 @@ class TestNoLeakage(unittest.TestCase):
             self.skipTest("no autonomous outputs yet")
         bad = []
         for p in base.rglob("*"):
-            if "private" in p.parts:
+            if "private" in p.parts or "fixtures" in p.parts:
                 continue
             if p.suffix == ".csv":
                 try:

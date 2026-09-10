@@ -230,9 +230,36 @@ def write_parquet(df: pd.DataFrame, path: Path, name: str, required: list[str]) 
 
 
 def out_dir(root: Path) -> Path:
-    d = root / "outputs" / "autonomous"
+    rel = os.environ.get("FYP_AUTONOMOUS_OUT", "outputs/autonomous")
+    d = root / rel
     d.mkdir(parents=True, exist_ok=True)
     return d
+
+
+def panel_v2_path(root: Path) -> Path:
+    rel = os.environ.get("FYP_PANEL_V2", "data/processed/hotel_aspect_quarter_v2.parquet")
+    p = root / rel
+    p.parent.mkdir(parents=True, exist_ok=True)
+    return p
+
+
+def peers_v2_path(root: Path) -> Path:
+    rel = os.environ.get("FYP_PEERS_V2", "data/processed/geo_reference_sets_v2.parquet")
+    p = root / rel
+    p.parent.mkdir(parents=True, exist_ok=True)
+    return p
+
+
+def paper_dir(root: Path) -> Path:
+    rel = os.environ.get("FYP_PAPER_DIR", "paper/autonomous")
+    p = root / rel
+    p.mkdir(parents=True, exist_ok=True)
+    return p
+
+
+def finals_dir(root: Path) -> Path:
+    rel = os.environ.get("FYP_FINALS_DIR")
+    return (root / rel) if rel else root
 
 
 def update_state(root: Path, **kwargs: Any) -> dict:
