@@ -1,0 +1,59 @@
+# TEMPORAL FEASIBILITY REPORT
+
+## Purpose
+
+Assess whether review-perceived aspect changes and peer-exposure variation support further temporal research.
+**Not** hunting for significant p-values. **Not** causal identification.
+
+## Data
+
+- Quarterly weak-labeled panel
+- Geo reference sets (k=10, same city)
+
+## Change definition
+
+`delta_q = smoothed_net(t) - smoothed_net(t-1)` on consecutive quarters.
+Term: **review-perceived aspect change**.
+
+## Results summary
+
+```json
+{
+  "main_delta_threshold": 0.15,
+  "min_mentions_for_event": 5,
+  "hotels_total": 1493,
+  "hotels_with_enough_coverage": 1458,
+  "valid_cells": 80686,
+  "cities": 6,
+  "quarter_periods": 9,
+  "delta_rows": 78169,
+  "candidate_events_broad": 6020,
+  "candidate_events": 5774,
+  "event_hotels": 1288,
+  "event_cities": 6,
+  "event_aspects": 7,
+  "events_exposure_gt0": 4894,
+  "events_exposure_eq0": 880,
+  "frac_events_2pre_2post": 1.0,
+  "mean_peer_exposure": 0.1959834314744256,
+  "threshold_sensitivity_raw_deltas": {
+    "0.1": 13585,
+    "0.15": 9520,
+    "0.2": 6359
+  },
+  "terminology": {
+    "change": "review-perceived aspect change",
+    "not": "managerial intervention"
+  },
+  "verdict": "GREEN",
+  "verdict_reasons": [
+    "All pre-registered GREEN gates passed."
+  ]
+}
+```
+
+## Verdict
+
+**GREEN**
+
+See `GO_NO_GO.md`.
