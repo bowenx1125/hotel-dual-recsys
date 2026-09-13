@@ -1,0 +1,6 @@
+# Core research and synthetic verification; offline ABSA uses .venv-absa.
+numpy
+pandas
+pyarrow
+scikit-learn
+scipy

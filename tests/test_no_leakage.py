@@ -20,7 +20,7 @@ SKIP_DIRS = {".git", ".venv-fyp", "node_modules", "outputs/autonomous/private", 
 def _iter_text_files():
     for dirpath, dirnames, filenames in os.walk(ROOT):
         rel = os.path.relpath(dirpath, ROOT)
-        dirnames[:] = [d for d in dirnames if d not in {".git", ".venv-fyp", "node_modules", "private", ".venv"}]
+        dirnames[:] = [d for d in dirnames if not d.startswith(".venv") and d not in {".git", "node_modules", "private"}]
         if "outputs/autonomous/private" in rel.replace("\\", "/"):
             continue
         for fn in filenames:

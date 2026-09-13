@@ -6,6 +6,12 @@
 
 ---
 
+## 0 · 2026-09-13 当前入口（优先于下面旧蓝图的状态描述）
+
+唯一工作目录为 `Desktop/FYP1`、唯一主线 `main`。先读 `PROJECT_STATUS.md`、当前 `HANDOFF.md` 和 `NEXT.md`。最新研究证据是 `outputs/autonomous/FACTS.json` 与 `FINAL_CLAIMS_LEDGER.md`：Track B / WORKING_PAPER_ONLY；Demo DESCRIPTIVE；游客排序和因果业务收益仍未完成。下面研究蓝图中的目标、因果示例与时间表不是已实现的结果或已核实的投稿日期。
+
+当前可用环境为 `.venv-fyp`（研究）、`.venv-demo`（UI）和 `.venv-absa`（离线模型），不要因为旧文档就重装 Anaconda。数据缓存已整合到 `data/cache/`；原来的 `FYP1-autonomous`、`FYP1-temporal` 和 Desktop 缓存目录不再作为入口。研究脚本是 `run_research.py`，不是 `run.py`。研究变更的 Gate 仍适用，目录整理不等于推进新 Stage。
+
 ## 1 · 权威文档（按需读，不要一次全读）
 
 | 文件 | 什么时候读 |

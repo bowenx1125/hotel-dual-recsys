@@ -324,10 +324,10 @@ Strongest null/refuted: {strongest_null}
         fdir / "FINAL_RESEARCH_HANDOFF.md",
         f"""# FINAL RESEARCH HANDOFF
 
-工作树：`/Users/xubosmell/Desktop/FYP1-autonomous`
-分支：`research/autonomous-paper-20260911`
+工作树：`{root.resolve()}`
+项目主线：`main`（当前 checkout 请用 `git branch --show-current` 核实）
 研究基线 SHA：`2586827f40a9028177061fdf16daf170fb35f9d6`
-历史 Demo SHA `0f5ebd5`：仅截图，未合并、未 cherry-pick。
+历史 Demo SHA `0f5ebd5`：仅历史截图；当前整合记录见 `docs/CONSOLIDATION_2026-09-13.md`。
 
 ## 结论（给徐）
 
@@ -359,7 +359,7 @@ def capture_demo_screenshots(root: Path, *, skip: bool) -> dict:
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
-        demo_py = Path(os.environ.get("FYP_DEMO_PYTHON") or "/Users/xubosmell/Desktop/FYP1/.venv-demo/bin/python")
+        demo_py = Path(os.environ.get("FYP_DEMO_PYTHON") or str(root / ".venv-demo" / "bin" / "python"))
         script = root / "scripts" / "capture_autonomous_screenshots.py"
         if demo_py.exists() and script.exists():
             import subprocess

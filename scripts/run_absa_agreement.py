@@ -105,7 +105,7 @@ def sample_pairs(csv_path: Path, cfg: dict, target: int = 2800) -> list[dict]:
 def main() -> int:
     cfg = load_temporal_config(ROOT)
     csv_path = resolve_europe_csv(cfg)
-    model_dir = Path(os.environ.get("FYP_PRIVATE_MODEL_ROOT", "/Users/xubosmell/Desktop/FYP1/models")) / "absa"
+    model_dir = Path(os.environ.get("FYP_PRIVATE_MODEL_ROOT", str(ROOT / "models"))) / "absa"
     out_dir = ROOT / "outputs" / "autonomous" / "wave1"
     private = ROOT / "outputs" / "autonomous" / "private"
     out_dir.mkdir(parents=True, exist_ok=True)

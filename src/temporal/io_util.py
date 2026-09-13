@@ -38,12 +38,8 @@ def resolve_europe_csv(cfg: dict, cache_root: str | None = None) -> Path:
     cache = Path(
         cache_root
         or os.environ.get("FYP_DATA_CACHE_ROOT")
-        or ""
+        or (Path(__file__).resolve().parents[2] / "data" / "cache")
     )
-    if not str(cache):
-        raise FileNotFoundError(
-            "Set FYP_DATA_CACHE_ROOT or pass --cache-root; expected 515K Europe CSV."
-        )
     rel = cfg["dataset"]["relative_path"]
     path = cache / rel
     if not path.exists():

@@ -1,7 +1,7 @@
 name: research-smoke
 on:
   push:
-    branches: ["research/**", "demo/**"]
+    branches: ["main"]
   pull_request:
 jobs:
   unit:
@@ -14,10 +14,10 @@ jobs:
       - name: Install minimal deps
         run: |
           python -m pip install --upgrade pip
-          pip install numpy pandas pyarrow scikit-learn scipy
+          pip install -r requirements-research.txt
       - name: Run synthetic/unit tests (no 515K download)
         run: |
-          python -m unittest tests.test_demo_actionability tests.test_temporal_research tests.test_autonomous_unit tests.test_no_leakage -v
+          python -m unittest discover -s tests -v
       - name: Small-fixture research pipeline
         run: |
           python run_research.py --small-fixture --verify-only
