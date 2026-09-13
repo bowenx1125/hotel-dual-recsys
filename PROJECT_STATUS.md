@@ -45,3 +45,8 @@
 - `docs/HUMAN_ANNOTATION_PROTOCOL.md`：人工核对说明。
 
 旧计划、重复交接和根目录 FINAL 副本已清理。旧数据中仍被演示或历史对照实验读取的部分保留；这类文件不能仅按日期删除。清理记录与验证见 `docs/FILE_CLEANUP_2026-09-13.md`。
+
+
+## 7. 如何人工推进与分配给 agent
+
+操作步骤、目录用途与各阶段分工见 [目录与人工推进指南](docs/PROJECT_GUIDE.md)。当前 126 项人工试用样本已核对来自真实 CSV，但只覆盖 3 城市、7 酒店；它适合校准标注规则，正式验证还需重新分层抽样。代码优先由 Cursor CLI 实现，协调者独立审计；共同规则是 [AGENTS.md](AGENTS.md)，任务状态见 [任务表](docs/AGENT_TASKS.md)。

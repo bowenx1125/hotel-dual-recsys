@@ -1,6 +1,6 @@
 # FYP1 · 酒店经理决策研究
 
-**先看 [项目报告](PROJECT_STATUS.md)**：用浅显语言说明做了什么、还缺什么和下一步。
+**先看 [项目报告](PROJECT_STATUS.md)** 了解进展，再看 [目录与人工推进指南](docs/PROJECT_GUIDE.md) 学会操作。所有 agent 共同遵守 [AGENTS.md](AGENTS.md)。
 
 唯一目录为 `Desktop/FYP1`，GitHub 主线为 `main`。当前是经理端研究原型与工作论文草稿；游客端和真实业务效果验证尚未完成。
 
@@ -30,6 +30,8 @@
 | 进展与下一步 | [PROJECT_STATUS.md](PROJECT_STATUS.md) |
 | 当前论文草稿 | [paper/autonomous/](paper/autonomous/) |
 | 当前事实与声明范围 | [FACTS.json](outputs/autonomous/FACTS.json)、[CLAIMS_LEDGER.md](outputs/autonomous/CLAIMS_LEDGER.md) |
+| 人工推进与目录导览 | [docs/PROJECT_GUIDE.md](docs/PROJECT_GUIDE.md) |
+| Agent 分工与验收 | [AGENTS.md](AGENTS.md)、[任务表](docs/AGENT_TASKS.md) |
 | 人工核对规范 | [docs/HUMAN_ANNOTATION_PROTOCOL.md](docs/HUMAN_ANNOTATION_PROTOCOL.md) |
 | 代码、配置、测试 | `demo/`、`src/`、`scripts/`、`conf/`、`tests/` |
 | 清理与恢复记录 | [文件清理](docs/FILE_CLEANUP_2026-09-13.md)、[版本整合](docs/CONSOLIDATION_2026-09-13.md) |
