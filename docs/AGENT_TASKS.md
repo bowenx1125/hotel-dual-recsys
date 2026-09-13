@@ -28,7 +28,7 @@
 - 可写：AGENTS.md、CLAUDE.md、README.md、PROJECT_STATUS.md、docs/AGENT_TASKS.md、docs/PROJECT_GUIDE.md、outputs/decisions.md。
 - 目标：统一规则、解释目录与推进步骤，明确 Cursor 优先实现和独立审计；完成用户授权的 main 同步。
 - 验收：事实核对、文档链接有效、代码任务审计完成、GitHub 与本地一致且对应 CI 通过。
-- 状态：REVIEW（本地内容、链接与集成检查完成，等待本次 GitHub 同步及 CI）。
+- 状态：DONE（已同步 main，提交 90fba70 的 GitHub CI 全部通过）。
 
 
 ### FYP-CURSOR-001 执行与审计记录
@@ -43,3 +43,5 @@
 - 协调者逐文件审查并只导入两份授权代码，亲自运行专项测试及完整 74 项 unittest，均通过。未运行全量研究或模型推理。
 - 本机试导出得到 A=126、B=26；空白 label/notes、匿名 ID、两表重叠和文件哈希均核对通过；输入包与研究 FACTS 不变。输出在 gitignored 私有目录，未上传评论原文。
 - 实现来源为 Cursor CLI / Composer 2.5；审计与文档为 Codex。实际 CLI 流式日志、退回原因与本地验收日志保留在 Documents/FYP1-agent-work，不提交模型过程日志或评论。
+
+- GitHub 验收：[90fba70 research-smoke](https://github.com/bowenx1125/hotel-dual-recsys/actions/runs/34758568793) 成功，覆盖全部单元测试、隔离小样本研究与泄漏检查。临时 detached worktree 已移除，保留唯一 Desktop/FYP1 和远端 main。
