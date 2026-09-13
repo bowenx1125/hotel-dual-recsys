@@ -31,6 +31,9 @@ Desktop 的 files 2、files.zip 和 files 中的三个 FYP Markdown 经比对均
 - 受版本控制的研究结果、数据表、论文结果及 FINAL_FACTS.json 在验证前后哈希完全一致；现有 smoke test 会重建 Demo 快照，验证后已恢复原始快照。
 - 16 个迁移的私人标注、checkpoint、中间面板和缓存文件均逐个与备份哈希一致。
 - 本地已删除两个重复工作区、files 2、files.zip、files 中三份重复 FYP 文档和 Source.zip；files 中两份无关 PDF 保留。Desktop 只剩一个 FYP 项目目录 FYP1。
-- GitHub 主线发布与旧分支清理待最后同步确认。
+- GitHub 默认分支已切到 main，三个旧远端分支和三个旧本地分支均已删除。删除前再次比对远端 SHA，并用显式 lease 防止误删并发更新；所有原分支提交都是 main 的祖先。
+- 旧 PR #1 随旧分支删除自动 CLOSED；其全部提交已经整合进 main，不代表另做了一次 GitHub PR merge。
+- GitHub Actions 对整合提交 6427ebb 的 [research-smoke](https://github.com/bowenx1125/hotel-dual-recsys/actions/runs/34756126246) 已通过，包括单元测试、隔离小样本流程和泄漏检查。
+- 最终结构核查：1 个本地 main、1 个远端 main、1 个工作区；Desktop 的 FYP* 入口只有 FYP1；137 个既有研究/数据/论文产物的哈希未改变。
 
 研究事实文件不重算，不把小样本验证当成全量研究验收。完整运行日志保存在上述恢复备份目录。
