@@ -111,8 +111,8 @@ HF_HUB_OFFLINE=1 .venv-fyp/bin/python run_research.py \
 
 任务登记格式：ID / 目标 / 起始提交 / 负责人 / 可写文件 / 禁止项 / 依赖 / 验收命令 / 状态。状态由协调者推进 PLANNED → IN_PROGRESS → REVIEW → DONE，失败退回同一任务修复。
 
-- NIGHT-005：共享算法、完整 Demo、描述性评价，已完成本地验收，GitHub CI 34773228100 已通过。
-- NIGHT-006：资产、复现、防覆盖、交接精简，正在收尾。
+- NIGHT-005：DONE。共享算法、完整 Demo、描述性评价，经Codex审计验收；功能CI34773228100与精简CI34773710930均通过。
+- NIGHT-006：DONE。资产、真实全量复现、防覆盖、交接精简已验收；仅最终验收记录的文档提交随后同步。
 - 以前 001–004 的实现/审计记录保留于 Git 历史，不再要求新同事通读。
 
 本次将旧 PROJECT_STATUS、PROJECT_GUIDE、RESEARCH_PLAN、任务长日志与整理说明合并到本文件。保留必要模型协议、科研 FACTS/声明/负结果和仍被读取的历史资产；清理后的精确文件差异可从 Git 提交查看。今后只在本文件维护进展和任务，不再创建重复“最新报告”。
@@ -127,4 +127,6 @@ HF_HUB_OFFLINE=1 .venv-fyp/bin/python run_research.py \
 
 新面板和附近酒店parquet与已保存文件逐值、类型完全一致；Wave2/3/4/5/7/9及最终结论逐字段一致。456严格事件、预测误差及跨零区间均复现；新Wave6改为共享算法和1487家覆盖。结论仍为WORKING_PAPER_ONLY。汇总证据见[reproduction_acceptance.json](outputs/demo/reproduction_acceptance.json)。完整本地运行保留于`outputs/runs/overnight-validation-20260914/`，包含私有中间材料，不提交；此目录是已完成结果副本，不用于原路径续跑。
 
-该全量运行后的代码变化仅增加temporal配置的resume指纹保护和清理无调用旧文件；未重跑相同全量模型与统计。最终main仍需完成末次GitHub CI与克隆轻量验收，结果在下面补记。
+该全量运行后的代码变化仅增加temporal配置的resume指纹保护和清理无调用旧文件；未重跑相同全量模型与统计。精简代码提交6e2c1be的GitHub CI已通过；该提交在独立GitHub克隆和新环境中再跑238项测试、Wave0–10小样本与中英文AppTest，全部通过。其后只更新验收记录，不改变代码或科研结果。
+
+最终验收：[6e2c1be research-smoke](https://github.com/bowenx1125/hotel-dual-recsys/actions/runs/34773710930)成功。唯一远端分支main，Desktop唯一主目录FYP1；本任务临时worktree已清除，实施归档与验收日志在拥有者本机Documents/FYP1-agent-work/overnight-20260914。
