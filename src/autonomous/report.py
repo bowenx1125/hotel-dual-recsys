@@ -357,14 +357,14 @@ def capture_demo_screenshots(root: Path, *, skip: bool) -> dict:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page(viewport={"width": 1400, "height": 900})
             page.goto(url, wait_until="networkidle", timeout=120000)
-            page.get_by_text("DESCRIPTIVE EVIDENCE").first.wait_for(timeout=120000)
-            page.get_by_text("Peer set size").first.wait_for(timeout=60000)
+            page.get_by_text("描述性证据").first.wait_for(timeout=120000)
+            page.get_by_text("参考集规模").first.wait_for(timeout=60000)
             page.wait_for_timeout(2000)
             page.screenshot(path=str(odir / "manager_live.png"), full_page=True)
             # measurement / research tabs
             for label, fname in [
-                ("Temporal Research Feasibility Lab", "measurement_live.png"),
-                ("Research Evidence", "research_evidence_live.png"),
+                ("历史时序分析", "measurement_live.png"),
+                ("当前研究证据", "research_evidence_live.png"),
             ]:
                 try:
                     page.get_by_role("tab", name=label).click()
@@ -380,9 +380,9 @@ def capture_demo_screenshots(root: Path, *, skip: bool) -> dict:
             "git_sha": sha,
             "captured_at": datetime.now().isoformat(timespec="seconds"),
             "pages": {
-                "manager_live.png": "Manager Diagnostic Demo",
-                "measurement_live.png": "Temporal / measurement lab",
-                "research_evidence_live.png": "Research Evidence",
+                "manager_live.png": "酒店经理诊断",
+                "measurement_live.png": "历史时序分析",
+                "research_evidence_live.png": "当前研究证据",
             },
             "facts_sha256": _facts(root).get("facts_sha256"),
             "evidence_level": "DESCRIPTIVE",
