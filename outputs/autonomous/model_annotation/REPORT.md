@@ -37,6 +37,6 @@ Cursor CLI 指定 `cursor-grok-4.6-medium` 初标、`claude-sonnet-5-medium` 盲
 - 本目录 `final_20260913.json`：最终聚合统计；`paired_20260913.json`：两模型配对与分层统计；`execution_20260913.json`：来源、调用及代码哈希记录。
 - 本机逐条标签：`outputs/autonomous/private/model_annotation_rounds/round_20260913/final_labels.csv`；`label` 列是结果，未决项为空且 `status=unresolved`。原 126 项人工试用表仍为空，未覆盖。
 - 本机同目录 `codex_audit.json` 保存 54 项真实裁决，`final_labels.json` 区分接受来源，`batches/` 保存两模型答案和调用原始记录。私有目录不会上传 GitHub。
-- 102 项 unittest 通过；没有重跑全量研究、训练或改写历史 FACTS/研究门槛。模型参考标签不是人工 gold，未验证因果、预订增长或 ROI。
+- 102 项 unittest 通过，[b7afe3c 的 GitHub CI](https://github.com/bowenx1125/hotel-dual-recsys/actions/runs/34764121571) 同时通过隔离小样本研究与泄漏检查；没有重跑全量研究、训练或改写历史 FACTS/研究门槛。模型参考标签不是人工 gold，未验证因果、预订增长或 ROI。
 
 完整方案见 [科研方案](../../../docs/RESEARCH_PLAN.md)，规则见 [模型标注协议](../../../docs/MODEL_ANNOTATION_PROTOCOL.md)。
