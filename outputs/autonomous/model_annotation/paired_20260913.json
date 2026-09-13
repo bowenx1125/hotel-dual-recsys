@@ -1,0 +1,759 @@
+{
+  "schema": "model_annotation_report_v1",
+  "no_human_gold": true,
+  "no_population_accuracy": true,
+  "cities_count": 6,
+  "n_items": 210,
+  "raw_agreement_rate": 0.9238095238095239,
+  "provisional_agreement_rate": 0.8095238095238095,
+  "cohen_kappa": 0.8903823567793293,
+  "requested_models": {
+    "grok": "cursor-grok-4.6-medium",
+    "reviewer": "claude-sonnet-5-medium"
+  },
+  "label_distribution": {
+    "grok": {
+      "not_about_aspect": 52,
+      "negative": 68,
+      "positive": 78,
+      "neutral": 12
+    },
+    "reviewer": {
+      "not_about_aspect": 47,
+      "negative": 72,
+      "positive": 76,
+      "neutral": 15
+    }
+  },
+  "per_aspect": {
+    "noise": {
+      "n": 30,
+      "raw_agree": 29,
+      "provisional_agree": 28
+    },
+    "cleanliness": {
+      "n": 30,
+      "raw_agree": 27,
+      "provisional_agree": 26
+    },
+    "room": {
+      "n": 30,
+      "raw_agree": 26,
+      "provisional_agree": 22
+    },
+    "location": {
+      "n": 30,
+      "raw_agree": 29,
+      "provisional_agree": 24
+    },
+    "value": {
+      "n": 30,
+      "raw_agree": 27,
+      "provisional_agree": 24
+    },
+    "service": {
+      "n": 30,
+      "raw_agree": 28,
+      "provisional_agree": 24
+    },
+    "breakfast": {
+      "n": 30,
+      "raw_agree": 28,
+      "provisional_agree": 22
+    }
+  },
+  "per_city": {
+    "Vienna": {
+      "n": 35,
+      "raw_agree": 33,
+      "provisional_agree": 30
+    },
+    "Paris": {
+      "n": 35,
+      "raw_agree": 34,
+      "provisional_agree": 30
+    },
+    "London": {
+      "n": 35,
+      "raw_agree": 33,
+      "provisional_agree": 30
+    },
+    "Milan": {
+      "n": 35,
+      "raw_agree": 30,
+      "provisional_agree": 26
+    },
+    "Barcelona": {
+      "n": 35,
+      "raw_agree": 34,
+      "provisional_agree": 27
+    },
+    "Amsterdam": {
+      "n": 35,
+      "raw_agree": 30,
+      "provisional_agree": 27
+    }
+  },
+  "per_gate_hit": {
+    "False": {
+      "n": 42,
+      "raw_agree": 40,
+      "provisional_agree": 38
+    },
+    "True": {
+      "n": 168,
+      "raw_agree": 154,
+      "provisional_agree": 132
+    }
+  },
+  "per_stratum": {
+    "miss|Vienna|noise": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Paris|cleanliness|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|London|room|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "miss|Vienna|location": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Milan|value|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|London|service|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Vienna|noise|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Vienna|noise|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Barcelona|room|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 1
+    },
+    "miss|Amsterdam|noise": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "miss|Vienna|service": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Paris|breakfast|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|London|cleanliness|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Paris|breakfast|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 1
+    },
+    "hit|London|room|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Milan|location|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Amsterdam|value|negative": {
+      "n": 2,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "miss|Amsterdam|service": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "miss|London|value": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Paris|location|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Barcelona|value|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Vienna|location|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Milan|cleanliness|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Vienna|service|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 1
+    },
+    "hit|Paris|service|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "miss|Milan|noise": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|London|breakfast|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "miss|Milan|room": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Vienna|location|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 1
+    },
+    "miss|Barcelona|cleanliness": {
+      "n": 1,
+      "raw_agree": 0,
+      "provisional_agree": 0
+    },
+    "hit|Barcelona|service|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "miss|Barcelona|breakfast": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "miss|Paris|value": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Vienna|breakfast|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Barcelona|value|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 1
+    },
+    "hit|Amsterdam|cleanliness|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Paris|room|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|London|cleanliness|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Milan|value|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 1
+    },
+    "hit|Amsterdam|room|positive": {
+      "n": 2,
+      "raw_agree": 1,
+      "provisional_agree": 0
+    },
+    "hit|Paris|location|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 1
+    },
+    "hit|Amsterdam|noise|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "miss|Barcelona|location": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Milan|noise|negative": {
+      "n": 2,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Paris|value|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Vienna|cleanliness|negative": {
+      "n": 2,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Barcelona|room|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "miss|London|location": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|London|breakfast|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Barcelona|location|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Amsterdam|value|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Paris|noise|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Milan|location|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 0
+    },
+    "miss|Paris|room": {
+      "n": 1,
+      "raw_agree": 0,
+      "provisional_agree": 0
+    },
+    "hit|London|location|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "miss|Milan|breakfast": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Milan|room|negative": {
+      "n": 2,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Milan|service|negative": {
+      "n": 2,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Amsterdam|service|positive": {
+      "n": 2,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Barcelona|breakfast|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 1
+    },
+    "miss|Milan|service": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "miss|Paris|service": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "miss|Amsterdam|room": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "miss|Milan|value": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "miss|London|room": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|London|value|positive": {
+      "n": 2,
+      "raw_agree": 0,
+      "provisional_agree": 0
+    },
+    "hit|Paris|noise|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Barcelona|noise|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Paris|cleanliness|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|London|noise|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Vienna|value|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Milan|service|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "miss|Vienna|value": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Barcelona|service|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Milan|room|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Paris|value|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 1
+    },
+    "hit|Vienna|room|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|London|value|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Amsterdam|service|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Vienna|room|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Vienna|value|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Milan|breakfast|positive": {
+      "n": 2,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Amsterdam|location|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 1
+    },
+    "hit|Milan|breakfast|negative": {
+      "n": 2,
+      "raw_agree": 1,
+      "provisional_agree": 0
+    },
+    "miss|Barcelona|room": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 0
+    },
+    "hit|Paris|service|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "miss|Paris|location": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Milan|cleanliness|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Barcelona|cleanliness|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Amsterdam|location|positive": {
+      "n": 2,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Barcelona|location|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|Amsterdam|room|negative": {
+      "n": 2,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Amsterdam|breakfast|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 1
+    },
+    "miss|Barcelona|service": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 0
+    },
+    "miss|Paris|breakfast": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Barcelona|cleanliness|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 1
+    },
+    "hit|London|location|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "hit|London|noise|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 1
+    },
+    "hit|Milan|noise|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "miss|Milan|cleanliness": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "miss|Amsterdam|location": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|London|service|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 0
+    },
+    "hit|Vienna|cleanliness|positive": {
+      "n": 2,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Amsterdam|noise|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "miss|London|service": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Amsterdam|cleanliness|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "miss|Vienna|room": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "miss|London|breakfast": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "miss|Barcelona|noise": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "miss|Amsterdam|value": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "miss|London|cleanliness": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "miss|London|noise": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Paris|room|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 1
+    },
+    "miss|Vienna|cleanliness": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Barcelona|breakfast|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 1
+    },
+    "hit|Barcelona|noise|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "miss|Vienna|breakfast": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "miss|Amsterdam|cleanliness": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Vienna|breakfast|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 1
+    },
+    "hit|Amsterdam|breakfast|negative": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "miss|Milan|location": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "hit|Vienna|service|positive": {
+      "n": 2,
+      "raw_agree": 2,
+      "provisional_agree": 2
+    },
+    "miss|Barcelona|value": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "miss|Amsterdam|breakfast": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "miss|Paris|noise": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    },
+    "miss|Paris|cleanliness": {
+      "n": 1,
+      "raw_agree": 1,
+      "provisional_agree": 1
+    }
+  },
+  "weak_section_agreement": {
+    "grok_vs_section": {
+      "n_gate_hit": 168,
+      "n_match": 136,
+      "rate": 0.8095238095238095
+    },
+    "reviewer_vs_section": {
+      "n_gate_hit": 168,
+      "n_match": 137,
+      "rate": 0.8154761904761905
+    },
+    "consensus_vs_section": {
+      "n_provisional_gate_hit": 132,
+      "n_match": 121,
+      "coverage": 0.7857142857142857,
+      "rate": 0.9166666666666666
+    }
+  }
+}

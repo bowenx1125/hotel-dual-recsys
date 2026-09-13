@@ -32,7 +32,7 @@
 | 当前事实与声明范围 | [FACTS.json](outputs/autonomous/FACTS.json)、[CLAIMS_LEDGER.md](outputs/autonomous/CLAIMS_LEDGER.md) |
 | 人工推进与目录导览 | [docs/PROJECT_GUIDE.md](docs/PROJECT_GUIDE.md) |
 | Agent 分工与验收 | [AGENTS.md](AGENTS.md)、[任务表](docs/AGENT_TASKS.md) |
-| 人工核对规范 | [docs/HUMAN_ANNOTATION_PROTOCOL.md](docs/HUMAN_ANNOTATION_PROTOCOL.md) |
+| 当前自动标注与科研路线 | [模型标注协议](docs/MODEL_ANNOTATION_PROTOCOL.md)、[完整科研方案](docs/RESEARCH_PLAN.md) |
 | 代码、配置、测试 | `demo/`、`src/`、`scripts/`、`conf/`、`tests/` |
 | 清理与恢复记录 | [文件清理](docs/FILE_CLEANUP_2026-09-13.md)、[版本整合](docs/CONSOLIDATION_2026-09-13.md) |
 
