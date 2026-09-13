@@ -64,16 +64,16 @@ def main() -> int:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page(viewport={"width": 1400, "height": 900})
             page.goto(url, wait_until="networkidle", timeout=120000)
-            page.get_by_text("描述性证据").first.wait_for(timeout=120000)
-            page.get_by_text("参考集规模").first.wait_for(timeout=60000)
+            page.get_by_text("酒店改善助手").first.wait_for(timeout=120000)
+            page.get_by_text("对比酒店数").first.wait_for(timeout=60000)
             page.wait_for_timeout(2500)
-            page.get_by_role("tab", name="酒店经理诊断").click()
+            page.get_by_role("tab", name="改善建议").click()
             page.wait_for_timeout(1200)
             page.screenshot(path=str(out / "manager_live.png"), full_page=True)
 
             for label, fname in [
-                ("历史时序分析", "measurement_live.png"),
-                ("当前研究证据", "research_evidence_live.png"),
+                ("历史变化", "measurement_live.png"),
+                ("研究进展", "research_evidence_live.png"),
             ]:
                 page.get_by_role("tab", name=label).click()
                 page.wait_for_timeout(2800)
@@ -85,9 +85,9 @@ def main() -> int:
             "git_sha": sha,
             "captured_at": datetime.now().isoformat(timespec="seconds"),
             "pages": {
-                "manager_live.png": "酒店经理诊断",
-                "measurement_live.png": "历史时序分析",
-                "research_evidence_live.png": "当前研究证据",
+                "manager_live.png": "改善建议",
+                "measurement_live.png": "历史变化",
+                "research_evidence_live.png": "研究进展",
             },
             "facts_sha256": facts.get("facts_sha256"),
             "evidence_level": "DESCRIPTIVE",

@@ -1,0 +1,8 @@
+# FYP-CURSOR-004 · native Streamlit widgets/charts inherit dark base tokens.
+[theme]
+base = "dark"
+primaryColor = "#5EEAD4"
+backgroundColor = "#0B1120"
+secondaryBackgroundColor = "#141E30"
+textColor = "#F1F5F9"
+font = "sans serif"

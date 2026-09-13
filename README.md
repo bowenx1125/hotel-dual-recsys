@@ -12,7 +12,7 @@
 .venv-demo/bin/python -m streamlit run demo/app.py --server.headless true --server.port 8501
 ```
 
-打开 http://localhost:8501 。新机器先建立 `.venv-demo`，安装 `requirements-demo.txt`。仓库已有演示快照，无需下载原始评论即可展示。
+打开 http://localhost:8501 。页面顶部可切换 **中文 / English**，默认深色界面；依次使用「改善建议」「历史变化」「研究进展」。新机器先建立 `.venv-demo`，安装 `requirements-demo.txt`。仓库已有演示快照，无需下载原始评论即可展示。
 
 ## 验证
 

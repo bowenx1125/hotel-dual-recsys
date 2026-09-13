@@ -91,6 +91,11 @@
 - 可写：demo/app.py、demo/zh_cn.py、demo/theme.py、demo/assets/dark.css、.streamlit/config.toml、新增 i18n 文件与对应 UI 测试（用户追加中英文切换，中文需浅显易懂）；本窗口 FYP-CURSOR-003 不再写这些 UI 文件。
 - 不可改：研究算法、数据、标注管线/结果、其他窗口文件；不得把对方未提交改动一并提交。共享文档由本窗口登记，Git 提交/推送串行协调。
 - 验收：AppTest 与浏览器；该窗口独立验收深色样式，本窗口不冒认其完成。
-- 状态：IN_PROGRESS。
+- 状态：REVIEW（实现、本地测试与浏览器验收通过，待 GitHub CI）。
 
 - FYP-CURSOR-004 补充范围：scripts/capture_autonomous_screenshots.py、scripts/capture_live_demo_screenshots.py、src/autonomous/report.py 仅页面标题/页签选择器，禁止改变科研报告生成逻辑。
+
+- 实现与审计：Cursor CLI / Composer 2.5 完成主题、双语目录、布局与语言控件同步；Codex 独立审查并修正重复提示、手机标题伸展、当前 Streamlit tab 选择器、图例位置与文案精度。未读取/修改私有评论或标注答案。
+- 主题依据：UI UX Pro Max 深色 dashboard 设计查询、Web Design Guidelines；深蓝黑背景/青绿重点色/中文系统字体。真实桌面与390px手机检查，两语言选项/标题/图表/表格/研究标注区可用；语言切换保留酒店/分组/滑块。原生平台工具栏仍可能英文。
+- 测试：122项 unittest通过；独立AppTest覆盖多次双语切换、3组酒店、滑块，数值/推荐与原后端匹配；语法与diff检查通过。增加语言目录完整性、占位符与选择同步测试。全量研究、业务效果和截图脚本批量生成未运行；截图调用仅审计选择器。
+- 集成以主目录c3a567d为准，仅复制UI拥有文件；保留标注窗口b7afe3c/c3a567d，FACTS、配置、scoring、evidence、demo快照哈希不变。旧CSS/翻译模块缓存导致加载错误，通过重启本Demo服务解决。

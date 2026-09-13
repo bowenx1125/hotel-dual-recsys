@@ -1,4 +1,4 @@
-"""Streamlit: 酒店经理决策演示 + 时序研究实验台。"""
+"""Streamlit: hotel manager decision demo + temporal research workbench."""
 from __future__ import annotations
 
 import json
@@ -12,13 +12,14 @@ if str(_ROOT) not in sys.path:
 from demo.config import ROOT, load_actionability_config, load_config
 from demo.data_adapter import eligible_hotels, load_snapshot
 from demo.evidence import decide_evidence_level
+from demo.i18n import DEFAULT_LANGUAGE, LANGUAGE_LABELS, SUPPORTED_LANGUAGES, get_locale, ui_text
 from demo.scoring import (
     all_policies,
     criticism_metrics,
     explain_action_vs_diagnostic,
     ranking_under_intensity,
 )
-from demo import zh_cn as zh
+from demo.theme import apply_theme, render_header, render_recommendation, render_section_header
 
 SNAPSHOT_PATH = ROOT / "outputs" / "night_demo" / "demo_snapshot.json"
 
@@ -26,11 +27,52 @@ OVERNIGHT_FEAS = ROOT / "outputs" / "overnight" / "feasibility"
 OVERNIGHT_TABLES = OVERNIGHT_FEAS / "tables"
 PRED_METRICS_PATH = ROOT / "outputs" / "overnight" / "predictive_pilot" / "metrics.json"
 
+MGR_CITY_CANONICAL = "mgr_city"
+MGR_CS_CANONICAL = "mgr_cs"
+
+
+def hydrate_locale_select_state(
+    session_state: dict,
+    canonical_key: str,
+    widget_key: str,
+    options: list,
+    default,
+):
+    """Validate canonical ID, then copy it into the locale-specific widget key before render."""
+    if not options:
+        return default
+    canonical = session_state.get(canonical_key)
+    if canonical not in options:
+        canonical = default
+        session_state[canonical_key] = canonical
+    session_state[widget_key] = canonical
+    return canonical
+
+
+def sync_canonical_from_locale_widget(
+    session_state: dict,
+    canonical_key: str,
+    widget_key: str,
+) -> None:
+    """Persist the locale widget choice into the language-neutral canonical key."""
+    session_state[canonical_key] = session_state[widget_key]
+
+
+def _locale_widget_key(base: str, lang: str) -> str:
+    return f"{base}_{lang}"
+
+
+def _make_locale_sync(st, canonical_key: str, widget_key: str):
+    def _sync() -> None:
+        sync_canonical_from_locale_widget(st.session_state, canonical_key, widget_key)
+
+    return _sync
+
 
 def _load():
     if not SNAPSHOT_PATH.exists():
         raise FileNotFoundError(
-            f"缺少 {SNAPSHOT_PATH}。请运行：python3 scripts/build_demo_snapshot.py"
+            f"Missing {SNAPSHOT_PATH}. Run: python3 scripts/build_demo_snapshot.py"
         )
     snap = load_snapshot(SNAPSHOT_PATH)
     cfg = load_config()
@@ -50,18 +92,18 @@ def _facts_waves(facts: dict | None) -> dict:
     return (facts or {}).get("waves") or {}
 
 
-def _legacy_event_count(waves: dict) -> str:
+def _legacy_event_count(loc, waves: dict) -> str:
     w0, w2 = waves.get("0") or {}, waves.get("2") or {}
     val = w2.get("legacy_permissive_event_count", w0.get("legacy_event_count_reproduced"))
-    return zh.fmt_na(val)
+    return loc.fmt_na(val)
 
 
-def _strict_event_count(waves: dict) -> str:
+def _strict_event_count(loc, waves: dict) -> str:
     w2 = waves.get("2") or {}
     val = w2.get("strict_crossfit_events")
     if val is None:
         val = (w2.get("metrics") or {}).get("n")
-    return zh.fmt_na(val)
+    return loc.fmt_na(val)
 
 
 def _download_button(st, label: str, path: Path, mime: str):
@@ -74,196 +116,292 @@ def _download_button(st, label: str, path: Path, mime: str):
         )
 
 
-def _render_verdict_event_chart(st, metrics: dict):
-    """Chinese bar chart: historical permissive event counts from feasibility_metrics.json."""
+def _render_verdict_event_chart(st, loc, metrics: dict):
     keys = [
-        ("candidate_events", "候选事件（宽松规则）"),
-        ("events_exposure_gt0", "暴露>0"),
-        ("events_exposure_eq0", "暴露=0"),
-        ("event_hotels", "涉及酒店"),
+        ("candidate_events", loc.UI["chart_verdict_candidate"]),
+        ("events_exposure_gt0", loc.UI["chart_verdict_with_ref"]),
+        ("events_exposure_eq0", loc.UI["chart_verdict_without_ref"]),
+        ("event_hotels", loc.UI["chart_verdict_hotels"]),
     ]
     rows = [
-        {"指标": label, "数量": metrics.get(key)}
+        {loc.UI["chart_verdict_metric_col"]: label, loc.UI["chart_verdict_count_col"]: metrics.get(key)}
         for key, label in keys
         if metrics.get(key) is not None
     ]
     if not rows:
-        st.info("暂无可绘制的候选事件汇总数据。")
+        st.info(loc.UI["chart_verdict_no_data"])
         return
     import pandas as pd
 
-    df = pd.DataFrame(rows).set_index("指标")
-    st.caption("基于 feasibility_metrics.json 的宽松规则候选事件概览（非当前严格认定）。")
+    df = pd.DataFrame(rows).set_index(loc.UI["chart_verdict_metric_col"])
+    st.caption(loc.UI["chart_verdict_caption"])
     st.bar_chart(df)
 
 
-def _render_peer_exposure_chart(st):
+def _render_peer_exposure_chart(st, loc):
     path = OVERNIGHT_TABLES / "candidate_events.csv"
     if not path.exists():
-        st.info("未找到 candidate_events.csv，无法绘制同行暴露分布。")
+        st.info(loc.UI["chart_peer_missing"])
         return
     import pandas as pd
 
     df = pd.read_csv(path, usecols=["peer_exposure"])
     series = df["peer_exposure"].dropna()
     if series.empty:
-        st.info("同行暴露列为空，无法绘制分布。")
+        st.info(loc.UI["chart_peer_empty"])
         return
     counts = series.value_counts(bins=30, sort=False)
     chart_df = pd.DataFrame(
-        {"频数": counts.values},
-        index=[zh.format_hist_bin(i) for i in counts.index],
+        {loc.UI["chart_freq_col"]: counts.values},
+        index=[loc.format_hist_bin(i) for i in counts.index],
     )
-    chart_df.index.name = "暴露区间"
-    st.caption("同行暴露分布（来自 candidate_events.csv）。")
+    chart_df.index.name = loc.UI["chart_peer_bin_col"]
+    st.caption(loc.UI["chart_peer_caption"])
     st.bar_chart(chart_df, sort=False)
 
 
-def _render_delta_q_chart(st):
+def _render_delta_q_chart(st, loc):
     path = OVERNIGHT_TABLES / "delta_q_sample.csv"
     if not path.exists():
-        st.info("未找到 delta_q_sample.csv，无法绘制 Δq 分布。")
+        st.info(loc.UI["chart_delta_missing"])
         return
     import pandas as pd
 
     df = pd.read_csv(path, usecols=["delta_q"])
     series = df["delta_q"].dropna()
     if series.empty:
-        st.info("Δq 列为空，无法绘制分布。")
+        st.info(loc.UI["chart_delta_empty"])
         return
     counts = series.value_counts(bins=30, sort=False)
     chart_df = pd.DataFrame(
-        {"频数": counts.values},
-        index=[zh.format_hist_bin(i) for i in counts.index],
+        {loc.UI["chart_freq_col"]: counts.values},
+        index=[loc.format_hist_bin(i) for i in counts.index],
     )
-    chart_df.index.name = "变化区间"
-    st.caption("评论感知维度变化（Δq）分布（来自 delta_q_sample.csv）。")
+    chart_df.index.name = loc.UI["chart_delta_bin_col"]
+    st.caption(loc.UI["chart_delta_caption"])
     st.bar_chart(chart_df, sort=False)
 
 
-def _render_mae_chart(st, models: dict):
+def _render_aspect_peer_chart(st, loc, hotel: dict, cfg: dict, albl) -> None:
+    """Grouped horizontal bars: hotel tendency vs comparison median per aspect."""
+    import pandas as pd
+
+    aspect_col = loc.UI["chart_aspect_col"]
+    series_own = loc.UI["chart_series_own"]
+    series_peer = loc.UI["chart_series_peer"]
+    x_title = loc.UI["chart_sentiment_axis"]
+    legend_title = loc.UI["chart_legend"]
+
+    aspect_order = [albl(a) for a in cfg["aspects"]]
+    rows: list[dict] = []
+    for a in cfg["aspects"]:
+        rec = hotel.get("aspects", {}).get(a, {})
+        net = rec.get("net")
+        peer = rec.get("peer_median_net")
+        label = albl(a)
+        if net is not None:
+            rows.append({aspect_col: label, "series": series_own, "value": float(net)})
+        if peer is not None:
+            rows.append({aspect_col: label, "series": series_peer, "value": float(peer)})
+
+    if not rows:
+        st.info(loc.UI["chart_no_data"])
+        return
+
+    try:
+        import altair as alt
+    except ImportError:
+        st.caption(loc.UI["chart_altair_fallback"])
+        st.dataframe(
+            pd.DataFrame(rows).pivot_table(
+                index=aspect_col, columns="series", values="value", aggfunc="first"
+            ).reindex(aspect_order),
+            use_container_width=True,
+        )
+        return
+
+    df = pd.DataFrame(rows)
+    chart = (
+        alt.Chart(df)
+        .mark_bar(height=14)
+        .encode(
+            y=alt.Y(f"{aspect_col}:N", sort=aspect_order, axis=alt.Axis(title=None)),
+            x=alt.X(
+                "value:Q",
+                scale=alt.Scale(domain=[-1, 1], nice=False),
+                title=x_title,
+            ),
+            color=alt.Color("series:N", scale=alt.Scale(domain=[series_own, series_peer], range=["#5EEAD4", "#8DA9D9"]), legend=alt.Legend(title=None, orient="top", columns=1)),
+            yOffset=alt.YOffset("series:N"),
+            tooltip=[
+                alt.Tooltip(f"{aspect_col}:N", title=aspect_col),
+                alt.Tooltip("series:N", title=legend_title),
+                alt.Tooltip("value:Q", title=x_title, format=".3f"),
+            ],
+        )
+        .properties(height=max(240, len(cfg["aspects"]) * 44))
+    )
+    st.altair_chart(chart, use_container_width=True)
+
+
+def _render_mae_chart(st, loc, models: dict):
     if not models:
-        st.info("暂无模型平均绝对误差数据可绘制。")
+        st.info(loc.UI["chart_mae_no_data"])
         return
     import pandas as pd
 
     rows = [
-        {"模型": zh.model_name(k), "MAE": v.get("mae")}
+        {loc.UI["col_model"]: loc.model_name(k), "MAE": v.get("mae")}
         for k, v in models.items()
         if v.get("mae") is not None
     ]
     if not rows:
-        st.info("模型平均绝对误差均为空，无法绘制对比图。")
+        st.info(loc.UI["chart_mae_empty"])
         return
-    mae_col = zh.mae_column_label()
-    df = pd.DataFrame(rows).set_index("模型").rename(columns={"MAE": mae_col})
-    st.caption("时间留出测试集上各基线模型的平均绝对误差对比。")
+    mae_col = loc.mae_column_label()
+    df = pd.DataFrame(rows).set_index(loc.UI["col_model"]).rename(columns={"MAE": mae_col})
+    st.caption(loc.UI["chart_mae_caption"])
     st.bar_chart(df[[mae_col]])
 
 
-def render_manager_tab(st, snap, cfg):
+def render_manager_tab(st, loc, snap, cfg):
     ev = decide_evidence_level(snap)
     labels = cfg.get("aspect_labels") or {}
     act = load_actionability_config()["aspects"]
     hotels = eligible_hotels(snap)
+    snap_hotel_count = len(snap.get("hotels") or [])
+    eligible_count = len(hotels)
 
     def albl(a: str) -> str:
-        return zh.aspect_label(a, labels.get(a, a))
+        return loc.aspect_label(a, labels.get(a, a))
 
-    st.subheader("酒店经理诊断")
-    st.caption("面向经理 · 描述性证据 · 无外部 API")
-    st.error(zh.evidence_banner(ev["level"]))
-    with st.expander("证据等级说明 / 不可宣称事项", expanded=False):
-        st.markdown(f"**等级：** {zh.evidence_level_label(ev['level'])}")
-        st.write(zh.evidence_why(ev["level"], ev["why"]))
-        for c in zh.CANNOT_CLAIM_ZH:
-            st.markdown(f"- {c}")
-        st.caption(
-            f"数据来源：`{snap['sources']['aspect_features']}` · "
-            f"`{snap['sources']['compsets']}` · `{snap['sources']['review_aspects_jsonl']}`"
-        )
+    st.caption(loc.UI["recommendation_evidence_note"])
+
+    lang = st.session_state.get("ui_language", DEFAULT_LANGUAGE)
+    city_widget_key = _locale_widget_key(MGR_CITY_CANONICAL, lang)
+    cs_widget_key = _locale_widget_key(MGR_CS_CANONICAL, lang)
 
     cities = sorted({h["city"] for h in hotels})
+    default_city = cities[0] if cities else None
+    hydrate_locale_select_state(
+        st.session_state,
+        MGR_CITY_CANONICAL,
+        city_widget_key,
+        cities,
+        default_city,
+    )
+
     c1, c2, c3 = st.columns(3)
     with c1:
-        city = st.selectbox(
-            "城市",
+        st.selectbox(
+            loc.UI["city"],
             cities,
-            index=0,
-            key="mgr_city",
-            format_func=zh.city_label,
+            key=city_widget_key,
+            format_func=loc.city_label,
+            on_change=_make_locale_sync(st, MGR_CITY_CANONICAL, city_widget_key),
         )
+    city = st.session_state[MGR_CITY_CANONICAL]
     hotels_c = [h for h in hotels if h["city"] == city]
+
+    cs_options = ["(all)"] + sorted({h["compset_id"] for h in hotels_c})
+    hydrate_locale_select_state(
+        st.session_state,
+        MGR_CS_CANONICAL,
+        cs_widget_key,
+        cs_options,
+        "(all)",
+    )
     with c2:
-        cs = st.selectbox(
-            "标注参考同行集",
-            ["(all)"] + sorted({h["compset_id"] for h in hotels_c}),
-            key="mgr_cs",
-            format_func=zh.compset_label,
+        st.selectbox(
+            loc.UI["peer_group"],
+            cs_options,
+            key=cs_widget_key,
+            format_func=loc.compset_label,
+            help=loc.UI["peer_group_help"],
+            on_change=_make_locale_sync(st, MGR_CS_CANONICAL, cs_widget_key),
         )
+    cs = st.session_state[MGR_CS_CANONICAL]
     hotels_f = hotels_c if cs == "(all)" else [h for h in hotels_c if h["compset_id"] == cs]
     with c3:
         names = {h["hotel_name"]: h["hotel_id"] for h in hotels_f}
-        name = st.selectbox("酒店", list(names.keys()), key="mgr_hotel")
+        name = st.selectbox(loc.UI["hotel"], list(names.keys()), key="mgr_hotel")
     hotel = next(h for h in hotels_f if h["hotel_id"] == names[name])
 
+    st.markdown(f"### {hotel['hotel_name']}")
+    st.caption(
+        ui_text(loc, "snapshot_caption", total=snap_hotel_count, eligible=eligible_count)
+    )
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric("参考集规模", hotel["compset_size"])
-    m2.metric("标注评论数", hotel["n_reviews"])
-    m3.metric("低分评论（<7）", hotel["n_negative"])
-    m4.metric("价格档位", zh.price_tier_label(hotel.get("price_tier")))
+    m1.metric(loc.UI["metric_peer_count"], hotel["compset_size"])
+    m2.metric(loc.UI["metric_reviews"], hotel["n_reviews"])
+    m3.metric(loc.UI["metric_low_reviews"], hotel["n_negative"])
+    m4.metric(loc.UI["metric_price_range"], loc.price_tier_label(hotel.get("price_tier")))
 
-    st.markdown("### 本店与同行对比（诊断层）")
+    expl = explain_action_vs_diagnostic(hotel, cfg)
+    render_section_header(
+        st, loc.UI["section_recommendation"], css_class="fyp-section-header--emphasis"
+    )
+    rec_aspect = (
+        albl(expl["actionable_recommendation"])
+        if expl["actionable_recommendation"]
+        else loc.UI["recommendation_none"]
+    )
+    loc_expl = loc.build_recommendation_explanation(expl, hotel, albl)
+    if loc_expl:
+        rec_body = loc_expl
+    elif expl["diagnostic_aspect"]:
+        rec_body = loc.UI["recommendation_fallback_actionable"]
+    else:
+        rec_body = loc.UI["recommendation_fallback_none"]
+    render_recommendation(
+        st,
+        rec_aspect,
+        rec_body,
+        reliability_text=loc.UI["recommendation_evidence_note"],
+        aria_label=loc.UI["recommendation_aria"],
+    )
+
+    render_section_header(st, loc.UI["section_compare"])
     rows = []
     for a in cfg["aspects"]:
         rec = hotel["aspects"][a]
         meta = act.get(a, {})
         rows.append({
-            "维度": albl(a),
-            "可操作性": zh.actionability_label(meta.get("actionability_level")),
-            "可直接行动": zh.fmt_bool(meta.get("eligible_for_direct_action")),
-            "本店净情感": rec.get("net"),
-            "同行中位数": rec.get("peer_median_net"),
-            "差距(同行−本店)": rec.get("gap"),
-            "百分位": rec.get("percentile"),
-            "提及次数": rec.get("mention_count"),
-            "负面提及": rec.get("neg_mentions"),
-            "负面率": rec.get("neg_rate"),
-            "每评论负面": criticism_metrics(hotel, a)["neg_per_review"],
-            "可靠性": rec.get("reliability"),
+            loc.UI["col_aspect"]: albl(a),
+            loc.UI["col_actionability"]: loc.actionability_label(meta.get("actionability_level")),
+            loc.UI["col_direct_action"]: loc.fmt_bool(meta.get("eligible_for_direct_action")),
+            loc.UI["col_own_sentiment"]: rec.get("net"),
+            loc.UI["col_peer_median"]: rec.get("peer_median_net"),
+            loc.UI["col_gap"]: rec.get("gap"),
+            loc.UI["col_percentile"]: rec.get("percentile"),
+            loc.UI["col_mentions"]: rec.get("mention_count"),
+            loc.UI["col_neg_mentions"]: rec.get("neg_mentions"),
+            loc.UI["col_neg_rate"]: rec.get("neg_rate"),
+            loc.UI["col_neg_per_review"]: criticism_metrics(hotel, a)["neg_per_review"],
+            loc.UI["col_reliability"]: rec.get("reliability"),
         })
-    st.dataframe(rows, use_container_width=True, hide_index=True)
+    _render_aspect_peer_chart(st, loc, hotel, cfg, albl)
+    st.caption(loc.UI["chart_caption"])
+    with st.expander(loc.UI["expander_detail_table"], expanded=False):
+        st.dataframe(rows, use_container_width=True, hide_index=True)
 
-    expl = explain_action_vs_diagnostic(hotel, cfg)
-    st.markdown("### 诊断劣势与可行动建议")
-    d1, d2 = st.columns(2)
-    d1.metric(
-        "最大诊断劣势",
-        albl(expl["diagnostic_aspect"]) if expl["diagnostic_aspect"] else "暂无",
-    )
-    d2.metric(
-        "可行动建议（默认启发式）",
-        albl(expl["actionable_recommendation"]) if expl["actionable_recommendation"] else "暂无",
-    )
-    zh_expl = zh.build_diagnostic_explanation(expl, albl)
-    if zh_expl:
-        st.warning(zh_expl)
+    render_section_header(st, loc.UI["section_policies"])
+    st.caption(loc.UI["policies_caption"])
+    with st.expander(loc.UI["expander_scenario_try"], expanded=False):
+        st.caption(loc.UI["expander_scenario_try_caption"])
+        intensity = st.slider(
+            loc.UI["slider_label"],
+            min_value=0.0,
+            max_value=1.0,
+            value=float(cfg["scenario"]["default_intensity"]),
+            step=0.05,
+            help=loc.UI["slider_help"],
+            key="mgr_intensity",
+        )
+    if "mgr_intensity" not in st.session_state:
+        intensity = float(cfg["scenario"]["default_intensity"])
     else:
-        st.info("最大诊断劣势维度可直接行动；诊断层与行动层在可操作性上一致。")
-
-    st.markdown("### 行动策略对比")
-    st.caption(
-        "行动层排除不可变维度（如位置）。权重为设计选择，非学习所得回报。"
-    )
-    intensity = st.slider(
-        "竞争拥挤假设 — 假定同行改善强度（情景/示意）",
-        min_value=0.0,
-        max_value=1.0,
-        value=float(cfg["scenario"]["default_intensity"]),
-        step=0.05,
-        help="假设/示意值，非拟合的竞争弹性。",
-        key="mgr_intensity",
-    )
+        intensity = float(st.session_state["mgr_intensity"])
     policies = all_policies(hotel, cfg, assumed_intensity=intensity)
     order = ["fix_weakest", "largest_peer_gap", "most_criticized", "peer_relative"]
     cols = st.columns(4)
@@ -271,105 +409,137 @@ def render_manager_tab(st, snap, cfg):
         p = policies[key]
         chosen = p["chosen_aspect"]
         col.metric(
-            zh.policy_label(key, p.get("label")),
-            albl(chosen) if chosen else "暂无",
+            loc.policy_label(key, p.get("label")),
+            albl(chosen) if chosen else loc.UI["recommendation_none"],
         )
-        col.caption(zh.policy_rule(key, p.get("rule"), cfg))
+        col.caption(loc.policy_summary(key))
+
+    with st.expander(loc.UI["expander_calculation"], expanded=False):
+        for key in order:
+            st.markdown(f"**{loc.policy_label(key)}**")
+            st.caption(loc.policy_rule(key, policies[key].get("rule"), cfg))
+        st.caption(loc.formula_caption(cfg))
+        st.caption(loc.weights_caption(cfg))
+        st.markdown(f"**{loc.UI['expander_formula_terms']}**")
+        st.markdown(loc.SCORE_TERM_DEFINITIONS)
 
     pr = policies["peer_relative"]
-    st.markdown(f"##### {zh.policy_label('peer_relative', pr.get('label'))} 得分表")
-    scores0 = ranking_under_intensity(hotel, cfg, 0.0)
-    scoresI = ranking_under_intensity(hotel, cfg, intensity)
-    st.table({
-        "维度": [albl(a) for a, _ in scoresI],
-        f"得分@强度{intensity}": [round(s, 4) for _, s in scoresI],
-        "得分@0": [round(dict(scores0).get(a, 0.0), 4) for a, _ in scoresI],
-    })
-    st.caption(zh.formula_caption(cfg))
-    st.caption(zh.weights_caption(cfg))
-    with st.expander("得分公式术语说明（可选）", expanded=False):
-        st.markdown(zh.SCORE_TERM_DEFINITIONS)
-
-    st.markdown("### 竞争拥挤假设（情景分析）")
-    st.warning("情景分析 — 假定/示意。非经验拥挤曲线，非因果估计。")
-    scen_rows = []
-    for g in (0.0, 0.25, 0.5, 0.75, 1.0):
-        rnk = ranking_under_intensity(hotel, cfg, g)
-        scen_rows.append({
-            "假定强度": g,
-            "首选可操作维度": albl(rnk[0][0]) if rnk else None,
-            "最高得分": round(rnk[0][1], 4) if rnk else None,
+    with st.expander(loc.UI["expander_scores"], expanded=False):
+        st.caption(loc.UI["expander_scores_caption"])
+        st.markdown(f"##### {loc.policy_label('peer_relative', pr.get('label'))} — {loc.UI['expander_score_table']}")
+        scores0 = ranking_under_intensity(hotel, cfg, 0.0)
+        scoresI = ranking_under_intensity(hotel, cfg, intensity)
+        st.table({
+            loc.UI["col_aspect"]: [albl(a) for a, _ in scoresI],
+            ui_text(loc, "col_score_at_intensity", intensity=intensity): [
+                round(s, 4) for _, s in scoresI
+            ],
+            loc.UI["col_score_at_zero"]: [
+                round(dict(scores0).get(a, 0.0), 4) for a, _ in scoresI
+            ],
         })
-    st.dataframe(scen_rows, hide_index=True, use_container_width=True)
+        st.markdown(f"##### {loc.UI['expander_scenario']}")
+        st.caption(loc.UI["expander_scenario_caption"])
+        scen_rows = []
+        for g in (0.0, 0.25, 0.5, 0.75, 1.0):
+            rnk = ranking_under_intensity(hotel, cfg, g)
+            scen_rows.append({
+                loc.UI["col_assumed_intensity"]: g,
+                loc.UI["col_top_aspect"]: albl(rnk[0][0]) if rnk else None,
+                loc.UI["col_top_score"]: round(rnk[0][1], 4) if rnk else None,
+            })
+        st.dataframe(scen_rows, hide_index=True, use_container_width=True)
 
-    with st.expander("批评指标审计（计数、比率与每评论）"):
+    with st.expander(loc.UI["expander_criticism"]):
         crit_rows = []
         for a in cfg["aspects"]:
             if a not in hotel["aspects"]:
                 continue
             m = criticism_metrics(hotel, a)
             crit_rows.append({
-                "维度": albl(a),
-                "负面提及": m["neg_mentions"],
-                "负面率": m["neg_rate"],
-                "每评论负面": round(m["neg_per_review"], 4),
-                "可操作": zh.fmt_bool(act.get(a, {}).get("eligible_for_direct_action")),
+                loc.UI["col_aspect"]: albl(a),
+                loc.UI["col_neg_mentions"]: m["neg_mentions"],
+                loc.UI["col_neg_rate"]: m["neg_rate"],
+                loc.UI["col_neg_per_review"]: round(m["neg_per_review"], 4),
+                loc.UI["col_actionable"]: loc.fmt_bool(
+                    act.get(a, {}).get("eligible_for_direct_action")
+                ),
             })
         st.dataframe(crit_rows, hide_index=True, use_container_width=True)
+        st.caption(loc.UI["expander_criticism_caption"])
+
+    with st.expander(loc.UI["expander_annotation"], expanded=False):
+        st.markdown(loc.MODEL_ANNOTATION_BOUNDARY_EXPANDER)
+
+    with st.expander(loc.UI["expander_provenance"], expanded=False):
+        prov_rows = [
+            {loc.UI["col_field"]: loc.UI["prov_evidence_level"], loc.UI["col_value"]: loc.evidence_level_label(ev["level"])},
+            {loc.UI["col_field"]: loc.UI["prov_hotel_id"], loc.UI["col_value"]: hotel["hotel_id"]},
+            {loc.UI["col_field"]: loc.UI["prov_compset_id"], loc.UI["col_value"]: hotel["compset_id"]},
+            {
+                loc.UI["col_field"]: loc.UI["prov_diagnostic_aspect"],
+                loc.UI["col_value"]: albl(expl["diagnostic_aspect"])
+                if expl["diagnostic_aspect"]
+                else loc.UI["recommendation_none"],
+            },
+            {
+                loc.UI["col_field"]: loc.UI["prov_action_aspect"],
+                loc.UI["col_value"]: albl(expl["actionable_recommendation"])
+                if expl["actionable_recommendation"]
+                else loc.UI["recommendation_none"],
+            },
+            {
+                loc.UI["col_field"]: loc.UI["prov_policy_selection"],
+                loc.UI["col_value"]: loc.format_policy_selection(policies, order, albl),
+            },
+            {loc.UI["col_field"]: loc.UI["prov_config"], loc.UI["col_value"]: "conf/demo.json"},
+            {
+                loc.UI["col_field"]: loc.UI["prov_actionability_config"],
+                loc.UI["col_value"]: "conf/actionability.json",
+            },
+            {
+                loc.UI["col_field"]: loc.UI["prov_synthetic"],
+                loc.UI["col_value"]: loc.fmt_bool(snap.get("synthetic")),
+            },
+        ]
+        st.dataframe(prov_rows, hide_index=True, use_container_width=True)
+
+    with st.expander(loc.UI["evidence_expander"], expanded=False):
+        st.markdown(f"**{loc.UI['evidence_level_prefix']}** {loc.evidence_level_label(ev['level'])}")
+        st.write(loc.evidence_why(ev["level"], ev["why"]))
+        for c in loc.CANNOT_CLAIM_ZH:
+            st.markdown(f"- {c}")
         st.caption(
-            "默认「最受批评项」使用负面提及次数；比率与每评论指标仅供审计，不会静默替换。"
+            f"`{snap['sources']['aspect_features']}` · "
+            f"`{snap['sources']['compsets']}` · `{snap['sources']['review_aspects_jsonl']}`"
         )
 
-    with st.expander("自动标注与使用边界", expanded=False):
-        st.markdown(zh.MODEL_ANNOTATION_BOUNDARY_EXPANDER)
+    if not hotels:
+        st.info(loc.UI["no_eligible_hotels"])
+        return
 
-    st.markdown("### 数据溯源")
-    prov_rows = [
-        {"字段": "证据等级", "值": zh.evidence_level_label(ev["level"])},
-        {"字段": "酒店编号", "值": hotel["hotel_id"]},
-        {"字段": "参考组编号", "值": hotel["compset_id"]},
-        {
-            "字段": "诊断维度",
-            "值": albl(expl["diagnostic_aspect"]) if expl["diagnostic_aspect"] else "暂无",
-        },
-        {
-            "字段": "行动建议维度",
-            "值": albl(expl["actionable_recommendation"])
-            if expl["actionable_recommendation"]
-            else "暂无",
-        },
-        {
-            "字段": "策略选型",
-            "值": zh.format_policy_selection(policies, order, albl),
-        },
-        {"字段": "配置", "值": "conf/demo.json"},
-        {"字段": "可操作性配置", "值": "conf/actionability.json"},
-        {"字段": "合成数据", "值": zh.fmt_bool(snap.get("synthetic"))},
-    ]
-    st.dataframe(prov_rows, hide_index=True, use_container_width=True)
-
-    st.markdown("### 局限与边界")
-    st.markdown(zh.LIMITATIONS_ZH)
+    with st.expander(loc.UI["expander_limitations"], expanded=False):
+        st.markdown(loc.LIMITATIONS_ZH)
 
 
-def render_temporal_tab(st):
-    st.subheader("历史时序分析")
-    st.caption(
-        "研究实验台 · 评论感知维度变化 · 地理参考集 · "
-        "非因果 · 非管理干预 · 非经核验竞争对手"
-    )
+def render_temporal_tab(st, loc):
+    st.subheader(loc.UI["temporal_subheader"])
+    st.caption(loc.UI["temporal_caption"])
     waves = _facts_waves(_load_facts())
     w2, w5 = waves.get("2") or {}, waves.get("5") or {}
-    legacy_n = _legacy_event_count(waves)
-    strict_n = _strict_event_count(waves)
-    strict_verdict = zh.strict_verdict_label(w2.get("verdict"))
-    evt_strength = zh.event_study_strength_label(w5.get("classification"))
+    legacy_n = _legacy_event_count(loc, waves)
+    strict_n = _strict_event_count(loc, waves)
+    strict_verdict = loc.strict_verdict_label(w2.get("verdict"))
+    evt_strength = loc.event_study_strength_label(w5.get("classification"))
     st.warning(
-        "**历史对照页：** 本页图表与指标来自 `outputs/overnight` 的**旧版宽松规则**流水线"
-        f"（宽松候选事件 **{legacy_n}** 条）。"
-        "这**不是**当前 `outputs/autonomous/FACTS.json` 中的严格交叉拟合事件认定"
-        f"（当前严格事件 **{strict_n}** 条，判定 **{strict_verdict}**，{evt_strength}）。"
-        "请以第三页「当前研究证据」为准。"
+        ui_text(
+            loc,
+            "temporal_warning",
+            legacy_n=legacy_n,
+            strict_n=strict_n,
+            verdict=strict_verdict,
+            evt_strength=evt_strength,
+        )
     )
 
     gate_path = OVERNIGHT_FEAS / "GO_NO_GO.md"
@@ -380,85 +550,91 @@ def render_temporal_tab(st):
     if panel_manifest.exists():
         pm = json.loads(panel_manifest.read_text(encoding="utf-8"))
         c1, c2, c3, c4 = st.columns(4)
-        c1.metric("季度单元格", pm.get("quarter_rows"))
-        c2.metric("酒店数", pm.get("quarter_hotels"))
-        c3.metric("城市数", pm.get("cities"))
-        c4.metric("有效提及单元格", pm.get("valid_mention_cells_quarter"))
+        c1.metric(loc.UI["metric_quarter_rows"], pm.get("quarter_rows"))
+        c2.metric(loc.UI["metric_event_hotels"], pm.get("quarter_hotels"))
+        c3.metric(loc.UI["city"], pm.get("cities"))
+        c4.metric(loc.UI["metric_valid_mentions"], pm.get("valid_mention_cells_quarter"))
         st.caption(
-            f"标注：结构性弱标签维度情感 · 先验强度={pm.get('prior_strength_main')} · "
-            f"来源 sha256 `{str(pm.get('source_sha256', ''))[:12]}…`（本地缓存）"
+            f"prior_strength={pm.get('prior_strength_main')} · "
+            f"sha256 `{str(pm.get('source_sha256', ''))[:12]}…`"
         )
     else:
-        st.info("时序面板尚未构建。")
+        st.info(loc.UI["temporal_panel_missing"])
 
     if peer_manifest.exists():
         peers = json.loads(peer_manifest.read_text(encoding="utf-8"))
-        st.markdown("### 地理参考集")
+        st.markdown(f"### {loc.UI['temporal_peer_section']}")
         st.write(
-            f"主设定：同城 Haversine k={peers.get('main_k')} · "
-            f"酒店={peers.get('n_hotels')} · 城市={peers.get('n_cities')} · "
-            "术语：**地理参考集/候选同行集**（非经核验的经济竞争对手）。"
+            ui_text(
+                loc,
+                "temporal_peer_summary",
+                k=peers.get("main_k"),
+                hotels=peers.get("n_hotels"),
+                cities=peers.get("n_cities"),
+            )
         )
 
     if metrics_path.exists():
         metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
         verdict = metrics.get("verdict", "UNKNOWN")
-        vlabel = zh.feasibility_verdict_label(verdict)
+        vlabel = loc.feasibility_verdict_label(verdict)
         if verdict == "GREEN":
-            st.success(f"可行性判定：**{vlabel}**（历史宽松流水线）")
+            st.success(ui_text(loc, "temporal_feasibility_green", label=vlabel))
         elif verdict == "AMBER":
-            st.warning(f"可行性判定：**{vlabel}**（历史宽松流水线）")
+            st.warning(ui_text(loc, "temporal_feasibility_amber", label=vlabel))
         else:
-            st.error(f"可行性判定：**{vlabel}**（历史宽松流水线）")
+            st.error(ui_text(loc, "temporal_feasibility_red", label=vlabel))
         m1, m2, m3, m4 = st.columns(4)
-        m1.metric("候选事件（宽松）", metrics.get("candidate_events"))
-        m2.metric("涉及酒店", metrics.get("event_hotels"))
-        m3.metric("暴露 > 0", metrics.get("events_exposure_gt0"))
-        m4.metric("暴露 = 0", metrics.get("events_exposure_eq0"))
+        m1.metric(loc.UI["metric_candidate_events"], metrics.get("candidate_events"))
+        m2.metric(loc.UI["metric_event_hotels"], metrics.get("event_hotels"))
+        m3.metric(loc.UI["metric_with_peer_ref"], metrics.get("events_exposure_gt0"))
+        m4.metric(loc.UI["metric_without_peer_ref"], metrics.get("events_exposure_eq0"))
         st.markdown(
-            f"- 变化阈值（预先确定）：**{metrics.get('main_delta_threshold')}**\n"
-            f"- 有效酒店-季度-维度单元格：**{metrics.get('valid_cells')}**\n"
-            f"- 覆盖 ≥4 期的酒店：**{metrics.get('hotels_with_enough_coverage')}**\n"
-            f"- 变化项含义：**评论感知维度变化**（非管理干预）"
+            ui_text(
+                loc,
+                "temporal_bullets",
+                threshold=metrics.get("main_delta_threshold"),
+                valid_cells=metrics.get("valid_cells"),
+                coverage=metrics.get("hotels_with_enough_coverage"),
+            )
         )
-        st.markdown("#### 图表")
+        st.markdown(f"#### {loc.UI['temporal_charts_heading']}")
         c_left, c_mid, c_right = st.columns(3)
         with c_left:
-            _render_verdict_event_chart(st, metrics)
+            _render_verdict_event_chart(st, loc, metrics)
         with c_mid:
-            _render_peer_exposure_chart(st)
+            _render_peer_exposure_chart(st, loc)
         with c_right:
-            _render_delta_q_chart(st)
+            _render_delta_q_chart(st, loc)
 
-        with st.expander("原始可行性指标（机器 JSON，可选下载）", expanded=False):
-            st.caption("下方为英文 schema 原始文件，仅供审计；普通阅读请以上方中文摘要为准。")
-            _download_button(st, "下载 feasibility_metrics.json", metrics_path, "application/json")
+        with st.expander(loc.UI["expander_raw_feasibility"], expanded=False):
+            st.caption(loc.UI["expander_raw_feasibility_caption"])
+            _download_button(
+                st, loc.UI["download_feasibility"], metrics_path, "application/json"
+            )
     else:
-        st.info(
-            "时序可行性产物尚未构建。"
-            "预期包含：面板覆盖、候选变化、同行暴露、绿/琥珀/红判定。"
-        )
+        st.info(loc.UI["temporal_feasibility_missing"])
 
-    st.markdown("### 时间留出法预测试点（历史宽松上下文）")
+    st.markdown(f"### {loc.UI['temporal_predict_header']}")
     if PRED_METRICS_PATH.exists():
         pm = json.loads(PRED_METRICS_PATH.read_text(encoding="utf-8"))
         if pm.get("skipped"):
             st.warning(
-                f"预测试点不可用或未通过门槛。"
-                f"（{pm.get('verdict') or pm.get('reason') or '暂无原因'}）"
+                ui_text(
+                    loc,
+                    "temporal_predict_skipped",
+                    reason=pm.get("verdict") or pm.get("reason") or loc.fmt_na(None),
+                )
             )
         else:
-            st.info(
-                "仅为预测关联 — **不会**将经理页升级为预测性证据，"
-                "**也不是**因果效应。"
-            )
+            st.info(loc.UI["temporal_predict_info"])
             models = pm.get("models") or {}
             st.dataframe(
                 [
                     {
-                        "模型": zh.model_name(k),
-                        zh.mae_column_label(): v.get("mae"),
-                        zh.rmse_column_label(): v.get("rmse"),
+                        loc.UI["col_model"]: loc.model_name(k),
+                        loc.mae_column_label(): v.get("mae"),
+                        loc.rmse_column_label(): v.get("rmse"),
                     }
                     for k, v in models.items()
                 ],
@@ -466,38 +642,42 @@ def render_temporal_tab(st):
                 use_container_width=True,
             )
             st.caption(
-                f"预测目标：{zh.target_label(pm.get('target'))} · "
-                f"测试期：{pm.get('test_periods') or '暂无'} · "
-                f"同行模型是否优于持久性：{zh.fmt_bool(pm.get('peer_model_improves_on_persistence'))}"
+                ui_text(
+                    loc,
+                    "temporal_predict_caption",
+                    target=loc.target_label(pm.get("target")),
+                    periods=pm.get("test_periods") or loc.fmt_na(None),
+                    beats=loc.fmt_bool(pm.get("peer_model_improves_on_persistence")),
+                )
             )
-            _render_mae_chart(st, models)
-            _download_button(st, "下载 metrics.json（原始）", PRED_METRICS_PATH, "application/json")
+            _render_mae_chart(st, loc, models)
+            _download_button(
+                st,
+                loc.UI["download_predict_metrics"],
+                PRED_METRICS_PATH,
+                "application/json",
+            )
     else:
-        st.warning("预测试点不可用或未通过门槛。")
+        st.warning(loc.UI["temporal_predict_missing"])
 
-    st.markdown("### 本实验台可/不可宣称")
-    st.markdown(
-        """
-**可宣称：** 描述性覆盖；时序测量的可行性；留出测试集上的预测关联（非因果）。
-
-**不可宣称：** 同行因果干扰；投资回报；需求提升；将地理邻居称为经核验竞争对手；
-将情感变化等同于管理干预；将宽松候选事件等同于当前严格事件认定。
-"""
-    )
+    st.markdown(f"### {loc.UI['temporal_claims_header']}")
+    st.markdown(loc.UI["temporal_claims_body"])
     if gate_path.exists():
-        with st.expander("通过/否决原始记录（可选下载）", expanded=False):
-            st.caption("英文 Markdown 原文仅供下载审计，界面不直接展示全文。")
-            _download_button(st, "下载 GO_NO_GO.md", gate_path, "text/markdown")
+        with st.expander(loc.UI["expander_go_no_go"], expanded=False):
+            st.caption(loc.UI["expander_go_no_go_caption"])
+            _download_button(st, loc.UI["download_go_no_go"], gate_path, "text/markdown")
 
 
-def render_research_evidence_tab(st):
-    st.subheader("当前研究证据")
-    st.caption("数字来自 outputs/autonomous/FACTS.json；演示不捏造指标。")
+def render_research_evidence_tab(st, loc):
+    st.subheader(loc.UI["research_subheader"])
+    st.caption(loc.UI["research_caption"])
     facts_p = ROOT / "outputs" / "autonomous" / "FACTS.json"
     claims_p = ROOT / "outputs" / "autonomous" / "CLAIMS_LEDGER.md"
+    facts_sha = ""
 
     if facts_p.exists():
         facts = json.loads(facts_p.read_text(encoding="utf-8"))
+        facts_sha = str(facts.get("facts_sha256") or "")[:16]
         waves = facts.get("waves") or {}
         w0 = waves.get("0") or {}
         w1, w2, w4, w5, w6 = (
@@ -507,61 +687,90 @@ def render_research_evidence_tab(st):
             waves.get("5") or {},
             waves.get("6") or {},
         )
-        st.info(
-            "经理诊断页保持**描述性**证据等级，除非本台账正式升级。"
-            "无因果效应 / 投资回报 / 需求提升宣称。"
-            "当前采用模型标注与独立审计；模型一致率不代表真实准确率。"
-        )
+        st.info(loc.UI["research_info"])
         c1, c2, c3, c4 = st.columns(4)
-        c1.metric("测量证据", zh.measurement_label(w1.get("measurement_verdict")))
-        c2.metric("严格交叉拟合事件", zh.fmt_na(w2.get("strict_crossfit_events")))
-        c3.metric("同行预测主张", zh.peer_predictive_label(w4.get("peer_predictive_claim")))
-        c4.metric("论文轨道", f"轨道 {w6.get('selected_track', '暂无')}")
+        c1.metric(loc.UI["metric_measurement"], loc.measurement_label(w1.get("measurement_verdict")))
+        c2.metric(loc.UI["metric_strict_events"], loc.fmt_na(w2.get("strict_crossfit_events")))
+        c3.metric(loc.UI["metric_peer_predictive"], loc.peer_predictive_label(w4.get("peer_predictive_claim")))
+        track = w6.get("selected_track")
+        c4.metric(
+            loc.UI["metric_track"],
+            f"{loc.UI['track_prefix']} {track}" if track else loc.fmt_na(None),
+        )
+        st.caption(loc.UI["metric_strict_events_caption"])
         st.caption(
-            f"FACTS sha256 `{str(facts.get('facts_sha256') or '')[:16]}…` · "
-            f"历史宽松事件（仅对照）= {w2.get('legacy_permissive_event_count', w0.get('legacy_event_count_reproduced', '暂无'))}"
+            ui_text(
+                loc,
+                "research_facts_caption",
+                legacy=w2.get(
+                    "legacy_permissive_event_count",
+                    w0.get("legacy_event_count_reproduced", loc.fmt_na(None)),
+                ),
+            )
         )
 
-        st.markdown("#### 当前事实摘要")
-        track = w6.get("selected_track")
+        st.markdown(f"#### {loc.UI['research_summary_heading']}")
         summary_rows = [
-            {"项目": "完整季度", "值": ", ".join(w1.get("complete_periods") or []) or "暂无"},
-            {"项目": "不完整季度（已排除）", "值": ", ".join(w1.get("partial_periods") or []) or "暂无"},
-            {"项目": "严格事件判定", "值": zh.strict_verdict_label(w2.get("verdict"))},
             {
-                "项目": "严格事件数",
-                "值": zh.fmt_na((w2.get("metrics") or {}).get("n", w2.get("strict_crossfit_events"))),
+                loc.UI["col_field"]: loc.UI["research_row_complete_periods"],
+                loc.UI["col_value"]: ", ".join(w1.get("complete_periods") or []) or loc.fmt_na(None),
             },
-            {"项目": "事件研究证据强度", "值": zh.event_study_strength_label(w5.get("classification"))},
             {
-                "项目": f"轨道 {track or '暂无'} 表述",
-                "值": zh.track_formulation(track, w6),
+                loc.UI["col_field"]: loc.UI["research_row_partial_periods"],
+                loc.UI["col_value"]: ", ".join(w1.get("partial_periods") or []) or loc.fmt_na(None),
             },
-            {"项目": "非因果声明", "值": "是"},
+            {
+                loc.UI["col_field"]: loc.UI["research_row_strict_verdict"],
+                loc.UI["col_value"]: loc.strict_verdict_label(w2.get("verdict")),
+            },
+            {
+                loc.UI["col_field"]: loc.UI["research_row_strict_count"],
+                loc.UI["col_value"]: loc.fmt_na(
+                    (w2.get("metrics") or {}).get("n", w2.get("strict_crossfit_events"))
+                ),
+            },
+            {
+                loc.UI["col_field"]: loc.UI["research_row_event_strength"],
+                loc.UI["col_value"]: loc.event_study_strength_label(w5.get("classification")),
+            },
+            {
+                loc.UI["col_field"]: ui_text(
+                    loc, "research_row_track_formulation", track=track or loc.fmt_na(None)
+                ),
+                loc.UI["col_value"]: loc.track_formulation(track, w6),
+            },
+            {
+                loc.UI["col_field"]: loc.UI["research_row_non_causal"],
+                loc.UI["col_value"]: loc.UI["research_row_non_causal_value"],
+            },
         ]
         st.dataframe(summary_rows, hide_index=True, use_container_width=True)
 
         st.markdown(
-            f"**与历史页对照：** 旧版宽松流水线共 **{_legacy_event_count(waves)}** 条宽松候选事件；"
-            f"当前严格认定 **{_strict_event_count(waves)}** 条，"
-            f"同行预测 **{zh.peer_predictive_label(w4.get('peer_predictive_claim'))}**，"
-            f"**{zh.event_study_strength_label(w5.get('classification'))}**。"
+            ui_text(
+                loc,
+                "research_compare",
+                legacy=_legacy_event_count(loc, waves),
+                strict=_strict_event_count(loc, waves),
+                peer=loc.peer_predictive_label(w4.get("peer_predictive_claim")),
+                strength=loc.event_study_strength_label(w5.get("classification")),
+            )
         )
     else:
-        st.warning("尚未构建 autonomous/FACTS.json。")
+        st.warning(loc.UI["research_facts_missing"])
 
     if claims_p.exists():
         md = claims_p.read_text(encoding="utf-8")
-        rows = zh.parse_claims_ledger(md)
-        st.markdown("#### 主张台账")
+        rows = loc.parse_claims_ledger(md)
+        st.markdown(f"#### {loc.UI['research_claims_heading']}")
         if rows:
             st.dataframe(
                 [
                     {
-                        "编号": r["id"],
-                        "主张": r["claim_zh"],
-                        "状态": r["status_zh"],
-                        "备注": r["notes"],
+                        loc.UI["col_claim_id"]: r["id"],
+                        loc.UI["col_claim"]: r["claim_zh"],
+                        loc.UI["col_status"]: r["status_zh"],
+                        loc.UI["col_notes"]: r["notes"],
                     }
                     for r in rows
                 ],
@@ -569,55 +778,51 @@ def render_research_evidence_tab(st):
                 use_container_width=True,
             )
         else:
-            st.info("台账表格为空或无法解析。")
-        with st.expander("原始台账文件（可选下载）", expanded=False):
-            st.caption("英文 Markdown 原文；界面以上方中文表为准，状态值来自实时文件。")
-            _download_button(st, "下载 CLAIMS_LEDGER.md", claims_p, "text/markdown")
+            st.info(loc.UI["research_claims_empty"])
+        with st.expander(loc.UI["expander_claims_raw"], expanded=False):
+            st.caption(loc.UI["expander_claims_caption"])
+            _download_button(st, loc.UI["download_claims"], claims_p, "text/markdown")
     else:
-        st.warning("尚未构建 CLAIMS_LEDGER.md。")
+        st.warning(loc.UI["research_claims_missing"])
 
     if facts_p.exists():
-        with st.expander("原始 FACTS（可选下载）", expanded=False):
-            _download_button(st, "下载 FACTS.json", facts_p, "application/json")
+        with st.expander(loc.UI["expander_facts_raw"], expanded=False):
+            st.caption(ui_text(loc, "research_facts_sha_caption", sha=facts_sha))
+            _download_button(st, loc.UI["download_facts"], facts_p, "application/json")
 
-    _render_model_annotation_section(st)
+    _render_model_annotation_section(st, loc)
 
-    with st.expander("自动标注与使用边界", expanded=False):
-        st.markdown(zh.MODEL_ANNOTATION_BOUNDARY_EXPANDER)
+    with st.expander(loc.UI["expander_annotation"], expanded=False):
+        st.markdown(loc.MODEL_ANNOTATION_BOUNDARY_EXPANDER)
 
 
-def _render_model_annotation_section(st):
-    report_p = ROOT / zh.MODEL_ANNOTATION_REPORT_PATH
-    st.markdown("#### 自动标注审计")
+def _render_model_annotation_section(st, loc):
+    report_p = ROOT / loc.MODEL_ANNOTATION_REPORT_PATH
+    st.markdown(f"#### {loc.UI['model_annotation_heading']}")
     if not report_p.exists():
-        st.info(
-            "模型标注终审报告尚未生成（预期路径："
-            f"`{zh.MODEL_ANNOTATION_REPORT_PATH}`）。"
-            "生成前本页不展示任何一致率或接受率数字。"
-        )
+        st.info(ui_text(loc, "model_annotation_missing", path=loc.MODEL_ANNOTATION_REPORT_PATH))
         st.caption(
-            f"终审标签 CSV 将保存在本机私有目录 "
-            f"`{zh.MODEL_ANNOTATION_PRIVATE_CSV}`（含评论原文，仅本机保存）。"
+            ui_text(loc, "model_annotation_private_note", path=loc.MODEL_ANNOTATION_PRIVATE_CSV)
         )
         return
     report = json.loads(report_p.read_text(encoding="utf-8"))
     if report.get("status") != "MODEL_AUDITED_REFERENCE":
-        st.warning("标注报告状态未知，以下数字仅作参考。")
+        st.warning(loc.UI["model_annotation_unknown_status"])
     c1, c2, c3, c4 = st.columns(4)
-    c1.metric("样本条目", zh.fmt_na(report.get("n_items")))
-    c2.metric("终审接受", zh.fmt_na(report.get("final_accepted_count")))
-    c3.metric("未决", zh.fmt_na(report.get("final_unresolved_count")))
-    c4.metric("Codex 审计条目", zh.fmt_na(report.get("audited_count")))
+    c1.metric(loc.UI["model_annotation_metric_items"], loc.fmt_na(report.get("n_items")))
+    c2.metric(loc.UI["model_annotation_metric_accepted"], loc.fmt_na(report.get("final_accepted_count")))
+    c3.metric(loc.UI["model_annotation_metric_unresolved"], loc.fmt_na(report.get("final_unresolved_count")))
+    c4.metric(loc.UI["model_annotation_metric_audited"], loc.fmt_na(report.get("audited_count")))
     st.caption(
-        zh.format_model_agreement_caption(
+        loc.format_model_agreement_caption(
             report.get("raw_agreement_rate"),
             report.get("cohen_kappa"),
         )
     )
     st.caption(
-        f"状态：{zh.model_annotation_status_label(report.get('status'))} · "
-        f"来源哈希 `{str(report.get('source_hash') or '')[:12]}…` · "
-        f"样本哈希 `{str(report.get('sample_hash') or '')[:12]}…`"
+        f"{loc.model_annotation_status_label(report.get('status'))} · "
+        f"`{str(report.get('source_hash') or '')[:12]}…` · "
+        f"`{str(report.get('sample_hash') or '')[:12]}…`"
     )
     per_aspect = report.get("per_aspect_final_label_counts") or {}
     if per_aspect:
@@ -625,35 +830,57 @@ def _render_model_annotation_section(st):
 
         rows = []
         for aspect, counts in sorted(per_aspect.items()):
-            row: dict = {"维度": zh.aspect_label(aspect, aspect)}
-            for lab, col in zh.SENTIMENT_LABELS.items():
+            row: dict = {loc.UI["col_aspect"]: loc.aspect_label(aspect, aspect)}
+            for lab, col in loc.SENTIMENT_LABELS.items():
                 row[col] = counts.get(lab, 0)
             rows.append(row)
-        st.markdown("##### 各维度终审标签计数")
+        st.markdown(f"##### {loc.UI['model_annotation_per_aspect']}")
         st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
     st.caption(
-        f"完整逐条标签（含原文）仅本机保存：`{zh.MODEL_ANNOTATION_PRIVATE_CSV}`。"
-        "公开报告不含评论原文、酒店名或逐条裁决理由。"
+        ui_text(loc, "model_annotation_footer", path=loc.MODEL_ANNOTATION_PRIVATE_CSV)
     )
+
+
+def _render_language_selector(st):
+    """Render language control; returns active locale module from session state."""
+    col, _ = st.columns([1.2, 4])
+    with col:
+        st.selectbox(
+            "Language / 语言",
+            options=list(SUPPORTED_LANGUAGES),
+            format_func=lambda code: LANGUAGE_LABELS[code],
+            key="ui_language",
+        )
+    return get_locale(st.session_state.get("ui_language"))
 
 
 def main():
     import streamlit as st
 
-    st.set_page_config(page_title="酒店经理决策演示", layout="wide")
+    if "ui_language" not in st.session_state:
+        st.session_state.ui_language = DEFAULT_LANGUAGE
+    loc = get_locale(st.session_state.ui_language)
+    st.set_page_config(page_title=loc.UI["page_title"], layout="wide")
+    apply_theme(st)
+    loc = _render_language_selector(st)
+    render_header(
+        st,
+        loc.UI["header_title"],
+        loc.UI["header_desc"],
+        loc.UI["header_badge"],
+    )
     snap, cfg = _load()
-    st.title("酒店经理决策演示")
     tab1, tab2, tab3 = st.tabs([
-        "酒店经理诊断",
-        "历史时序分析",
-        "当前研究证据",
+        loc.UI["tab_improvement"],
+        loc.UI["tab_history"],
+        loc.UI["tab_research"],
     ])
     with tab1:
-        render_manager_tab(st, snap, cfg)
+        render_manager_tab(st, loc, snap, cfg)
     with tab2:
-        render_temporal_tab(st)
+        render_temporal_tab(st, loc)
     with tab3:
-        render_research_evidence_tab(st)
+        render_research_evidence_tab(st, loc)
 
 
 if __name__ == "__main__":

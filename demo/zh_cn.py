@@ -4,7 +4,6 @@ from __future__ import annotations
 import re
 from typing import Any, Callable, Mapping
 
-# --- Aspects (7) ---
 ASPECT_LABELS: dict[str, str] = {
     "location": "位置",
     "cleanliness": "清洁",
@@ -15,7 +14,6 @@ ASPECT_LABELS: dict[str, str] = {
     "value": "性价比",
 }
 
-# --- Cities ---
 CITY_LABELS: dict[str, str] = {
     "Brussels": "布鲁塞尔",
     "Amsterdam": "阿姆斯特丹",
@@ -29,30 +27,221 @@ CITY_LABELS: dict[str, str] = {
     "Ghent": "根特",
 }
 
-# --- Price bands ---
 PRICE_TIER_LABELS: dict[str, str] = {
-    "low": "低档",
-    "mid": "中档",
-    "high": "高档",
+    "low": "较低",
+    "mid": "中等",
+    "high": "较高",
 }
 
-# --- Actionability levels ---
 ACTIONABILITY_LEVEL_LABELS: dict[str, str] = {
-    "immutable": "不可直接干预",
-    "high": "高可操作性",
-    "conditional": "条件性可操作",
-    "medium": "中等可操作性",
+    "immutable": "不可直接改善",
+    "high": "较易改善",
+    "conditional": "视情况可改善",
+    "medium": "中等可改善",
 }
 
-# --- Policy keys ---
-POLICY_LABELS: dict[str, str] = {
-    "fix_weakest": "修复最弱项（可操作）",
-    "largest_peer_gap": "最大同行差距（可操作）",
-    "most_criticized": "最受批评项（可操作）",
-    "peer_relative": "同行相对证据加权（启发式）",
-    "competition_aware": "同行相对证据加权（启发式）",
-    "diagnostic_largest_gap": "最大诊断劣势",
+POLICY_SUMMARIES: dict[str, str] = {
+    "fix_weakest": "选本店评价最低的可改善方面",
+    "largest_peer_gap": "选与对比酒店差距最大的可改善方面",
+    "most_criticized": "选负面提及最多的可改善方面",
+    "peer_relative": "综合评价差距、差评比例和评论数量",
 }
+
+POLICY_LABELS: dict[str, str] = {
+    "fix_weakest": "优先改善评价最差的",
+    "largest_peer_gap": "优先缩小与附近酒店的差距",
+    "most_criticized": "优先处理差评最多的",
+    "peer_relative": "综合考虑差距与评论数量",
+    "competition_aware": "综合考虑差距与评论数量",
+    "diagnostic_largest_gap": "与附近差距最大（诊断）",
+}
+
+LANG_CODE = "zh"
+
+UI: dict[str, str] = {
+    "page_title": "酒店改善助手",
+    "header_title": "酒店改善助手",
+    "header_desc": "选一家酒店，看看哪里值得先改善，以及建议依据。",
+    "header_badge": "研究演示版",
+    "lang_selector_label": "语言",
+    "tab_improvement": "改善建议",
+    "tab_history": "历史变化",
+    "tab_research": "研究进展",
+    "section_improvement_desc": "面向经理 · 基于评论与对比酒店的描述性建议",
+    "evidence_expander": "这些建议有哪些限制？",
+    "evidence_level_prefix": "等级：",
+    "city": "城市",
+    "peer_group": "对比酒店分组",
+    "peer_group_help": "研究中选定的附近酒店，用于参考，未证明是直接竞争对手。",
+    "hotel": "选择酒店",
+    "snapshot_caption": "演示快照共 {total} 家酒店，当前可选 {eligible} 家符合展示条件。",
+    "no_eligible_hotels": "演示快照中没有符合展示条件的酒店，无法选择酒店或生成建议。请检查快照是否已正确构建。",
+    "metric_peer_count": "对比酒店数",
+    "metric_reviews": "评论数",
+    "metric_low_reviews": "低分评论数",
+    "metric_price_range": "价格范围",
+    "section_compare": "本店与对比酒店",
+    "chart_no_data": "暂无足够数据绘制对比图。",
+    "chart_altair_fallback": "图表组件不可用，以下以表格展示非缺失对比。",
+    "chart_caption": "越接近1表示正面评价越多，越接近−1表示负面评价越多；没有提及的方面不作判断。",
+    "chart_aspect_col": "方面",
+    "chart_series_own": "本店",
+    "chart_series_peer": "对比酒店的中间水平",
+    "chart_sentiment_axis": "好评与差评的总体倾向",
+    "chart_legend": "图例",
+    "expander_detail_table": "对比明细表",
+    "section_recommendation": "建议先关注",
+    "section_policies": "不同优先规则对比",
+    "policies_caption": "行动建议排除位置等无法直接改变的方面。下方卡片对应当前情景假设。",
+    "expander_scenario_try": "试一试：如果附近酒店也在改善",
+    "expander_scenario_try_caption": "以下为假设情景，不代表已观测到的竞争变化。",
+    "expander_calculation": "查看计算方法",
+    "slider_label": "假定对比酒店改善强度",
+    "slider_help": "假设/示意值，非拟合的竞争弹性。",
+    "recommendation_none": "暂无",
+    "recommendation_fallback_actionable": "综合考虑与附近酒店的差距、差评和评论数量，建议先关注这一方面。",
+    "recommendation_fallback_none": "当前证据下暂无明确短板或可执行建议。",
+    "recommendation_evidence_note": "建议来自历史评论，尚未验证改善后能提高评分或收入。",
+    "expander_scores": "查看详细得分与模拟结果",
+    "expander_scores_caption": "「得分@0」为默认竞争强度；「得分@强度」对应当前滑块假定强度。",
+    "expander_score_table": "得分表",
+    "expander_formula_terms": "得分公式术语说明（可选）",
+    "expander_scenario": "竞争拥挤假设（情景分析）",
+    "expander_scenario_caption": "情景分析 — 假定/示意。非经验拥挤曲线，非因果估计。",
+    "expander_criticism": "差评指标核对",
+    "expander_criticism_caption": "默认「差评最多」使用负面提及次数；比率与每条评论均值仅供核对。",
+    "expander_annotation": "电脑如何理解评论？",
+    "expander_provenance": "数据从哪里来？",
+    "expander_limitations": "使用前需要了解什么？",
+    "col_aspect": "方面",
+    "col_actionability": "可改善程度",
+    "col_direct_action": "可直接改善",
+    "col_own_sentiment": "本店",
+    "col_peer_median": "对比中间水平",
+    "col_gap": "差距(对比−本店)",
+    "col_percentile": "百分位",
+    "col_mentions": "提及次数",
+    "col_neg_mentions": "负面提及",
+    "col_neg_rate": "负面率",
+    "col_neg_per_review": "每评论负面",
+    "col_reliability": "可靠性",
+    "col_score_at_intensity": "得分@强度{intensity}",
+    "col_score_at_zero": "得分@0",
+    "col_assumed_intensity": "假定强度",
+    "col_top_aspect": "首选可改善方面",
+    "col_top_score": "最高得分",
+    "col_actionable": "可改善",
+    "col_field": "字段",
+    "col_value": "值",
+    "prov_evidence_level": "证据等级",
+    "prov_hotel_id": "酒店编号",
+    "prov_compset_id": "对比分组编号",
+    "prov_diagnostic_aspect": "诊断方面",
+    "prov_action_aspect": "行动建议方面",
+    "prov_policy_selection": "策略选型",
+    "prov_config": "配置",
+    "prov_actionability_config": "可操作性配置",
+    "prov_synthetic": "合成数据",
+    "temporal_subheader": "历史变化",
+    "temporal_caption": "观察住客评价随时间的变化，了解分析方法是否可用。",
+    "temporal_warning": "**历史对照页：** 本页使用旧版宽松规则（**{legacy_n}** 条候选事件），与当前严格认定（**{strict_n}** 条，判定 **{verdict}**，{evt_strength}）不同。请以「研究进展」页为准。",
+    "temporal_panel_missing": "时序面板尚未构建。",
+    "temporal_peer_section": "地理参考集",
+    "temporal_peer_summary": "主设定：同城 Haversine k={k} · 酒店={hotels} · 城市={cities} · 术语：**地理参考集/候选对比集**（非经核验的经济竞争对手）。",
+    "temporal_feasibility_green": "可行性判定：**{label}**（历史宽松流水线）",
+    "temporal_feasibility_amber": "可行性判定：**{label}**（历史宽松流水线）",
+    "temporal_feasibility_red": "可行性判定：**{label}**（历史宽松流水线）",
+    "metric_quarter_rows": "季度单元格",
+    "metric_valid_mentions": "有效提及单元格",
+    "metric_candidate_events": "候选事件（宽松）",
+    "metric_event_hotels": "涉及酒店",
+    "metric_with_peer_ref": "附近有酒店评价变好",
+    "metric_without_peer_ref": "附近未发现评价变好",
+    "temporal_bullets": "- 变化阈值（预先确定）：**{threshold}**\n- 有效酒店-季度-方面单元格：**{valid_cells}**\n- 覆盖 ≥4 期的酒店：**{coverage}**\n- 变化项含义：**评论感知方面变化**（非管理干预）",
+    "temporal_charts_heading": "图表",
+    "chart_verdict_no_data": "暂无可绘制的候选事件汇总数据。",
+    "chart_verdict_caption": "基于 feasibility_metrics.json 的宽松规则候选事件概览（非当前严格认定）。",
+    "chart_verdict_candidate": "候选事件（宽松规则）",
+    "chart_verdict_with_ref": "附近有酒店评价变好",
+    "chart_verdict_without_ref": "附近未发现评价变好",
+    "chart_verdict_hotels": "涉及酒店",
+    "chart_verdict_metric_col": "指标",
+    "chart_verdict_count_col": "数量",
+    "chart_peer_missing": "未找到 candidate_events.csv，无法绘制对比参考分布。",
+    "chart_peer_empty": "对比参考列为空，无法绘制分布。",
+    "chart_peer_caption": "横轴为附近酒店在同一方面评价变好的比例（0–1），反映评论中的参照信号，不代表实际装修或改造。",
+    "chart_peer_bin_col": "参考区间",
+    "chart_delta_missing": "未找到 delta_q_sample.csv，无法绘制变化分布。",
+    "chart_delta_empty": "变化列为空，无法绘制分布。",
+    "chart_delta_caption": "评论感知方面变化（Δq）分布（来自 delta_q_sample.csv）。",
+    "chart_delta_bin_col": "变化区间",
+    "chart_freq_col": "频数",
+    "chart_mae_no_data": "暂无模型平均绝对误差数据可绘制。",
+    "chart_mae_empty": "模型平均绝对误差均为空，无法绘制对比图。",
+    "chart_mae_caption": "各模型预测误差的对比；数值越低越好。这不代表已证明能改善经营效果。",
+    "expander_raw_feasibility": "原始可行性指标（机器 JSON，可选下载）",
+    "expander_raw_feasibility_caption": "下方为英文 schema 原始文件，仅供审计；普通阅读请以上方中文摘要为准。",
+    "download_feasibility": "下载 feasibility_metrics.json",
+    "temporal_feasibility_missing": "时序可行性产物尚未构建。预期包含：面板覆盖、候选变化、对比参考、绿/琥珀/红判定。",
+    "temporal_predict_header": "早期预测实验",
+    "temporal_predict_skipped": "预测试点不可用或未通过门槛。（{reason}）",
+    "temporal_predict_info": "仅为预测关联 — **不会**将改善建议页升级为预测性证据，**也不是**因果效应。",
+    "temporal_predict_caption": "预测目标：{target} · 测试期：{periods} · 同行模型是否优于持久性：{beats}",
+    "temporal_predict_missing": "预测试点不可用或未通过门槛。",
+    "download_predict_metrics": "下载 metrics.json（原始）",
+    "temporal_claims_header": "本实验台可/不可宣称",
+    "temporal_claims_body": "**可宣称：** 描述性覆盖；时序测量的可行性；留出测试集上的预测关联（非因果）。\n\n**不可宣称：** 同行因果干扰；投资回报；需求提升；将地理邻居称为经核验竞争对手；将情感变化等同于管理干预；将宽松候选事件等同于当前严格事件认定。",
+    "expander_go_no_go": "通过/否决原始记录（可选下载）",
+    "expander_go_no_go_caption": "英文 Markdown 原文仅供下载审计，界面不直接展示全文。",
+    "download_go_no_go": "下载 GO_NO_GO.md",
+    "research_subheader": "研究进展",
+    "research_caption": "目前已完成评论整理和建议原型，正在检验建议是否可靠。",
+    "research_info": "改善建议页仍为描述性参考，不代表因果效果、投资回报或预订增长。模型一致率不等于人工准确率。",
+    "metric_measurement": "评论数据覆盖",
+    "metric_strict_events": "筛选后的评价变化",
+    "metric_strict_events_caption": "统计评论中检测到的评价变化次数，不代表已知的酒店改造或管理行动。",
+    "metric_peer_predictive": "加入附近酒店信息是否更好",
+    "metric_track": "当前研究方向",
+    "research_facts_caption": "历史宽松候选事件仅供对照：{legacy}",
+    "research_facts_sha_caption": "数据来源校验：FACTS sha256 `{sha}…`",
+    "research_summary_heading": "当前事实摘要",
+    "research_row_complete_periods": "完整季度",
+    "research_row_partial_periods": "不完整季度（已排除）",
+    "research_row_strict_verdict": "严格事件判定",
+    "research_row_strict_count": "筛选后的评价变化",
+    "research_row_event_strength": "事件研究证据强度",
+    "research_row_track_formulation": "轨道 {track} 表述",
+    "research_row_non_causal": "非因果声明",
+    "research_row_non_causal_value": "是",
+    "research_compare": "**与历史页对照：** 旧版宽松流水线共 **{legacy}** 条宽松候选事件；当前严格认定 **{strict}** 条，同行预测 **{peer}**，**{strength}**。",
+    "research_facts_missing": "尚未构建 autonomous/FACTS.json。",
+    "research_claims_heading": "主张台账",
+    "research_claims_empty": "台账表格为空或无法解析。",
+    "expander_claims_raw": "原始台账文件（可选下载）",
+    "expander_claims_caption": "英文 Markdown 原文；界面以上方中文表为准，状态值来自实时文件。",
+    "download_claims": "下载 CLAIMS_LEDGER.md",
+    "research_claims_missing": "尚未构建 CLAIMS_LEDGER.md。",
+    "expander_facts_raw": "原始 FACTS（可选下载）",
+    "download_facts": "下载 FACTS.json",
+    "model_annotation_heading": "电脑读懂评论了吗？",
+    "model_annotation_missing": "模型标注终审报告尚未生成（预期路径：`{path}`）。生成前本页不展示任何一致率或接受率数字。",
+    "model_annotation_private_note": "终审标签 CSV 将保存在本机私有目录 `{path}`（含评论原文，仅本机保存）。",
+    "model_annotation_unknown_status": "标注报告状态未知，以下数字仅作参考。",
+    "model_annotation_metric_items": "检查的评论片段",
+    "model_annotation_metric_accepted": "保留的判断",
+    "model_annotation_metric_unresolved": "仍无法确定",
+    "model_annotation_metric_audited": "复查的片段",
+    "model_annotation_per_aspect": "各方面终审标签计数",
+    "model_annotation_footer": "完整逐条标签（含原文）仅本机保存：`{path}`。公开报告不含评论原文、酒店名或逐条裁决理由。",
+    "col_claim_id": "编号",
+    "col_claim": "主张",
+    "col_status": "状态",
+    "col_notes": "备注",
+    "col_model": "模型",
+    "track_prefix": "轨道",
+    "recommendation_aria": "改善建议",
+}
+
 
 def _min_mentions(cfg: dict | None) -> int:
     if cfg and cfg.get("min_mentions") is not None:
@@ -68,15 +257,15 @@ def policy_rules(cfg: dict | None = None) -> dict[str, str]:
     unrel_w = w.get("unreliable", 0.20)
     return {
         "fix_weakest": (
-            f"在提及次数≥{min_m} 的可操作维度中，选取本店净情感最低者"
-            "（位置等不可直接干预维度不参与）"
+            f"在提及次数≥{min_m} 且可着手改善的方面中，选本店评价最低的一项"
+            "（位置等无法搬迁的方面不参与）"
         ),
         "largest_peer_gap": (
-            f"在提及次数≥{min_m} 的可操作维度中，选取与同行中位数差距最大者"
-            "（同行中位数−本店；位置不参与行动层）"
+            f"在提及次数≥{min_m} 且可着手改善的方面中，选与对比酒店中间水平差距最大的一项"
+            "（对比中间水平−本店；位置不参与行动层）"
         ),
         "most_criticized": (
-            f"在提及次数≥{min_m} 的可操作维度中，选取负面情感提及次数最多者"
+            f"在提及次数≥{min_m} 且可着手改善的方面中，选负面提及次数最多的一项"
             "（同时展示比率与每条评论均值供核对）"
         ),
         "peer_relative": (
@@ -85,7 +274,7 @@ def policy_rules(cfg: dict | None = None) -> dict[str, str]:
             "【设计权重，非学习所得】。竞争拥挤强度仅在情景分析中单独施加。"
         ),
         "diagnostic_largest_gap": (
-            f"在诊断可见且提及次数≥{min_m} 的维度中，选取与同行中位数差距最大者"
+            f"在诊断可见且提及次数≥{min_m} 的方面中，选与对比中间水平差距最大的一项"
             "（可含位置）"
         ),
     }
@@ -93,9 +282,8 @@ def policy_rules(cfg: dict | None = None) -> dict[str, str]:
 
 POLICY_RULES: dict[str, str] = policy_rules()
 
-HEURISTIC_NAME_ZH = "同行相对证据加权（启发式）"
+HEURISTIC_NAME_ZH = POLICY_LABELS["peer_relative"]
 
-# --- Evidence ---
 EVIDENCE_LEVEL_LABELS: dict[str, str] = {
     "DESCRIPTIVE": "描述性证据",
     "PREDICTIVE": "预测性证据",
@@ -104,7 +292,7 @@ EVIDENCE_LEVEL_LABELS: dict[str, str] = {
 
 EVIDENCE_BANNERS: dict[str, str] = {
     "DESCRIPTIVE": (
-        "描述性证据 — 建议基于相对维度差距与评论证据，"
+        "描述性证据 — 建议基于与附近酒店的相对差距和评论数量，"
         "并非经验证的因果效应估计。"
     ),
     "PREDICTIVE": "预测性证据",
@@ -113,9 +301,9 @@ EVIDENCE_BANNERS: dict[str, str] = {
 
 EVIDENCE_WHY: dict[str, str] = {
     "DESCRIPTIVE": (
-        "经理诊断页所用快照仅包含横截面维度得分与研究者定义的参考同行集，"
+        "改善建议页所用快照仅包含横截面方面得分与研究者定义的对比酒店分组，"
         "本页证据等级为描述性。"
-        "项目在「历史时序分析」「当前研究证据」另有按时间切分的预测实验与严格事件认定，"
+        "项目在「历史变化」「研究进展」另有按时间切分的预测实验与严格事件认定，"
         "但不将本页升级为预测性或因果证据，亦无带置信区间的处理效应识别。"
     ),
     "PREDICTIVE": "快照包含按时间切分划分的样本外预测指标。",
@@ -123,14 +311,13 @@ EVIDENCE_WHY: dict[str, str] = {
 }
 
 CANNOT_CLAIM_ZH: list[str] = [
-    "改善某一维度会带来因果效应",
+    "改善某一方面会带来因果效应",
     "预订需求或收入提升",
-    "参考同行集是经核验的经济替代品",
+    "对比酒店分组是经核验的经济替代品",
     "评论情感变化等于实际管理干预",
     "保证改进或投资回报率（ROI）",
 ]
 
-# --- Feasibility / research verdicts ---
 FEASIBILITY_VERDICT_ZH: dict[str, str] = {
     "GREEN": "可行（绿）",
     "AMBER": "谨慎（琥珀）",
@@ -162,15 +349,14 @@ EVENT_STUDY_STRENGTH_ZH: dict[str, str] = {
 }
 
 TRACK_FORMULATION_ZH: dict[str, str] = {
-    "A": "同行暴露下的供给侧推荐（研究轨道 A）",
-    "B": "诊断≠行动；位置不可直接行动；证据不足时弃权",
+    "A": "同行参考下的供给侧推荐（研究轨道 A）",
+    "B": "诊断≠行动；位置不可直接行动；证据不足时不给出建议",
     "C": "评论情感变化≠服务改进：测量风险视角（研究轨道 C）",
 }
 
-# --- Claims ledger finite mappings ---
 CLAIM_TEXT_ZH: dict[str, str] = {
     "Demo is descriptive unless ledger upgrades it": "演示默认为描述性证据，除非本台账升级认定",
-    "Geo kNN are candidate peers / geo reference sets": "地理 kNN 为候选同行/地理参考集（非经核验竞争对手）",
+    "Geo kNN are candidate peers / geo reference sets": "地理 kNN 为候选对比/地理参考集（非经核验竞争对手）",
     "Location is not a direct operational action": "位置不是可直接运营干预的杠杆",
     "Overnight 5774 is legacy_permissive only": "历史宽松流水线计数仅为旧版宽松规则结果，非当前严格认定",
     "Zero-mention is not observed neutral": "零提及不等于观测到的中性",
@@ -202,16 +388,15 @@ CLAIM_NOTES_ZH: dict[str, str] = {
     "Wave 6": "第 6 波：论文轨道决策",
 }
 
-# --- Predictive model display names ---
 MODEL_NAME_ZH: dict[str, str] = {
     "city_mean": "城市均值基线",
     "persistence": "持久性基线",
     "own_trend": "自身趋势",
     "own_features": "自身特征",
-    "own_plus_peer_state": "自身+同行状态",
-    "own_plus_peer_exposure": "自身+同行暴露",
-    "own_plus_same_aspect_peer_state": "自身+同维度同行状态",
-    "own_plus_same_aspect_peer_exposure": "自身+同维度同行暴露",
+    "own_plus_peer_state": "自身+对比酒店状态",
+    "own_plus_peer_exposure": "自身+对比酒店参考",
+    "own_plus_same_aspect_peer_state": "自身+同方面对比状态",
+    "own_plus_same_aspect_peer_exposure": "自身+同方面对比参考",
 }
 
 TARGET_LABEL_ZH: dict[str, str] = {
@@ -220,25 +405,25 @@ TARGET_LABEL_ZH: dict[str, str] = {
 
 SCORE_TERM_DEFINITIONS = (
     "**术语（可选）：** "
-    "净情感 = 维度正面与负面提及的净值；"
-    "差距 = 同行中位数净情感 − 本店净情感；"
-    "负面率 = 负面提及占该维度提及的比例；"
-    "可靠性 = 提及量越高越接近 1（经收缩处理）；"
-    "差距/负面率归一化 = 本店各可操作维度内的 0–1 缩放。"
+    "总体倾向 = 该方面正面与负面提及的净值；"
+    "差距 = 对比酒店中间水平 − 本店；"
+    "负面率 = 负面提及占该方面提及的比例；"
+    "可靠性 = 提及量越高越接近 1（经收缩处理），反映证据多少而非真伪概率；"
+    "差距/负面率归一化 = 本店各可改善方面内的 0–1 缩放。"
 )
 
 LIMITATIONS_ZH = """
 - 评论条数**不等于**预订量或需求。
-- 维度净情感来自评论情感，**不等于**经核验的管理干预效果。
-- 参考同行集为标注参考集，**不等于**经核验的经济替代品。
-- **同行相对证据加权**使用**设计权重**，非学习所得业务回报。
+- 方面总体倾向来自评论，**不等于**经核验的管理干预效果。
+- 对比酒店分组为研究参考集，**不等于**经核验的经济替代品。
+- **综合考虑差距与评论数量**使用**设计权重**，非学习所得业务回报。
 - **竞争拥挤假设**滑块为**假设/示意**，非拟合弹性。
-- 位置可呈现为诊断劣势，但**不是**可直接运营的行动杠杆。
+- 位置可呈现为短板，但**不是**可直接运营的行动杠杆。
 - 本演示**不宣称**事件研究、安慰剂或因果估计。
 """
 
 MODEL_ANNOTATION_BOUNDARY_EXPANDER = """
-**自动标注与使用边界**（本演示不宣称人工 gold 或真实业务验收）：
+**自动标注与使用边界**（本演示不要求人工填写标签，也不宣称真实业务验收）：
 
 1. **流程**：Grok 初标 → 不同模型盲审（如 Claude）→ 分歧与不确定项由 Codex 作最终裁决；证据不足时保留为未决。
 2. **一致率含义**：模型间原始一致率与 Cohen κ 仅反映标注一致性，**不等于**人工准确率或总体正确率。
@@ -247,7 +432,6 @@ MODEL_ANNOTATION_BOUNDARY_EXPANDER = """
 完整标注文本与逐条理由保存在本机私有目录，不进入公开仓库。
 """
 
-# Backward-compatible name for callers that still import HUMAN_CONFIRM_EXPANDER.
 HUMAN_CONFIRM_EXPANDER = MODEL_ANNOTATION_BOUNDARY_EXPANDER
 
 SENTIMENT_LABELS: dict[str, str] = {
@@ -265,7 +449,7 @@ MODEL_ANNOTATION_PRIVATE_CSV = (
 
 def model_annotation_status_label(status: str | None) -> str:
     mapping = {
-        "MODEL_AUDITED_REFERENCE": "模型审计参考（非人工 gold）",
+        "MODEL_AUDITED_REFERENCE": "已完成模型审计（参考结果）",
         "accepted_consensus": "双模型一致（未抽审计）",
         "accepted_codex": "Codex 裁决接受",
         "unresolved": "未决（证据不足）",
@@ -275,10 +459,7 @@ def model_annotation_status_label(status: str | None) -> str:
 
 def format_model_agreement_caption(raw_rate: float | None, kappa: float | None) -> str:
     raw = f"{raw_rate * 100:.1f}%" if raw_rate is not None else "暂无"
-    if kappa is None:
-        kappa_s = "未定义"
-    else:
-        kappa_s = f"{kappa:.3f}"
+    kappa_s = "未定义" if kappa is None else f"{kappa:.3f}"
     return (
         f"模型原始一致率 {raw} · Cohen κ {kappa_s}。"
         "此为模型间配对一致率，不代表人工准确率或总体正确率。"
@@ -294,9 +475,7 @@ def city_label(city: str) -> str:
 
 
 def compset_label(cs: str) -> str:
-    if cs == "(all)":
-        return "（全部）"
-    return cs
+    return "（全部）" if cs == "(all)" else cs
 
 
 def price_tier_label(tier: str | None) -> str:
@@ -340,14 +519,16 @@ def evidence_why(level: str, backend_why: str) -> str:
 
 
 def policy_label(key: str, backend_label: str | None = None) -> str:
-    if key == "peer_relative" and backend_label:
-        return HEURISTIC_NAME_ZH
     return POLICY_LABELS.get(key, backend_label or key)
 
 
 def policy_rule(key: str, backend_rule: str | None = None, cfg: dict | None = None) -> str:
     rules = policy_rules(cfg) if cfg else POLICY_RULES
     return rules.get(key, backend_rule or "")
+
+
+def policy_summary(key: str) -> str:
+    return POLICY_SUMMARIES.get(key, "")
 
 
 def formula_caption(cfg: dict) -> str:
@@ -367,8 +548,29 @@ def weights_caption(cfg: dict) -> str:
     )
 
 
-def build_diagnostic_explanation(expl: dict, label_fn: Callable[[str], str] = aspect_label) -> str | None:
-    """Build Chinese explanation from diagnostic/action fields, not backend English text."""
+def _aspect_stats_line(rec: Mapping[str, Any], label: str) -> str:
+    mentions = fmt_na(rec.get("mention_count"))
+    neg = fmt_na(rec.get("neg_mentions"))
+    gap = rec.get("gap")
+    if gap is None:
+        comparison = "暂时没有足够数据与附近酒店比较"
+    elif isinstance(gap, (int, float)):
+        if gap > 0:
+            comparison = f"评价比对比酒店的中间水平低 {gap:.3f}"
+        elif gap < 0:
+            comparison = f"评价比对比酒店的中间水平高 {abs(gap):.3f}"
+        else:
+            comparison = "评价与对比酒店的中间水平持平"
+    else:
+        comparison = "暂时无法比较评价水平"
+    return f"「{label}」被提到 {mentions} 次，其中 {neg} 次是负面评价；{comparison}。"
+
+
+def build_diagnostic_explanation(
+    expl: dict,
+    label_fn: Callable[[str], str] = aspect_label,
+    hotel: dict | None = None,
+) -> str | None:
     diag_a = expl.get("diagnostic_aspect")
     act_a = expl.get("actionable_recommendation")
     if not diag_a:
@@ -379,15 +581,31 @@ def build_diagnostic_explanation(expl: dict, label_fn: Callable[[str], str] = as
     diag_label = label_fn(diag_a)
     if act_a:
         act_label = label_fn(act_a)
+        act_rec = ((hotel or {}).get("aspects") or {}).get(act_a) or {}
+        stats = _aspect_stats_line(act_rec, act_label)
         return (
-            f"诊断层最大劣势维度为「{diag_label}」。"
-            f"该维度不属于可直接运营干预的杠杆（如地理位置无法搬迁），"
-            f"行动建议层因此转向可操作维度「{act_label}」。"
+            f"与附近酒店相比，「{diag_label}」差距最大，但这类问题通常无法直接改变"
+            f"（例如位置无法搬迁）。因此建议先关注可改善的方面：{stats}"
         )
     return (
-        f"诊断层最大劣势维度为「{diag_label}」。"
-        "该维度不属于可直接运营干预的杠杆，当前证据下行动层暂无对应直接建议。"
+        f"与附近酒店相比，「{diag_label}」差距最大，但不属于可直接改善的方面，"
+        "当前证据下暂无对应行动建议。"
     )
+
+
+def build_recommendation_explanation(
+    expl: dict,
+    hotel: dict,
+    label_fn: Callable[[str], str] = aspect_label,
+) -> str | None:
+    diag_expl = build_diagnostic_explanation(expl, label_fn, hotel)
+    if diag_expl:
+        return diag_expl
+    act_a = expl.get("actionable_recommendation")
+    if not act_a:
+        return None
+    rec = (hotel.get("aspects") or {}).get(act_a) or {}
+    return _aspect_stats_line(rec, label_fn(act_a))
 
 
 def translate_claim_text(text: str) -> str:
@@ -395,8 +613,7 @@ def translate_claim_text(text: str) -> str:
 
 
 def translate_claim_status(status: str) -> str:
-    s = status.strip()
-    return CLAIM_STATUS_ZH.get(s, s)
+    return CLAIM_STATUS_ZH.get(status.strip(), status.strip())
 
 
 def translate_claim_notes(notes: str) -> str:
@@ -420,7 +637,6 @@ def format_policy_selection(
 
 
 def format_hist_bin(idx: Any) -> str:
-    """Format pandas Interval or scalar bin label for histogram axes."""
     if hasattr(idx, "left") and hasattr(idx, "right"):
         lo, hi = float(idx.left), float(idx.right)
         return f"{lo:.2f}–{hi:.2f}"
