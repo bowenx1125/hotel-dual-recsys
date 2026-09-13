@@ -28,5 +28,15 @@
   "unit_tests_passed": 102,
   "no_human_gold": true,
   "no_population_accuracy": true,
-  "old_research_facts_changed": false
+  "old_research_facts_changed": false,
+  "github_validation": {
+    "commit": "b7afe3c0b49a0a44bd33a64a392bda277ab3cf8f",
+    "run_url": "https://github.com/bowenx1125/hotel-dual-recsys/actions/runs/34764121571",
+    "conclusion": "success",
+    "checks": [
+      "102 unit tests",
+      "isolated small-fixture research",
+      "raw-text leakage scan"
+    ]
+  }
 }
