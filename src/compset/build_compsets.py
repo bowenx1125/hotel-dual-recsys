@@ -3,7 +3,7 @@
 """
 Phase 1：竞争集构建（创新点 ②）
 
-方法（见 RESEARCH_PLAN Phase 1）：
+历史 MVP 方法：
   1. 地理聚类：对布鲁塞尔酒店坐标做 DBSCAN（haversine 真实距离），
      把"地理上抢同一批客人"的酒店聚成地理组。
   2. 价格分档：在每个地理组内按价格分位切档（低/中[/高]）。
@@ -32,7 +32,7 @@ OUT_CSV = os.path.join(ROOT, "data", "processed", "compsets.csv")
 # ---- 可调参数 ----
 EPS_KM        = 1.5    # DBSCAN 邻域半径（km）；地理组的尺度
 MIN_SAMPLES   = 2      # DBSCAN 核心点最小邻居数
-MIN_COMPSET   = 5      # 有效竞争集最小酒店数（RESEARCH_PLAN N=5）
+MIN_COMPSET   = 5      # 有效竞争集最小酒店数（历史 MVP 阈值）
 SENSITIVITY   = [1.0, 1.5, 2.0, 3.0]  # 敏感性分析的 eps 候选
 
 

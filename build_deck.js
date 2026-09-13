@@ -170,4 +170,6 @@ s.addText("Thank You", { x: 0.9, y: 2.5, w: 11, h: 1.2, fontFace: F, fontSize: 5
 s.addShape(p.shapes.LINE, { x: 1.0, y: 3.85, w: 3.4, h: 0, line: { color: GOLDLT, width: 1.5 } });
 s.addText("Next  →  build local competition sets from coordinates + price, then aspect-level review analysis", { x: 0.95, y: 4.1, w: 10.8, h: 0.8, fontFace: F, fontSize: 19, color: BLUELT });
 
-p.writeFile({ fileName: "FYP_Data_Foundation.pptx" }).then(f => console.log("WROTE", f));
+const exportDir = require("path").join(__dirname, "paper", "previous_submission");
+require("fs").mkdirSync(exportDir, { recursive: true });
+p.writeFile({ fileName: require("path").join(exportDir, "FYP_Data_Foundation.pptx") }).then(f => console.log("WROTE", f));

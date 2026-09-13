@@ -7,4 +7,4 @@ Provider-side recommender systems, aspect-based sentiment, and peer effects in h
 - Peer effects and interference in panel settings [CITATION NEEDED]
 - Weak supervision and measurement error [CITATION NEEDED]
 
-We do not copy wording from `RESEARCH_MASTER_PLAN.md` Part 9 as if it were verified.
+Related-work claims remain provisional until checked against the cited primary papers.

@@ -12,4 +12,4 @@
 | Track | B | FACTS waves.6 |
 | Robustness | STABLE | FACTS waves.7 |
 
-Strongest supported claim and strongest null are recorded in `FINAL_CLAIMS_LEDGER.md` after Wave 9.
+Strongest supported claim and strongest null are recorded in `outputs/autonomous/CLAIMS_LEDGER.md` after Wave 9.

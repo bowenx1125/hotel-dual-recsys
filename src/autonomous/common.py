@@ -255,11 +255,6 @@ def paper_dir(root: Path) -> Path:
     return p
 
 
-def finals_dir(root: Path) -> Path:
-    rel = os.environ.get("FYP_FINALS_DIR")
-    return (root / rel) if rel else root
-
-
 def update_state(root: Path, **kwargs: Any) -> dict:
     path = out_dir(root) / "STATE.json"
     if path.exists():

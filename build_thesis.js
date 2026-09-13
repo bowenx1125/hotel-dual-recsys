@@ -318,4 +318,4 @@ const doc = new Document({
   }],
 });
 
-Packer.toBuffer(doc).then(buf => { fs.writeFileSync("FYP1_Partial_Thesis.docx", buf); console.log("WROTE", buf.length, "bytes; TOC pages:", Object.keys(TOC_PAGES).length ? "filled" : "PLACEHOLDER"); });
+Packer.toBuffer(doc).then(buf => { const out = require("path").join(__dirname, "paper", "previous_submission", "FYP1_Partial_Thesis.docx"); fs.mkdirSync(require("path").dirname(out), { recursive: true }); fs.writeFileSync(out, buf); console.log("WROTE", buf.length, "bytes; TOC pages:", Object.keys(TOC_PAGES).length ? "filled" : "PLACEHOLDER"); });

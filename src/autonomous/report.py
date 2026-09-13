@@ -6,7 +6,7 @@ import os
 from datetime import datetime
 from pathlib import Path
 
-from src.autonomous.common import atomic_write_json, atomic_write_text, load_config, out_dir, paper_dir, finals_dir, sha256_file, sha256_json, update_state
+from src.autonomous.common import atomic_write_json, atomic_write_text, load_config, out_dir, paper_dir, sha256_file, sha256_json, update_state
 from src.autonomous.ledger import merge_facts
 
 
@@ -76,7 +76,7 @@ Provider-side recommender systems, aspect-based sentiment, and peer effects in h
 - Peer effects and interference in panel settings [CITATION NEEDED]
 - Weak supervision and measurement error [CITATION NEEDED]
 
-We do not copy wording from `RESEARCH_MASTER_PLAN.md` Part 9 as if it were verified.
+Related-work claims remain provisional until checked against the cited primary papers.
 """,
         "PROBLEM_FORMULATION.md": f"""# Problem Formulation
 
@@ -124,7 +124,7 @@ ABSA audit vs weak section labels (not gold): status={absa.get('status')}, agree
 | Track | {track} | FACTS waves.6 |
 | Robustness | {n(stab)} | FACTS waves.7 |
 
-Strongest supported claim and strongest null are recorded in `FINAL_CLAIMS_LEDGER.md` after Wave 9.
+Strongest supported claim and strongest null are recorded in `outputs/autonomous/CLAIMS_LEDGER.md` after Wave 9.
 """,
         "ROBUSTNESS.md": f"""# Robustness
 
@@ -223,8 +223,6 @@ def adversarial_review(root: Path) -> dict:
 
 def write_finals(root: Path) -> None:
     facts = _facts(root)
-    fdir = finals_dir(root)
-    fdir.mkdir(parents=True, exist_ok=True)
     track = _w(facts, "6", "selected_track", "UNDECIDED")
     titles = _w(facts, "6", "track_titles") or {}
     title = titles.get(track, "Working paper")
@@ -282,69 +280,26 @@ def write_finals(root: Path) -> None:
         "strongest_claim": strongest_claim,
         "strongest_null": strongest_null,
     })
-    atomic_write_text(fdir / "FINAL_CLAIMS_LEDGER.md", claims)
+    # Keep one canonical copy of facts, claims and the generated summary.
+    # merge_facts above writes FACTS.json; the ledger owns ARTIFACT_INDEX.json.
     atomic_write_text(out_dir(root) / "CLAIMS_LEDGER.md", claims)
-    atomic_write_json(fdir / "FINAL_FACTS.json", facts)
-    idx_path = out_dir(root) / "ARTIFACT_INDEX.json"
-    idx = json.loads(idx_path.read_text()) if idx_path.exists() else {"artifacts": []}
-    atomic_write_json(fdir / "FINAL_ARTIFACT_INDEX.json", idx)
-
     atomic_write_text(
-        fdir / "FINAL_SUBMISSION_READINESS.md",
-        f"""# Submission readiness
+        out_dir(root) / "RESEARCH_SUMMARY.md",
+        f"""# Research summary
 
-**{readiness}**
-
-Proposed title: {title}
-Track: {track}
-Recommended venue: ACM RecSys Full / Long if Track A supported; otherwise CIKM Full Research (Track B/C measurement+actionability).
-Do not mark READY_FOR_FULL_PAPER without confirmatory identification and human labels.
-""",
-    )
-    atomic_write_text(
-        fdir / "FINAL_REVIEWER_REPORT.md",
-        (out_dir(root) / "wave9" / "ADVERSARIAL_REVIEW.md").read_text(encoding="utf-8")
-        if (out_dir(root) / "wave9" / "ADVERSARIAL_REVIEW.md").exists()
-        else "# Reviewer report pending\n",
-    )
-    atomic_write_text(
-        fdir / "FINAL_RESEARCH_REPORT.md",
-        f"""# Final research report
-
-Track **{track}**. Measurement **{meas}**. Strict events **{evn}** ({verd}).
-Peer validity **{peer}**. Predictive claim **{pred}**. Event study **{es}**.
-Robustness **{stab}**. Readiness **{readiness}**.
+Track **{track}** — {title}
+Readiness **{readiness}**. Measurement **{meas}**.
+Strict events **{evn}** ({verd}); peer prediction **{pred}**; event study **{es}**.
+Robustness **{stab}**.
 
 Strongest supported claim: {strongest_claim}
 
 Strongest null/refuted: {strongest_null}
-""",
-    )
-    atomic_write_text(
-        fdir / "FINAL_RESEARCH_HANDOFF.md",
-        f"""# FINAL RESEARCH HANDOFF
 
-工作树：`{root.resolve()}`
-项目主线：`main`（当前 checkout 请用 `git branch --show-current` 核实）
-研究基线 SHA：`2586827f40a9028177061fdf16daf170fb35f9d6`
-历史 Demo SHA `0f5ebd5`：仅历史截图；当前整合记录见 `docs/CONSOLIDATION_2026-09-13.md`。
-
-## 结论（给徐）
-
-- 论文轨道：**Track {track}** — {title}
-- 测量：{meas}
-- 严格事件数：{evn}（overnight 5774 仅为 legacy_permissive）
-- 同伴增量预测：{pred}
-- 事件研究：{es}（非因果）
-- 投稿就绪度：**{readiness}**
-- 最强支持：{strongest_claim}
-- 最强空结果：{strongest_null}
-
-HUMAN_VALIDATION_REQUIRED：人工 ABSA gold。
-FUTURE_EXTERNAL_EVIDENCE：真实翻修/预订/经理操作日志。
-
-FACTS：`outputs/autonomous/FACTS.json`（sha `{facts.get('facts_sha256')}`）
-论文：`paper/autonomous/`
+Human ABSA gold remains required. Operational events / bookings require external evidence.
+Facts and claims: `FACTS.json`, `CLAIMS_LEDGER.md` in this directory.
+Review: `wave9/ADVERSARIAL_REVIEW.md`. Paper: `paper/autonomous/`.
+Do not mark READY_FOR_FULL_PAPER without confirmatory identification and human labels.
 """,
     )
 

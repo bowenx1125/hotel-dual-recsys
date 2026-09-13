@@ -163,7 +163,6 @@ def main() -> int:
         os.environ["FYP_PANEL_V2"] = "outputs/autonomous/fixtures/hotel_aspect_quarter_v2.parquet"
         os.environ["FYP_PEERS_V2"] = "outputs/autonomous/fixtures/geo_reference_sets_v2.parquet"
         os.environ["FYP_PAPER_DIR"] = "outputs/autonomous/fixtures/paper"
-        os.environ["FYP_FINALS_DIR"] = "outputs/autonomous/fixtures"
         os.environ["FYP_SMALL_FIXTURE"] = "1"
     init_ledgers(root)
     waves = [args.wave] if args.wave is not None else list(range(args.from_wave, args.to_wave + 1))
