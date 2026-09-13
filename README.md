@@ -1,39 +1,39 @@
-# FYP1 · 酒店经理决策研究
+# FYP1 · 酒店改善助手
 
-**先看 [项目报告](PROJECT_STATUS.md)** 了解进展，再看 [目录与人工推进指南](docs/PROJECT_GUIDE.md) 学会操作。所有 agent 共同遵守 [AGENTS.md](AGENTS.md)。
+这是一个**酒店经理决策研究原型**：把住客评论按清洁、早餐、服务等方面整理，与附近酒店比较，再给出“先改善什么、依据是什么”的建议。网站用来展示研究，核心成果是可复现的评论分析与建议算法。
 
-唯一目录为 `Desktop/FYP1`，GitHub 主线为 `main`。当前是经理端研究原型与工作论文草稿；游客端和真实业务效果验证尚未完成。
+目前支持深色中文 / English 界面，覆盖最近完整季度的 1,487 家酒店，其中 1,223 家符合展示条件。它还没有证明能增加评分、预订或利润，也没有完成游客选酒店功能。
 
-## 启动演示
+只需先读三份文件：**本页**了解项目并启动；[HANDOFF.md](HANDOFF.md)看最新进展、完整复现和下一步；[AGENTS.md](AGENTS.md)约束所有编码 agent。
 
-在项目目录运行：
+## 五分钟启动 Demo
+
+使用 Python **3.12.3**，在仓库根目录执行：
 
 ```bash
+python3.12 -m venv .venv-demo
+.venv-demo/bin/python -m pip install -r requirements-demo.txt
 .venv-demo/bin/python -m streamlit run demo/app.py --server.headless true --server.port 8501
 ```
 
-打开 http://localhost:8501 。页面顶部可切换 **中文 / English**，默认深色界面；依次使用「改善建议」「历史变化」「研究进展」。新机器先建立 `.venv-demo`，安装 `requirements-demo.txt`。仓库已有演示快照，无需下载原始评论即可展示。
+打开 http://localhost:8501 。先选城市和酒店，查看建议，再展开依据。顶部切换中英文。仓库已包含无评论原文的快照，**启动 Demo 不需要原始 CSV 或模型**。Windows 使用 `.venv-demo\Scripts\python.exe` 替换上述 Python 路径。
 
-## 验证
+## 文件夹怎么读
 
-```bash
-.venv-fyp/bin/python -m unittest discover -s tests -v
-.venv-fyp/bin/python run_research.py --small-fixture --verify-only
-```
-
-新机器先建立 `.venv-fyp`，安装 `requirements-research.txt`。小样本验证写入 `outputs/autonomous/fixtures/`，不代表全量研究验收。
-
-## 文件入口
-
-| 内容 | 位置 |
+| 位置 | 用途 |
 |---|---|
-| 进展与下一步 | [PROJECT_STATUS.md](PROJECT_STATUS.md) |
-| 当前论文草稿 | [paper/autonomous/](paper/autonomous/) |
-| 当前事实与声明范围 | [FACTS.json](outputs/autonomous/FACTS.json)、[CLAIMS_LEDGER.md](outputs/autonomous/CLAIMS_LEDGER.md) |
-| 人工推进与目录导览 | [docs/PROJECT_GUIDE.md](docs/PROJECT_GUIDE.md) |
-| Agent 分工与验收 | [AGENTS.md](AGENTS.md)、[任务表](docs/AGENT_TASKS.md) |
-| 当前自动标注与科研路线 | [模型标注协议](docs/MODEL_ANNOTATION_PROTOCOL.md)、[完整科研方案](docs/RESEARCH_PLAN.md) |
-| 代码、配置、测试 | `demo/`、`src/`、`scripts/`、`conf/`、`tests/` |
-| 清理与恢复记录 | [文件清理](docs/FILE_CLEANUP_2026-09-13.md)、[版本整合](docs/CONSOLIDATION_2026-09-13.md) |
+| `demo/` | 网页、深色样式与中英文文案 |
+| `src/recommendation/` | Demo 和研究共用的建议算法、面板转换 |
+| `src/autonomous/`、`src/temporal/` | 测量、时间切分、比较实验和报告 |
+| `run_research.py` | 从原始数据到实验报告的统一入口 |
+| `scripts/` | 构建快照、评估策略、核验资产和模型标注等工具 |
+| `conf/` | 科研门槛、建议权重和可操作性规则 |
+| `tests/` | 合成测试、边界测试和复现保护 |
+| `outputs/demo/` | 当前完整 Demo 快照和描述性验收结果 |
+| `outputs/autonomous/` | 已保存的科研结果、声明边界和模型标注报告 |
+| `data/processed/` | 无评论原文的必要处理表 |
+| `paper/autonomous/` | 工作论文草稿，仍需按复现实验修订 |
+| `docs/` | 模型标注协议、外部资产哈希清单 |
+| `outputs/overnight/`、`outputs/night_demo/` | 当前流程仍读取的历史对照；不是最新 Demo |
 
-本机原始数据在 `data/cache/d1_europe/Hotel_Reviews.csv`，可通过 `FYP_DATA_CACHE_ROOT` 覆盖缓存根目录。原始评论、模型、私有人工标注包、环境和早期 Office 文件仅本机保留。早期报告生成脚本 `build_thesis.js`、`build_deck.js` 输出到 `paper/previous_submission/`。
+`data/cache/`、`models/`、虚拟环境和私有标注只在本机，不能上传。完整研究的资产、命令、续跑和验收见 [HANDOFF.md](HANDOFF.md)。
