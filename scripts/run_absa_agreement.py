@@ -26,6 +26,23 @@ from src.temporal.geo_parse import parse_city_country
 from src.temporal.io_util import load_temporal_config, resolve_europe_csv
 
 
+def _output_base(root: Path) -> Path:
+    raw = os.environ.get("FYP_AUTONOMOUS_OUT", "outputs/autonomous/reproduced")
+    p = Path(raw)
+    return p if p.is_absolute() else root / p
+
+
+def _base_meta() -> dict:
+    return {
+        "attempted": True,
+        "never_gold_accuracy": True,
+        "reference_type": "weak_section_labels",
+        "independent_accuracy_not_established": True,
+        "fixed_sampler_2800": True,
+        "wording": "agreement with structurally weak section labels; not gold accuracy",
+    }
+
+
 def _atomic_write_json(path: Path, obj: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
@@ -106,22 +123,18 @@ def main() -> int:
     cfg = load_temporal_config(ROOT)
     csv_path = resolve_europe_csv(cfg)
     model_dir = Path(os.environ.get("FYP_PRIVATE_MODEL_ROOT", str(ROOT / "models"))) / "absa"
-    out_dir = ROOT / "outputs" / "autonomous" / "wave1"
-    private = ROOT / "outputs" / "autonomous" / "private"
+    base = _output_base(ROOT)
+    out_dir = base / "wave1"
+    private = base / "private"
     out_dir.mkdir(parents=True, exist_ok=True)
     private.mkdir(parents=True, exist_ok=True)
 
     if not (model_dir / "model.safetensors").exists():
-        _atomic_write_json(
-            out_dir / "absa_audit.json",
-            {
-                "attempted": True,
-                "never_gold_accuracy": True,
-                "HUMAN_VALIDATION_REQUIRED": True,
-                "status": "SKIPPED_NO_LOCAL_WEIGHTS",
-                "model_dir": str(model_dir),
-            },
-        )
+        payload = {
+            **_base_meta(),
+            "status": "SKIPPED_NO_LOCAL_WEIGHTS",
+        }
+        _atomic_write_json(out_dir / "absa_audit.json", payload)
         print("SKIPPED_NO_LOCAL_WEIGHTS", file=sys.stderr)
         return 2
 
@@ -212,9 +225,7 @@ def main() -> int:
         (p != w and conf >= 0.8) for p, w, conf in zip(y_pred, y_weak, confs)
     )
     out = {
-        "attempted": True,
-        "never_gold_accuracy": True,
-        "HUMAN_VALIDATION_REQUIRED": True,
+        **_base_meta(),
         "status": "RAN",
         "n_pairs": int(n),
         "agreement_vs_weak_section_label": agree,
@@ -226,7 +237,6 @@ def main() -> int:
         "high_confidence_disagreements": int(high_dis),
         "failures": n_fail,
         "device": str(device),
-        "wording": "agreement with structurally weak section labels; not gold accuracy",
     }
     _atomic_write_json(out_dir / "absa_audit.json", out)
     _atomic_write_text(
@@ -234,7 +244,7 @@ def main() -> int:
         f"# ABSA vs weak labels\n\nStatus: **RAN** (not gold accuracy)\n\n"
         f"n={out['n_pairs']} agreement={agree:.4f} kappa={kappa:.4f}\n"
         f"weak-reference F1={f1s}\n"
-        f"HUMAN_VALIDATION_REQUIRED remains true.\n",
+        "Reference: structurally weak section labels; independent accuracy not established.\n",
     )
     print(json.dumps({k: out[k] for k in ("n_pairs", "agreement_vs_weak_section_label", "cohens_kappa_vs_weak", "status")}, indent=2))
     return 0

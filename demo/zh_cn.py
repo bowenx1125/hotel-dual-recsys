@@ -59,6 +59,7 @@ POLICY_LABELS: dict[str, str] = {
 LANG_CODE = "zh"
 
 UI: dict[str, str] = {
+    "snapshot_config_error": '快照缺少完整的计算配置或格式无效，请重新生成：{cmd} --overwrite',
     "page_title": "酒店改善助手",
     "header_title": "酒店改善助手",
     "header_desc": "选一家酒店，看看哪里值得先改善，以及建议依据。",
@@ -74,16 +75,34 @@ UI: dict[str, str] = {
     "peer_group": "对比酒店分组",
     "peer_group_help": "研究中选定的附近酒店，用于参考，未证明是直接竞争对手。",
     "hotel": "选择酒店",
+    "snapshot_missing_error": "未找到研究演示快照：{path}。请在本机项目目录运行：{cmd}",
+    "data_period_caption": "数据时期：{period}（最近完整季度）。下方评论数为该季度住客评论条数，不是预订量。",
+    "version_caption": "快照版本 {schema} · 评分版本 {scoring}",
+    "coverage_summary_heading": "数据覆盖摘要",
+    "coverage_total": "选定时期酒店总数",
+    "coverage_eligible": "可展示酒店",
+    "coverage_excluded": "已排除酒店",
+    "coverage_source_panel": "源面板共 {count} 家",
+    "coverage_absent_period": "选定时期无数据 {count} 家",
+    "coverage_exclusion_breakdown": "排除原因汇总：{breakdown}",
+    "expander_excluded_hotels": "已排除酒店及原因",
+    "col_hotel_name": "酒店名称",
+    "col_hotel_id": "酒店编号",
+    "col_exclusion_reason": "排除原因",
     "snapshot_caption": "演示快照共 {total} 家酒店，当前可选 {eligible} 家符合展示条件。",
     "no_eligible_hotels": "演示快照中没有符合展示条件的酒店，无法选择酒店或生成建议。请检查快照是否已正确构建。",
     "metric_peer_count": "对比酒店数",
-    "metric_reviews": "评论数",
+    "metric_reviews": "当季评论数",
+    "metric_nearby_hotels": "附近可参考酒店",
+    "metric_aspects_review_evidence": "有足够评论证据的方面",
+    "metric_aspects_peer_references": "有足够附近参考的方面",
     "metric_low_reviews": "低分评论数",
     "metric_price_range": "价格范围",
     "section_compare": "本店与对比酒店",
     "chart_no_data": "暂无足够数据绘制对比图。",
     "chart_altair_fallback": "图表组件不可用，以下以表格展示非缺失对比。",
-    "chart_caption": "越接近1表示正面评价越多，越接近−1表示负面评价越多；没有提及的方面不作判断。",
+    "chart_caption": '越接近 1 表示正面评价越多，越接近 −1 表示负面评价越多。评论少时已作适度修正；没有提及的方面不作判断。',
+    "chart_smoothing_caption": "评论较少时，估计会向中性靠拢；这不是把缺失当作中性。",
     "chart_aspect_col": "方面",
     "chart_series_own": "本店",
     "chart_series_peer": "对比酒店的中间水平",
@@ -99,6 +118,10 @@ UI: dict[str, str] = {
     "slider_label": "假定对比酒店改善强度",
     "slider_help": "假设/示意值，非拟合的竞争弹性。",
     "recommendation_none": "暂无",
+    "recommendation_evidence_insufficient": "证据不足，暂不建议投入",
+    "recommendation_evidence_insufficient_body": "当前评论与附近酒店参考不足以给出明确改善建议。",
+    "policy_evidence_insufficient": "证据不足",
+    "excluded_aspect_generic": "未达到建议门槛",
     "recommendation_fallback_actionable": "综合考虑与附近酒店的差距、差评和评论数量，建议先关注这一方面。",
     "recommendation_fallback_none": "当前证据下暂无明确短板或可执行建议。",
     "recommendation_evidence_note": "建议来自历史评论，尚未验证改善后能提高评分或收入。",
@@ -405,12 +428,49 @@ TARGET_LABEL_ZH: dict[str, str] = {
 
 SCORE_TERM_DEFINITIONS = (
     "**术语（可选）：** "
-    "总体倾向 = 该方面正面与负面提及的净值；"
+    "总体倾向 = 经贝叶斯收缩的净好评倾向，约为 (正面提及−负面提及)/(提及次数+先验强度)，"
+    "评论少时向中性靠拢；"
     "差距 = 对比酒店中间水平 − 本店；"
     "负面率 = 负面提及占该方面提及的比例；"
-    "可靠性 = 提及量越高越接近 1（经收缩处理），反映证据多少而非真伪概率；"
+    "可靠性 = 提及量越高越接近 1（经收缩处理），反映评论提及多少而非判断真伪或准确率；"
     "差距/负面率归一化 = 本店各可改善方面内的 0–1 缩放。"
 )
+
+INELIGIBLE_REASONS: dict[str, str] = {
+    'missing_coordinates': '缺少酒店坐标',
+    'no_measured_aspects': '没有可用的评论方面数据',
+
+    "compset_valid=0": "对比分组无效",
+    "peer_count<2": "附近可参考酒店不足",
+    "absent_selected_period": "选定时期无评论数据",
+    "missing_from_panel": "不在研究面板中",
+}
+
+ABSTENTION_REASONS: dict[str, str] = {
+    'missing_coordinates': '缺少酒店坐标',
+    'no_measured_aspects': '没有可用的评论方面数据',
+    'no_eligible_aspects': '没有方面同时满足证据和可改善条件',
+    'crowding_data_unavailable': '缺少模拟场景所需的附近酒店数据',
+    'crowding_unavailable': '缺少模拟场景数据',
+    'hotel_ineligible': '酒店数据尚未达到展示条件',
+    'insufficient_mentions': '相关评论太少',
+    'insufficient_peers': '可比较的附近酒店太少',
+    'insufficient_reliability': '评论数量所提供的证据不足',
+    'invalid_counts': '评论计数不完整或无效',
+    'invalid_neg_mentions': '缺少有效的差评计数',
+    'invalid_neg_rate': '缺少有效的差评比例',
+    'missing_aspect_record': '缺少这个方面的数据',
+    'missing_aspects': '缺少评论方面数据',
+    'no_measurement': '没有提及这个方面',
+    'nonfinite_gap': '缺少可用的附近酒店差距',
+    'nonfinite_net': '缺少有效评价数据',
+    'not_actionable': '不属于可以直接改善的方面',
+    'unknown_aspect': '尚未定义这个方面的改善规则',
+
+    "insufficient_evidence": "评论与附近参考均不足以给出建议",
+    "no_actionable_aspect": "没有可直接改善的方面达到门槛",
+    "all_aspects_excluded": "各方面均未达到建议门槛",
+}
 
 LIMITATIONS_ZH = """
 - 评论条数**不等于**预订量或需求。
@@ -722,3 +782,52 @@ def feasibility_verdict_label(code: str | None) -> str:
     if not code:
         return "未知"
     return FEASIBILITY_VERDICT_ZH.get(code, code)
+
+
+def ineligible_reason_label(reason: str) -> str:
+    if not reason:
+        return fmt_na(None)
+    if reason in INELIGIBLE_REASONS:
+        return INELIGIBLE_REASONS[reason]
+    if reason.startswith("n_reviews<"):
+        return f"当季评论数不足（需≥{reason.split('<', 1)[1]}）"
+    if reason.startswith("mention_count<"):
+        return f"提及次数不足（需≥{reason.split('<', 1)[1]}）"
+    if reason.startswith("reliability<"):
+        return f"可靠性不足（需≥{reason.split('<', 1)[1]}）"
+    if reason.startswith("peer_n<"):
+        return f"附近可参考酒店不足（需≥{reason.split('<', 1)[1]}）"
+    return reason
+
+
+def abstention_reason_label(reason: str) -> str:
+    if not reason:
+        return fmt_na(None)
+    if reason in ABSTENTION_REASONS:
+        return ABSTENTION_REASONS[reason]
+    return ineligible_reason_label(reason)
+
+
+def format_excluded_aspect_reasons(
+    excluded: Any,
+    label_fn: Callable[[str], str],
+) -> str:
+    if not excluded:
+        return ""
+    pairs: list[tuple[str | None, str]] = []
+    if isinstance(excluded, dict):
+        pairs = [(str(k), str(v or "")) for k, v in excluded.items()]
+    elif isinstance(excluded, list):
+        for item in excluded:
+            if isinstance(item, str):
+                pairs.append((item, ""))
+            elif isinstance(item, dict):
+                pairs.append((item.get("aspect"), str(item.get("reason") or "")))
+    lines: list[str] = []
+    for aspect, reason in pairs:
+        if not aspect:
+            continue
+        lbl = label_fn(aspect)
+        reason_txt = abstention_reason_label(reason) if reason else UI["excluded_aspect_generic"]
+        lines.append(f"· {lbl}：{reason_txt}")
+    return "\n".join(lines)

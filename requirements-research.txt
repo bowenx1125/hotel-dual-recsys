@@ -1,6 +1,7 @@
 # Core research and synthetic verification; offline ABSA uses .venv-absa.
-numpy
-pandas
-pyarrow
-scikit-learn
-scipy
+# Verified on Python 3.12.3 for the current full-panel reference run.
+numpy==2.5.3
+pandas==3.0.5
+pyarrow==25.0.1
+scikit-learn==1.9.0
+scipy==1.18.1

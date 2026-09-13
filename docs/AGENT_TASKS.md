@@ -101,3 +101,32 @@
 - 集成以主目录c3a567d为准，仅复制UI拥有文件；保留标注窗口b7afe3c/c3a567d，FACTS、配置、scoring、evidence、demo快照哈希不变。旧CSS/翻译模块缓存导致加载错误，通过重启本Demo服务解决。
 
 - FYP-CURSOR-004 GitHub验收：[9aeecae research-smoke](https://github.com/bowenx1125/hotel-dual-recsys/actions/runs/34765139635) 成功，含单元测试、小样本研究流程及泄漏扫描。Cursor工作成果已存本机压缩交接，短期worktree已删除；只保留主目录。
+
+
+## FYP-NIGHT-005 · 共享基础算法与全量 Demo
+- 用户授权：2026-09-14 凌晨自动实施/审计/fix循环；不另做固定基线。当前提交5e366e1仅作追溯。
+- 协调：Codex；实现：Cursor Composer2.5；独立复现/精简审计：Luna max（只读）。
+- A写入：src/recommendation/__init__.py、src/recommendation/scoring.py、demo/scoring.py、tests/test_recommendation.py。统一策略与证据门槛，禁止其余文件。
+- B写入：src/recommendation/panel_adapter.py、scripts/build_research_demo.py、tests/test_research_demo.py。完整季度面板→无原文Demo快照，禁止其余文件。
+- 协调集成：conf/demo.json、demo/data_adapter.py、demo/app.py、demo/zh_cn.py、demo/en.py、src/autonomous/infer.py及文档；共享文件串行。
+- 依赖：A/B保持既有hotel/aspects字典接口；原FACTS和实验门槛不改，新规则结果独立记录。
+- 验收：合成边界测试、完整unittest、隔离研究流程、全部酒店覆盖账目、双语AppTest/浏览器、全新clone复现与CI。
+- 状态：IN_PROGRESS。
+
+## FYP-NIGHT-006 · 复现及精简交接
+- 依赖：005先验收，再精简。不删除仍被当前入口引用的历史资产。
+- 协调所有写入，Luna只读列依赖/可清理项；最终README/AGENTS/HANDOFF三个入口，保留必要研究事实/方法/数据获取说明。
+- 验收：新clone按文档运行，数据/模型资产清单、哈希、命令、运行结果与缺口完整；只stage授权文件并push main，CI通过。
+- 状态：PLANNED。
+- 额度：首查Codex CLI剩余55%，每小时heartbeat fyp1检查；低于30%转入收尾，不购买或重置。
+
+- 005补充分工：Luna max / policy_evaluation 仅写 scripts/evaluate_recommendations.py、tests/test_policy_evaluation.py，状态IN_PROGRESS。依赖共享all_policies稳定接口，评估覆盖/弃权/约束违反及共同集合内策略一致，不以自定分数证明优越。协调者运行真实无原文快照并审计。
+
+- 005 C补充分工：Cursor Composer2.5仅写 demo/app.py/demo/zh_cn.py/demo/en.py 与tests/test_full_demo_ui.py（仅若需要，不增加复制文案的测试），状态IN_PROGRESS；接入outputs/demo/research_snapshot.json，酒店ID选择、时期/排除说明和真实弃权提示，保持深色双语。
+
+- 006R：Luna max/reproduction_audit 转实现复现隔离与只读历史审计，状态IN_PROGRESS。仅run_research.py/src/autonomous/panel.py/tests/test_reproduction.py/scripts/verify_reproduction_assets.py/依赖文件/已确认CI工作流；主窗口独立审计，禁止动infer/UI/其他worker。
+
+- 006A：Cursor Composer2.5修复ABSA复现路径，ONLY src/autonomous/absa.py/scripts/run_absa_agreement.py/tests/test_absa_reproduction.py；统一2800样本入口、隔离输出，禁止写旧FACTS/实际模型调用。状态IN_PROGRESS。
+
+- 005/006集成审计：Cursor A/B/C/ABSA 与 Luna evaluator/runner 均经独立返工验收。236项整测通过，新增NEXT续跑模式回归后复现专项16项通过；小样本Wave0–10通过；双语/六城市/两滑块值24组通过，浏览器桌面及窄屏实际检查通过。共享策略7435次选择对比零差异，最新面板1487家、1223合格；原FACTS不变。真实全量科研尚待执行，不将工程结果升级为科学验证。
+- 006进入IN_PROGRESS：冻结的依赖已在新Python3.12.3环境安装并通过pip check；数据/模型外部交接包与docs/ASSETS.json哈希已准备。本次功能检查点后进行新clone验证和最终精简。

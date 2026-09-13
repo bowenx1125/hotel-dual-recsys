@@ -9,7 +9,7 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from demo.config import ROOT, load_actionability_config, load_config
+from demo.config import ROOT
 from demo.data_adapter import eligible_hotels, load_snapshot
 from demo.evidence import decide_evidence_level
 from demo.i18n import DEFAULT_LANGUAGE, LANGUAGE_LABELS, SUPPORTED_LANGUAGES, get_locale, ui_text
@@ -17,11 +17,15 @@ from demo.scoring import (
     all_policies,
     criticism_metrics,
     explain_action_vs_diagnostic,
+    is_finite,
     ranking_under_intensity,
 )
 from demo.theme import apply_theme, render_header, render_recommendation, render_section_header
 
-SNAPSHOT_PATH = ROOT / "outputs" / "night_demo" / "demo_snapshot.json"
+SNAPSHOT_PATH = ROOT / "outputs" / "demo" / "research_snapshot.json"
+BUILD_SNAPSHOT_CMD = ".venv-fyp/bin/python scripts/build_research_demo.py"
+
+MGR_HOTEL_KEY = "mgr_hotel"
 
 OVERNIGHT_FEAS = ROOT / "outputs" / "overnight" / "feasibility"
 OVERNIGHT_TABLES = OVERNIGHT_FEAS / "tables"
@@ -69,15 +73,99 @@ def _make_locale_sync(st, canonical_key: str, widget_key: str):
     return _sync
 
 
+def _gate_thresholds(cfg: dict) -> tuple[int, float, int]:
+    min_mentions = int(cfg.get("min_mentions", 5))
+    min_reliability = float(cfg.get("min_reliability", 0.3))
+    min_measured_peers = int(cfg.get("min_measured_peers", 2))
+    return min_mentions, min_reliability, min_measured_peers
+
+
+def _aspect_has_review_evidence(rec: dict, min_mentions: int, min_reliability: float) -> bool:
+    if rec.get("has_measurement") is False:
+        return False
+    mentions = rec.get("mention_count")
+    if mentions is None or int(mentions) < min_mentions:
+        return False
+    if not is_finite(rec.get("net")):
+        return False
+    rel = rec.get("reliability")
+    return rel is not None and float(rel) >= min_reliability
+
+
+def _aspect_has_peer_references(
+    rec: dict,
+    min_mentions: int,
+    min_reliability: float,
+    min_measured_peers: int,
+) -> bool:
+    if not _aspect_has_review_evidence(rec, min_mentions, min_reliability):
+        return False
+    peer_n = rec.get("peer_n")
+    return peer_n is not None and int(peer_n) >= min_measured_peers
+
+
+def count_aspects_with_review_evidence(hotel: dict, cfg: dict) -> int:
+    min_m, min_r, _ = _gate_thresholds(cfg)
+    aspects = cfg.get("aspects") or []
+    return sum(
+        1
+        for a in aspects
+        if _aspect_has_review_evidence((hotel.get("aspects") or {}).get(a, {}), min_m, min_r)
+    )
+
+
+def count_aspects_with_peer_references(hotel: dict, cfg: dict) -> int:
+    min_m, min_r, min_p = _gate_thresholds(cfg)
+    aspects = cfg.get("aspects") or []
+    return sum(
+        1
+        for a in aspects
+        if _aspect_has_peer_references(
+            (hotel.get("aspects") or {}).get(a, {}), min_m, min_r, min_p
+        )
+    )
+
+
+def hotel_display_labels(hotels: list[dict]) -> dict[str, str]:
+    """Map hotel_id → selectbox label; append short id when names duplicate in set."""
+    name_counts: dict[str, int] = {}
+    for h in hotels:
+        name = h.get("hotel_name") or h["hotel_id"]
+        name_counts[name] = name_counts.get(name, 0) + 1
+    labels: dict[str, str] = {}
+    for h in hotels:
+        hid = h["hotel_id"]
+        name = h.get("hotel_name") or hid
+        if name_counts.get(name, 0) > 1:
+            short = hid[-8:] if len(hid) > 8 else hid
+            labels[hid] = f"{name} ({short})"
+        else:
+            labels[hid] = name
+    return labels
+
+
+def hydrate_hotel_selection(session_state: dict, hotel_ids: list[str], default_id: str | None) -> str | None:
+    if not hotel_ids:
+        session_state.pop(MGR_HOTEL_KEY, None)
+        return None
+    current = session_state.get(MGR_HOTEL_KEY)
+    if current not in hotel_ids:
+        current = default_id if default_id in hotel_ids else hotel_ids[0]
+        session_state[MGR_HOTEL_KEY] = current
+    return current
+
+
+def excluded_hotels(snapshot: dict) -> list[dict]:
+    return [h for h in (snapshot.get("hotels") or []) if not h.get("eligible")]
+
+
 def _load():
     if not SNAPSHOT_PATH.exists():
-        raise FileNotFoundError(
-            f"Missing {SNAPSHOT_PATH}. Run: python3 scripts/build_demo_snapshot.py"
-        )
+        raise FileNotFoundError(str(SNAPSHOT_PATH))
     snap = load_snapshot(SNAPSHOT_PATH)
-    cfg = load_config()
-    snap_cfg = snap.get("config") or {}
-    cfg = {**snap_cfg, **cfg}
+    cfg = snap.get("config")
+    if not isinstance(cfg, dict) or not isinstance(cfg.get("actionability"), dict):
+        raise ValueError("Snapshot must contain frozen scoring and actionability configuration")
     return snap, cfg
 
 
@@ -264,17 +352,105 @@ def _render_mae_chart(st, loc, models: dict):
     st.bar_chart(df[[mae_col]])
 
 
+def _render_snapshot_meta(st, loc, snap: dict) -> None:
+    period = snap.get("period") or loc.fmt_na(None)
+    schema_v = snap.get("schema_version") or loc.fmt_na(None)
+    scoring_v = snap.get("scoring_version") or loc.fmt_na(None)
+    st.caption(ui_text(loc, "data_period_caption", period=period))
+    st.caption(ui_text(loc, "version_caption", schema=schema_v, scoring=scoring_v))
+
+
+def _render_coverage_summary(st, loc, snap: dict) -> None:
+    total = snap.get("n_hotels_total")
+    if total is None:
+        total = len(snap.get("hotels") or [])
+    eligible = snap.get("n_eligible_hotels")
+    if eligible is None:
+        eligible = sum(1 for h in (snap.get("hotels") or []) if h.get("eligible"))
+    excluded = snap.get("n_excluded_hotels")
+    if excluded is None and total is not None and eligible is not None:
+        excluded = int(total) - int(eligible)
+
+    render_section_header(st, loc.UI["coverage_summary_heading"])
+    c1, c2, c3 = st.columns(3)
+    c1.metric(loc.UI["coverage_total"], total)
+    c2.metric(loc.UI["coverage_eligible"], eligible)
+    c3.metric(loc.UI["coverage_excluded"], excluded if excluded is not None else loc.fmt_na(None))
+
+    optional_bits: list[str] = []
+    if snap.get("n_hotels_source_panel") is not None:
+        optional_bits.append(
+            ui_text(loc, "coverage_source_panel", count=snap["n_hotels_source_panel"])
+        )
+    if snap.get("absent_selected_period_count") is not None:
+        optional_bits.append(
+            ui_text(
+                loc,
+                "coverage_absent_period",
+                count=snap["absent_selected_period_count"],
+            )
+        )
+    if optional_bits:
+        st.caption(" · ".join(optional_bits))
+
+    counts = snap.get("exclusion_counts") or {}
+    if counts:
+        parts = [
+            f"{loc.ineligible_reason_label(str(reason))}: {count}"
+            for reason, count in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
+        ]
+        st.caption(ui_text(loc, "coverage_exclusion_breakdown", breakdown=" · ".join(parts)))
+
+    excluded = excluded_hotels(snap)
+    if excluded:
+        with st.expander(loc.UI["expander_excluded_hotels"], expanded=False):
+            rows = [
+                {
+                    loc.UI["col_hotel_name"]: h.get("hotel_name") or loc.fmt_na(None),
+                    loc.UI["col_hotel_id"]: h.get("hotel_id"),
+                    loc.UI["col_exclusion_reason"]: loc.ineligible_reason_label(
+                        str(h.get("ineligible_reason") or "")
+                    ),
+                }
+                for h in sorted(excluded, key=lambda x: (x.get("city") or "", x.get("hotel_name") or ""))
+            ]
+            st.dataframe(rows, hide_index=True, use_container_width=True)
+
+
+def _build_recommendation_copy(loc, expl: dict, hotel: dict, albl) -> tuple[str, str]:
+    act_a = expl.get("actionable_recommendation")
+    action_pol = expl.get("action") or {}
+    if not act_a:
+        rec_aspect = loc.UI["recommendation_evidence_insufficient"]
+        parts = [loc.UI["recommendation_evidence_insufficient_body"]]
+        abstention = action_pol.get("abstention_reason")
+        if abstention:
+            parts.append(loc.abstention_reason_label(str(abstention)))
+        excluded = action_pol.get("excluded_aspects")
+        extra = loc.format_excluded_aspect_reasons(excluded, albl)
+        if extra:
+            parts.append(extra)
+        return rec_aspect, "\n".join(parts)
+
+    loc_expl = loc.build_recommendation_explanation(expl, hotel, albl)
+    if loc_expl:
+        return albl(act_a), loc_expl
+    if expl.get("diagnostic_aspect"):
+        return albl(act_a), loc.UI["recommendation_fallback_actionable"]
+    return loc.UI["recommendation_none"], loc.UI["recommendation_fallback_none"]
+
+
 def render_manager_tab(st, loc, snap, cfg):
     ev = decide_evidence_level(snap)
     labels = cfg.get("aspect_labels") or {}
-    act = load_actionability_config()["aspects"]
+    act = cfg["actionability"].get("aspects", cfg["actionability"])
     hotels = eligible_hotels(snap)
-    snap_hotel_count = len(snap.get("hotels") or [])
-    eligible_count = len(hotels)
 
     def albl(a: str) -> str:
         return loc.aspect_label(a, labels.get(a, a))
 
+    _render_snapshot_meta(st, loc, snap)
+    _render_coverage_summary(st, loc, snap)
     st.caption(loc.UI["recommendation_evidence_note"])
 
     lang = st.session_state.get("ui_language", DEFAULT_LANGUAGE)
@@ -322,37 +498,43 @@ def render_manager_tab(st, loc, snap, cfg):
         )
     cs = st.session_state[MGR_CS_CANONICAL]
     hotels_f = hotels_c if cs == "(all)" else [h for h in hotels_c if h["compset_id"] == cs]
+    hotels_by_id = {h["hotel_id"]: h for h in hotels_f}
+    hotel_ids = list(hotels_by_id.keys())
+    display_labels = hotel_display_labels(hotels_f)
+    default_hid = hotel_ids[0] if hotel_ids else None
+    hydrate_hotel_selection(st.session_state, hotel_ids, default_hid)
     with c3:
-        names = {h["hotel_name"]: h["hotel_id"] for h in hotels_f}
-        name = st.selectbox(loc.UI["hotel"], list(names.keys()), key="mgr_hotel")
-    hotel = next(h for h in hotels_f if h["hotel_id"] == names[name])
+        if hotel_ids:
+            st.selectbox(
+                loc.UI["hotel"],
+                hotel_ids,
+                format_func=lambda hid: display_labels.get(hid, hid),
+                key=MGR_HOTEL_KEY,
+            )
+    if not hotel_ids:
+        st.info(loc.UI["no_eligible_hotels"])
+        return
+    hotel = hotels_by_id[st.session_state[MGR_HOTEL_KEY]]
 
     st.markdown(f"### {hotel['hotel_name']}")
-    st.caption(
-        ui_text(loc, "snapshot_caption", total=snap_hotel_count, eligible=eligible_count)
-    )
+    peer_count = hotel.get("peer_count")
+    if peer_count is None:
+        peer_count = loc.fmt_na(None)
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric(loc.UI["metric_peer_count"], hotel["compset_size"])
-    m2.metric(loc.UI["metric_reviews"], hotel["n_reviews"])
-    m3.metric(loc.UI["metric_low_reviews"], hotel["n_negative"])
-    m4.metric(loc.UI["metric_price_range"], loc.price_tier_label(hotel.get("price_tier")))
+    n_reviews = hotel.get("n_reviews")
+    m1.metric(
+        loc.UI["metric_reviews"],
+        n_reviews if n_reviews is not None else loc.fmt_na(None),
+    )
+    m2.metric(loc.UI["metric_nearby_hotels"], peer_count)
+    m3.metric(loc.UI["metric_aspects_review_evidence"], count_aspects_with_review_evidence(hotel, cfg))
+    m4.metric(loc.UI["metric_aspects_peer_references"], count_aspects_with_peer_references(hotel, cfg))
 
     expl = explain_action_vs_diagnostic(hotel, cfg)
     render_section_header(
         st, loc.UI["section_recommendation"], css_class="fyp-section-header--emphasis"
     )
-    rec_aspect = (
-        albl(expl["actionable_recommendation"])
-        if expl["actionable_recommendation"]
-        else loc.UI["recommendation_none"]
-    )
-    loc_expl = loc.build_recommendation_explanation(expl, hotel, albl)
-    if loc_expl:
-        rec_body = loc_expl
-    elif expl["diagnostic_aspect"]:
-        rec_body = loc.UI["recommendation_fallback_actionable"]
-    else:
-        rec_body = loc.UI["recommendation_fallback_none"]
+    rec_aspect, rec_body = _build_recommendation_copy(loc, expl, hotel, albl)
     render_recommendation(
         st,
         rec_aspect,
@@ -364,8 +546,10 @@ def render_manager_tab(st, loc, snap, cfg):
     render_section_header(st, loc.UI["section_compare"])
     rows = []
     for a in cfg["aspects"]:
-        rec = hotel["aspects"][a]
+        rec = hotel.get("aspects", {}).get(a, {})
         meta = act.get(a, {})
+        crit = criticism_metrics(hotel, a)
+        npr = crit.get("neg_per_review")
         rows.append({
             loc.UI["col_aspect"]: albl(a),
             loc.UI["col_actionability"]: loc.actionability_label(meta.get("actionability_level")),
@@ -377,11 +561,13 @@ def render_manager_tab(st, loc, snap, cfg):
             loc.UI["col_mentions"]: rec.get("mention_count"),
             loc.UI["col_neg_mentions"]: rec.get("neg_mentions"),
             loc.UI["col_neg_rate"]: rec.get("neg_rate"),
-            loc.UI["col_neg_per_review"]: criticism_metrics(hotel, a)["neg_per_review"],
+            loc.UI["col_neg_per_review"]: round(npr, 4) if npr is not None else loc.fmt_na(None),
             loc.UI["col_reliability"]: rec.get("reliability"),
         })
     _render_aspect_peer_chart(st, loc, hotel, cfg, albl)
-    st.caption(loc.UI["chart_caption"])
+    prior_k = cfg.get("reliability_k", 10)
+    st.caption(ui_text(loc, "chart_caption", prior_strength=prior_k))
+    st.caption(loc.UI["chart_smoothing_caption"])
     with st.expander(loc.UI["expander_detail_table"], expanded=False):
         st.dataframe(rows, use_container_width=True, hide_index=True)
 
@@ -410,7 +596,7 @@ def render_manager_tab(st, loc, snap, cfg):
         chosen = p["chosen_aspect"]
         col.metric(
             loc.policy_label(key, p.get("label")),
-            albl(chosen) if chosen else loc.UI["recommendation_none"],
+            albl(chosen) if chosen else loc.UI["policy_evidence_insufficient"],
         )
         col.caption(loc.policy_summary(key))
 
@@ -456,11 +642,12 @@ def render_manager_tab(st, loc, snap, cfg):
             if a not in hotel["aspects"]:
                 continue
             m = criticism_metrics(hotel, a)
+            npr = m.get("neg_per_review")
             crit_rows.append({
                 loc.UI["col_aspect"]: albl(a),
                 loc.UI["col_neg_mentions"]: m["neg_mentions"],
                 loc.UI["col_neg_rate"]: m["neg_rate"],
-                loc.UI["col_neg_per_review"]: round(m["neg_per_review"], 4),
+                loc.UI["col_neg_per_review"]: round(npr, 4) if npr is not None else loc.fmt_na(None),
                 loc.UI["col_actionable"]: loc.fmt_bool(
                     act.get(a, {}).get("eligible_for_direct_action")
                 ),
@@ -509,14 +696,9 @@ def render_manager_tab(st, loc, snap, cfg):
         st.write(loc.evidence_why(ev["level"], ev["why"]))
         for c in loc.CANNOT_CLAIM_ZH:
             st.markdown(f"- {c}")
-        st.caption(
-            f"`{snap['sources']['aspect_features']}` · "
-            f"`{snap['sources']['compsets']}` · `{snap['sources']['review_aspects_jsonl']}`"
-        )
-
-    if not hotels:
-        st.info(loc.UI["no_eligible_hotels"])
-        return
+        sources = snap.get("sources") or {}
+        if sources:
+            st.caption(" · ".join(f"`{path}`" for path in sources.values() if path))
 
     with st.expander(loc.UI["expander_limitations"], expanded=False):
         st.markdown(loc.LIMITATIONS_ZH)
@@ -869,7 +1051,21 @@ def main():
         loc.UI["header_desc"],
         loc.UI["header_badge"],
     )
-    snap, cfg = _load()
+    try:
+        snap, cfg = _load()
+    except FileNotFoundError:
+        st.error(
+            ui_text(
+                loc,
+                "snapshot_missing_error",
+                path=str(SNAPSHOT_PATH),
+                cmd=BUILD_SNAPSHOT_CMD,
+            )
+        )
+        return
+    except ValueError:
+        st.error(ui_text(loc, "snapshot_config_error", cmd=BUILD_SNAPSHOT_CMD))
+        return
     tab1, tab2, tab3 = st.tabs([
         loc.UI["tab_improvement"],
         loc.UI["tab_history"],

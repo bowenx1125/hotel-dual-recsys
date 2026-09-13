@@ -1,2 +1,8 @@
-streamlit>=1.30
-matplotlib>=3.8
+# Streamlit demo and the full quarterly-panel adapter.
+# Verified on Python 3.12.3.
+streamlit==1.63.0
+matplotlib==3.11.1
+pandas==3.0.5
+numpy==2.5.3
+pyarrow==25.0.1
+altair==6.2.2

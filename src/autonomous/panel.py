@@ -32,7 +32,6 @@ from src.autonomous.common import (
     resolve_europe_csv,
     review_fingerprint,
     sha256_file,
-    sha256_json,
     smoothed_net,
     update_state,
     panel_v2_path,
@@ -257,71 +256,29 @@ def run_wave0(root: Path) -> dict:
     findings["legacy_event_count_artifact"] = int(len(ev))
     findings["legacy_reproduced_match"] = int(n_final) == int(len(ev))
 
-    # Correct stale overnight metadata (additive, documented)
-    man2 = dict(man)
-    man2["n_cities_known6"] = findings["n_cities"]
-    man2["n_cities_parsed_legacy_bug"] = 373
-    man2["n_cities_parsed"] = findings["n_cities"]
-    man2["correction_note"] = (
-        "n_cities_parsed=373 was a last-token parser bug. "
-        "Correct city count under known-6 detector is 6. "
-        "Original buggy field retained as n_cities_parsed_legacy_bug."
-    )
-    atomic_write_json(overnight / "data_audit" / "europe_515k_manifest.json", man2)
-
-    facts_path = overnight / "FACTS.json"
-    facts = json.loads(facts_path.read_text())
-    facts["europe_515k"]["hotels_by_name"] = findings["n_hotel_name"]
-    facts["europe_515k"]["hotels_by_id"] = findings["n_hotel_id"]
-    facts["europe_515k"]["cities"] = findings["n_cities"]
-    facts["audit_wave0"] = {
-        "legacy_permissive_event_count": int(len(ev)),
-        "legacy_reproduced": int(n_final),
-        "zero_mention_not_neutral": True,
-        "frac_2pre2post_valid_measurement": findings["questions"]["q2_2pre2post_row_vs_valid"]["frac_valid_measurement"],
-        "predictive_test_included_partial_2017Q3": True,
-        "peer_exposure_was_overall_score": True,
-        "bootstrap_was_not_hotel_clustered": True,
-        "validation_unused_for_ridge": True,
+    # Keep the historical overnight artifacts immutable.  The corrected
+    # values are recorded in this run's findings and audit output below; the
+    # old FACTS/manifest/state/FAILURES/REVIEW remain an archival baseline.
+    findings["historical_manifest_correction"] = {
+        "n_cities_known6": findings["n_cities"],
+        "n_cities_parsed_legacy_bug": 373,
+        "n_cities_parsed": findings["n_cities"],
+        "correction_note": (
+            "n_cities_parsed=373 was a last-token parser bug. "
+            "Correct city count under known-6 detector is recorded only in this run."
+        ),
     }
-    facts_hash = sha256_json(facts)
-    atomic_write_json(facts_path, facts)
-    st["facts_sha256"] = facts_hash
-    atomic_write_json(overnight / "state.json", st)
-
-    atomic_write_text(
-        overnight / "FAILURES.md",
-        """# Failures
-
-## Recorded (Wave 0 forensic, 2026-09-11)
-
-1. **GitHub Actions `research-smoke` failed** on all listed runs of `research/temporal-feasibility-20260910-grok`.
-   Cause: `test_classify_green` imported `scripts.run_temporal_feasibility`, which imported `matplotlib` at module level. CI installed only numpy/pandas/pyarrow.
-   Run IDs: 34510724491 (PR), 34500261999, 34500257453, 34500234958.
-2. **City parser** initially invented 373 cities (last token). Fixed to known 6-city detector; `europe_515k_manifest.json` remained stale at 373 until Wave 0 correction.
-3. **`facts_sha256` empty** in overnight `state.json`.
-4. **Handoff Final SHA** pinned `365b548` while branch HEAD is `2586827` (two later commits).
-5. **Scientific (not engineering) issues in overnight measurement/prediction** — see `outputs/autonomous/wave0/WAVE0_AUDIT.md`. These are not CI failures; they change the research interpretation of 5774 / GREEN / peer MAE.
-""",
-    )
-    atomic_write_text(
-        overnight / "REVIEW.md",
-        """# Review Log
-
-## Phase 0
-
-- Data Auditor: worktree isolation clean; private data remains outside git.
-- Reviewer #2: mission docs do not invent temporal results.
-- Product Critic: Demo still needs Location/actionability fix in Phase 1.
-
-## Overnight research (post-hoc Wave 0)
-
-- Independent reproduction of legacy permissive events from parquet: see WAVE0_AUDIT.md.
-- GREEN overnight gate used row-exists 2pre+2post and zero-mention smoothed_net=0 as if observed.
-- Predictive pilot included partial 2017Q3; validation unused; bootstrap not hotel-clustered; peer exposure used overall score.
-- CI matplotlib import failure is an engineering defect (repair in autonomous branch).
-""",
-    )
+    facts_path = overnight / "FACTS.json"
+    facts = json.loads(facts_path.read_text()) if facts_path.exists() else {}
+    findings["historical_facts_snapshot"] = {
+        "europe_515k_present": bool(facts.get("europe_515k")),
+        "audit_wave0_present": "audit_wave0" in facts,
+        "facts_sha256": facts.get("facts_sha256"),
+    }
+    findings["historical_state_snapshot"] = {
+        "state_present": bool(st),
+        "facts_sha256": st.get("facts_sha256"),
+    }
 
     md = _wave0_markdown(findings)
     atomic_write_json(odir / "findings.json", findings)
@@ -353,17 +310,53 @@ Autonomous research does **not** treat overnight GREEN / 5774 as a strict result
 7. **Ridge fair:** NO (see findings JSON).
 8. **Bootstrap hotel-clustered:** NO (iid rows, n=500).
 9. **1492 names vs 1493 IDs:** hashed addresses vs names. Panel: {f['n_hotel_id']} IDs, {f['n_hotel_name']} names. Multi-id names: {f['multi_id_names']}.
-10. **Stale 373-city manifest:** YES; corrected to 6 with legacy bug field retained.
+10. **Stale 373-city manifest:** YES; corrected value is recorded in this audit while the historical manifest and legacy field remain unchanged.
 11. **Stale handoff SHA:** YES (`365b548` vs HEAD `2586827`).
-12. **FAILURES.md omitted failures:** YES; rewritten.
-13. **REVIEW.md only Phase 0:** YES; extended.
-14. **facts_sha256 empty:** YES; now hashed.
+12. **FAILURES.md omitted failures:** YES; historical file retained unchanged and omissions are recorded here.
+13. **REVIEW.md only Phase 0:** YES; historical review retained unchanged and this audit records the extension.
+14. **facts_sha256 empty:** YES in the historical snapshot; the current audit records it without changing the archive.
 15. **GitHub Actions:** matplotlib missing on import path; repaired on this branch.
 
 ## Engineering vs scientific
 
 Overnight CI failure is **engineering** (must fix). Overnight GREEN/5774 overclaim is **scientific measurement error** — keep the number only as legacy_permissive, do not retune thresholds to recover GREEN.
 """
+
+
+def _validate_full_source(
+    cfg: dict,
+    csv_path: Path,
+    source_sha: str,
+    rows_read: int | None = None,
+) -> dict:
+    """Validate the configured immutable source before publishing derived data."""
+    expected = cfg["dataset"]
+    expected_bytes = expected.get("expected_bytes")
+    actual_bytes = csv_path.stat().st_size
+    if expected_bytes is not None and actual_bytes != int(expected_bytes):
+        raise ValueError(
+            "dataset byte-size mismatch: "
+            f"expected {int(expected_bytes)}, got {actual_bytes} for {csv_path.name}"
+        )
+    expected_sha = expected.get("expected_sha256")
+    if expected_sha and source_sha != expected_sha:
+        raise ValueError(
+            "dataset SHA-256 mismatch: "
+            f"expected {expected_sha}, got {source_sha} for {csv_path.name}"
+        )
+    expected_rows = expected.get("expected_rows")
+    if expected_rows is not None and rows_read is not None and rows_read != int(expected_rows):
+        raise ValueError(
+            "dataset row-count mismatch: "
+            f"expected {int(expected_rows)}, got {rows_read} for {csv_path.name}"
+        )
+    return {
+        "mode": "full",
+        "validated": True,
+        "bytes": int(actual_bytes),
+        "rows": int(rows_read) if rows_read is not None else None,
+        "sha256": source_sha,
+    }
 
 
 def build_measurement_v2(root: Path, *, small_fixture: bool = False) -> dict:
@@ -380,11 +373,18 @@ def build_measurement_v2(root: Path, *, small_fixture: bool = False) -> dict:
     if small_fixture:
         csv_path = _write_fixture_csv(root)
         source_sha = sha256_file(csv_path)
+        source_validation = {
+            "mode": "small_fixture",
+            "validated": True,
+            "bytes": int(csv_path.stat().st_size),
+            "sha256": source_sha,
+        }
     else:
         csv_path = resolve_europe_csv(cfg)
         source_sha = sha256_file(csv_path)
-        if source_sha != cfg["dataset"]["expected_sha256"]:
-            print(f"WARNING source sha256 {source_sha} != expected {cfg['dataset']['expected_sha256']}")
+        # Verify identity before spending time parsing the full source.  The
+        # row-count check is repeated after streaming and before publication.
+        source_validation = _validate_full_source(cfg, csv_path, source_sha)
 
     print(f"Wave1 streaming {csv_path} prior={prior}")
     month_acc: dict = defaultdict(lambda: {"pos": 0, "neg": 0, "posA": 0, "negA": 0, "posB": 0, "negB": 0})
@@ -475,6 +475,15 @@ def build_measurement_v2(root: Path, *, small_fixture: bool = False) -> dict:
 
     print(f"  已完成/总数/失败数 = {rows_ok}/{rows_read}/{rows_read-rows_ok}", flush=True)
     assert fold_n["A"] + fold_n["B"] == rows_ok
+    if not small_fixture:
+        source_sha_after = sha256_file(csv_path)
+        if source_sha_after != source_sha:
+            raise ValueError(
+                f"dataset changed while reading {csv_path.name}: "
+                f"initial SHA {source_sha}, final SHA {source_sha_after}"
+            )
+        source_sha = source_sha_after
+        source_validation = _validate_full_source(cfg, csv_path, source_sha, rows_read)
     # A ∩ B = 0 by construction (each review one fold)
 
     periods = sorted(dates_by_q.keys(), key=period_sort_key)
@@ -570,6 +579,7 @@ def build_measurement_v2(root: Path, *, small_fixture: bool = False) -> dict:
 
     meas = {
         "source_sha256": source_sha,
+        "source_validation": source_validation,
         "rows_read": rows_read,
         "rows_date_ok": rows_ok,
         "date_min": date_min.isoformat(),
@@ -621,7 +631,6 @@ def build_measurement_v2(root: Path, *, small_fixture: bool = False) -> dict:
         "status": "pack_generated_unannotated",
     }
     atomic_write_json(odir / "human_annotation_pack_manifest.json", manifest)
-    atomic_write_text(root / "docs" / "HUMAN_ANNOTATION_PROTOCOL.md", HUMAN_PROTOCOL)
 
     atomic_write_json(odir / "measurement_manifest.json", meas)
     atomic_write_text(odir / "MEASUREMENT_V2.md", _meas_md(meas))

@@ -1,0 +1,51 @@
+{
+  "schema_version": "handoff-assets-v1",
+  "archive_name": "FYP1-handoff-assets-20260914.tar.gz",
+  "contains": [
+    "original review CSV",
+    "offline ABSA model and tokenizer files"
+  ],
+  "not_in_github": true,
+  "dataset_source": "https://huggingface.co/datasets/Dricz/515k-Hotel-Reviews-In-Europe/tree/cdaea79962c5d667dd5177956ef0353001f6ade3",
+  "model_source": "https://huggingface.co/yangheng/deberta-v3-base-absa",
+  "model_source_check": "HTTP 401 on 2026-09-14; use verified local asset bundle",
+  "files": [
+    {
+      "path": "data/cache/d1_europe/Hotel_Reviews.csv",
+      "bytes": 238154765,
+      "sha256": "a4810c2757934f0a826a1b16a437eb67a38be45b1a22ad56772afce0b6c11af9"
+    },
+    {
+      "path": "models/absa/added_tokens.json",
+      "bytes": 18,
+      "sha256": "cd0141b19e809eb963a8f8244fad72530233f729e1f6960d281e1fbb3537b2fb"
+    },
+    {
+      "path": "models/absa/config.json",
+      "bytes": 1032,
+      "sha256": "fd2cb71859840be42a8bd13ee5e2849608b44bac77a9d7c75ac77b4bd4276be1"
+    },
+    {
+      "path": "models/absa/model.safetensors",
+      "bytes": 737726548,
+      "sha256": "270559fb59fec507f6a105d2c7765af0b61c685670dbbcf52e551c6fa160601e"
+    },
+    {
+      "path": "models/absa/special_tokens_map.json",
+      "bytes": 156,
+      "sha256": "fcfbeb4e25cd37fb5b8030406394253b245230fd3b552750092bab7d24d827da"
+    },
+    {
+      "path": "models/absa/spm.model",
+      "bytes": 2464616,
+      "sha256": "c679fbf93643d19aab7ee10c0b99e460bdbc02fedf34b92b05af343b4af586fd"
+    },
+    {
+      "path": "models/absa/tokenizer_config.json",
+      "bytes": 372,
+      "sha256": "18893ee284f616237d508c05b50d49a3f098f534e4b7f57262c7f0a9c0ae3930"
+    }
+  ],
+  "archive_bytes": 675753800,
+  "archive_sha256": "7dd7940ef05a63ef604e0dd3b41b5454863ac264b97f4fe83967d1f8f4b6dfb9"
+}

@@ -1,7 +1,6 @@
-"""Demo compatibility layer — re-exports shared recommendation scoring."""
-from __future__ import annotations
+"""Shared recommendation policies (stdlib-only scoring core)."""
 
-from src.recommendation.scoring import (
+from .scoring import (
     ASPECTS_DEFAULT,
     actionable_aspect_ids,
     all_policies,
