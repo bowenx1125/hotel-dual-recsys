@@ -250,6 +250,7 @@ def _build_reproduction_manifest(
 
     demo_config_path = root / "conf" / "demo.json"
     actionability_config_path = root / "conf" / "actionability.json"
+    temporal_config_path = root / "conf" / "temporal_feasibility.json"
 
     def config_record(path: Path) -> dict:
         return {
@@ -276,10 +277,18 @@ def _build_reproduction_manifest(
             if actionability_config_path.is_file()
             else None
         ),
+        "temporal_config_path": _safe_path_ref(root, temporal_config_path),
+        "temporal_config_path_sha256": _path_digest(temporal_config_path),
+        "temporal_config_sha256": (
+            sha256_file(temporal_config_path)
+            if temporal_config_path.is_file()
+            else None
+        ),
         "config_inputs": {
             "autonomous_research": config_record(config_path),
             "demo": config_record(demo_config_path),
             "actionability": config_record(actionability_config_path),
+            "temporal_feasibility": config_record(temporal_config_path),
         },
         "small_fixture": small_fixture,
         "verify_only": verify_only,
@@ -334,6 +343,7 @@ def _assert_resume_manifest(
         "config_sha256",
         "demo_config_sha256",
         "actionability_config_sha256",
+        "temporal_config_sha256",
         "config_inputs",
         "assets",
         "small_fixture",

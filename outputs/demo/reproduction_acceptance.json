@@ -1,0 +1,112 @@
+{
+  "schema_version": "reproduction-acceptance-v1",
+  "date": "2026-09-14",
+  "source_commit": "23cd4633aa7c581fa67c7ff1ec1b344fc3c2b59d",
+  "source": "fresh clone from GitHub main",
+  "mode": "full; --skip-ui; not verify-only",
+  "exit_code": 0,
+  "waves_completed": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "fresh_research_demo_environment": true,
+  "absa_runtime": "existing verified local .venv-absa; not a fresh ABSA dependency install",
+  "input_assets": "docs/ASSETS.json; all bundle hashes verified after extraction",
+  "data_rows": 515738,
+  "strict_events": 456,
+  "absa_status": "RAN",
+  "absa_pairs": 2800,
+  "absa_weak_label_agreement": 0.8460714285714286,
+  "prediction": {
+    "complete_periods": [
+      "2015Q4",
+      "2016Q1",
+      "2016Q2",
+      "2016Q3",
+      "2016Q4",
+      "2017Q1",
+      "2017Q2"
+    ],
+    "n_rolling_folds": 3,
+    "last_fold_models": {
+      "own_features": {
+        "mae": 0.3703841938050289,
+        "rmse": 0.5175198690206229,
+        "alpha": 0.01
+      },
+      "own_plus_generic_peer": {
+        "mae": 0.3697602246712266,
+        "rmse": 0.5172166047685796,
+        "alpha": 0.01
+      },
+      "own_plus_same_aspect_peer_state": {
+        "mae": 0.3694981690336025,
+        "rmse": 0.5169702169307046,
+        "alpha": 0.01
+      },
+      "own_plus_same_aspect_peer_exposure": {
+        "mae": 0.3693705182306876,
+        "rmse": 0.5170643387839939,
+        "alpha": 0.01
+      }
+    },
+    "bootstrap_own_minus_peer": {
+      "mean": 0.0010301549277233635,
+      "ci95": [
+        -0.0013688588071684895,
+        0.003541099948903185
+      ],
+      "n_boot": 1000,
+      "n_hotels": 1437
+    },
+    "shuffled_peer_frac_real_better": 1.0,
+    "n_shuffle": 100,
+    "peer_predictive_claim": "PARTIAL",
+    "not_causal": true,
+    "2017Q3_excluded": true
+  },
+  "numeric_reference_comparison": "panel and peer parquet values/dtypes exactly equal; waves 2,3,4,5,7,9,final exact equality; wave1 and ABSA differences limited to validation/wording metadata",
+  "wave6": {
+    "selected_track": "B",
+    "formulation": "Actionability- and Reliability-Aware Provider Recommendation: diagnosis ≠ action; Location never a direct action; abstain when evidence is insufficient.",
+    "n_hotels_scored": 1487,
+    "location_violation_rate_action_policies": 0.0,
+    "actionability_violation_count": 0,
+    "n_action_selections": 6110,
+    "n_eligible_hotels": 1223,
+    "period": "2017Q2",
+    "policy_version": "shared-v1",
+    "baselines": [
+      "fix_weakest",
+      "largest_peer_gap",
+      "most_criticized",
+      "peer_relative",
+      "reliability_aware"
+    ],
+    "abstention_applies_to_choices": true,
+    "no_ips_snips": true,
+    "no_roi": true,
+    "no_demand_lift": true,
+    "track_titles": {
+      "A": "Provider-Side Recommendation under Peer Exposure",
+      "B": "From Diagnosis to Action: Actionability- and Reliability-Aware Provider Recommendation",
+      "C": "Review Sentiment Change Is Not Service Improvement: Measurement Risks in Provider-Side Recommendation"
+    }
+  },
+  "ui_capture": {
+    "status": "SKIPPED_UI_REQUESTED",
+    "note": "UI capture skipped independently; this does not reduce statistical experiment settings."
+  },
+  "research_readiness": "WORKING_PAPER_ONLY",
+  "canonical_reference_unchanged": true,
+  "claims": "Reproduction and engineering acceptance only; weak agreement is not accuracy; no causal or business benefit validation."
+}

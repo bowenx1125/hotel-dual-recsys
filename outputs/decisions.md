@@ -23,3 +23,7 @@
 
 ## 2026-09-14 · 共享建议规则口径
 统一Demo/批量研究的建议门槛：提及量>=5，评论量可靠性>=0.3（沿用旧wave6已有阈值），需要附近参照的方法至少2家有效方面参照（沿用Demo酒店至少2家参照的最低规模并明确到方面）。保留0.45/0.35/0.20设计权重，不因实验结果调参。缺失不补零，位置与未知可操作性失败关闭；规则版本shared-v1。旧FACTS与旧实验不覆盖，新输出独立存outputs/demo。科学比较需报告各方法可用集合/共同集合，不以约束内建的0违规证明推荐真实有用。
+
+## 2026-09-14 Overnight handoff
+
+No new frozen-baseline stage. Cursor implemented bounded code packages; Luna max handled evaluator/reproduction protection; Codex independently audited. Full-panel shared scoring and snapshot config freezing accepted. A fresh GitHub clone completed full Wave0–10 with verified assets and unchanged scientific conclusions; ABSA reused the verified local runtime. See HANDOFF.md and outputs/demo/reproduction_acceptance.json. Duplicate entry documents merged into HANDOFF; obsolete scripts/Office generation assets removed only after dependency audit. Existing historical research dependencies retained. Core CLI quota remaining39% at02:04; closing completed scope rather than expanding.

@@ -39,4 +39,4 @@ Cursor CLI 指定 `cursor-grok-4.6-medium` 初标、`claude-sonnet-5-medium` 盲
 - 本机同目录 `codex_audit.json` 保存 54 项真实裁决，`final_labels.json` 区分接受来源，`batches/` 保存两模型答案和调用原始记录。私有目录不会上传 GitHub。
 - 102 项 unittest 通过，[b7afe3c 的 GitHub CI](https://github.com/bowenx1125/hotel-dual-recsys/actions/runs/34764121571) 同时通过隔离小样本研究与泄漏检查；没有重跑全量研究、训练或改写历史 FACTS/研究门槛。模型参考标签不是人工 gold，未验证因果、预订增长或 ROI。
 
-完整方案见 [科研方案](../../../docs/RESEARCH_PLAN.md)，规则见 [模型标注协议](../../../docs/MODEL_ANNOTATION_PROTOCOL.md)。
+完整方案见 [科研方案](../../../HANDOFF.md)，规则见 [模型标注协议](../../../docs/MODEL_ANNOTATION_PROTOCOL.md)。

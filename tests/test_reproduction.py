@@ -500,6 +500,53 @@ class TestResumeBinding(unittest.TestCase):
                         skip_ui=True,
                     )
 
+    def test_resume_rejects_temporal_config_change(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            conf = root / "conf"
+            conf.mkdir(parents=True)
+            for name in (
+                "autonomous_research.json",
+                "demo.json",
+                "actionability.json",
+                "temporal_feasibility.json",
+            ):
+                shutil.copyfile(ROOT / "conf" / name, conf / name)
+            cfg = json.loads((conf / "autonomous_research.json").read_text(encoding="utf-8"))
+            out = root / "run"
+            with _env(
+                FYP_AUTONOMOUS_OUT=str(out),
+                FYP_PANEL_V2=str(out / "hotel_aspect_quarter_v2.parquet"),
+                FYP_PEERS_V2=str(out / "geo_reference_sets_v2.parquet"),
+                FYP_PAPER_DIR=str(out / "paper"),
+                FYP_DATA_CACHE_ROOT=str(root / "data" / "cache"),
+                FYP_PRIVATE_MODEL_ROOT=str(root / "models"),
+                FYP_SMALL_FIXTURE="1",
+                FYP_SKIP_UI="1",
+            ):
+                _write_reproduction_manifest(
+                    root,
+                    out,
+                    cfg,
+                    small_fixture=True,
+                    verify_only=True,
+                    resume=False,
+                    skip_ui=True,
+                )
+                temporal_path = conf / "temporal_feasibility.json"
+                temporal = json.loads(temporal_path.read_text(encoding="utf-8"))
+                temporal["_test_manifest_change"] = True
+                temporal_path.write_text(json.dumps(temporal), encoding="utf-8")
+                with self.assertRaisesRegex(RuntimeError, "fingerprints changed"):
+                    _assert_resume_manifest(
+                        root,
+                        out,
+                        cfg,
+                        small_fixture=True,
+                        verify_only=True,
+                        skip_ui=True,
+                    )
+
 
 class TestSkipUI(unittest.TestCase):
     def test_skip_ui_environment_has_explicit_status(self):
