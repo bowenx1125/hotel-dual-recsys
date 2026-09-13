@@ -54,8 +54,10 @@
 - 可写：demo/app.py、demo/zh_cn.py；补充依赖范围为 scripts/capture_autonomous_screenshots.py、scripts/capture_live_demo_screenshots.py、src/autonomous/report.py 中仅截图选择器与页面标题。配置、事实文件与科研参数不改。
 - 协调者可写：本任务记录、PROJECT_STATUS.md、outputs/decisions.md。
 - 验收：既有单元测试、Streamlit AppTest 交互及浏览器核查；历史宽松结果不得翻译成当前确认结论；选择器和滑块结果不变。
-- 状态：REVIEW（中文界面与浏览器验收通过，等待本次同步及 CI）。
+- 状态：DONE（中文界面、8 组交互、浏览器核查及 74 项测试通过；已同步 main）。
 
 - FYP-CURSOR-002 审计：中文显示层不改后端键、配置或分数；修复首版 pandas.Interval 格式异常、补全策略/台账翻译、当前结论改为实时读取 FACTS，修复直方图按字符串排序。截图调用方的等待文字与页签名一并更新。
 - 协调者运行 8 组参考组/滑块交互，中文显示的策略选择与后端计算一致；浏览器实际检查三个页签、中文控件与图表坐标，0 页面异常。Streamlit 自带工具栏/下载工具提示和技术文件名仍可能使用英文；酒店名保留原文。
 - 手工标注内容、原始评论、研究结果和数值门槛均未改；不增加低风险翻译断言测试。截图脚本只做语法与选择器对应检查，实际浏览器检查通过 CUA 完成，未运行全量研究或重新生成既有截图产物。
+
+- FYP-CURSOR-002 GitHub 验收：[99bc2d4 research-smoke](https://github.com/bowenx1125/hotel-dual-recsys/actions/runs/34761712547) 成功。测试与显示语言变更均不构成科研结论升级。
