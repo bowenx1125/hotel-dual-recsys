@@ -199,9 +199,7 @@ def haversine_km(lat1, lon1, lat2, lon2):
 
 
 def resolve_europe_csv(cfg: dict, cache_root: str | None = None) -> Path:
-    cache = Path(cache_root or os.environ.get("FYP_DATA_CACHE_ROOT") or "")
-    if not str(cache):
-        raise FileNotFoundError("Set FYP_DATA_CACHE_ROOT")
+    cache = Path(cache_root or os.environ.get("FYP_DATA_CACHE_ROOT") or (repo_root() / "data" / "cache"))
     path = cache / cfg["dataset"]["relative_path"]
     if not path.exists():
         raise FileNotFoundError(f"Missing {path}")

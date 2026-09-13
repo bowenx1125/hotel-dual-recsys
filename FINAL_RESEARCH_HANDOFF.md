@@ -1,9 +1,11 @@
 # FINAL RESEARCH HANDOFF
 
-工作树：`/Users/xubosmell/Desktop/FYP1-autonomous`
-分支：`research/autonomous-paper-20260911`
+工作树：`/Users/xubosmell/Desktop/FYP1`
+分支：`main`
 研究基线 SHA：`2586827f40a9028177061fdf16daf170fb35f9d6`
-历史 Demo SHA `0f5ebd5`：仅截图，未合并、未 cherry-pick。
+历史 Demo SHA `0f5ebd5`：仅截图，已于 2026-09-13 整合到 main；研究数值未改变。
+
+当前使用入口：`README.md` 与 `PROJECT_STATUS.md`。
 
 ## 结论（给徐）
 

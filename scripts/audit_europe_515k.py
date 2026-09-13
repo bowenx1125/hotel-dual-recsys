@@ -28,7 +28,7 @@ def parse_date(s: str):
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--cache-root", default=os.environ.get("FYP_DATA_CACHE_ROOT"))
+    ap.add_argument("--cache-root", default=os.environ.get("FYP_DATA_CACHE_ROOT", str(ROOT / "data" / "cache")))
     ap.add_argument("--relative", default="d1_europe/Hotel_Reviews.csv")
     args = ap.parse_args()
     if not args.cache_root:

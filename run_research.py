@@ -154,10 +154,10 @@ def main() -> int:
     ap.add_argument("--force", action="store_true")
     ap.add_argument("--root", default=str(ROOT))
     args = ap.parse_args()
-    root = Path(args.root)
-    os.environ.setdefault("FYP_DATA_CACHE_ROOT", "/Users/xubosmell/Desktop/FYP_DATA_CACHE")
-    os.environ.setdefault("FYP_PRIVATE_DATA_ROOT", "/Users/xubosmell/Desktop/FYP1/data")
-    os.environ.setdefault("FYP_PRIVATE_MODEL_ROOT", "/Users/xubosmell/Desktop/FYP1/models")
+    root = Path(args.root).resolve()
+    os.environ.setdefault("FYP_DATA_CACHE_ROOT", str(root / "data" / "cache"))
+    os.environ.setdefault("FYP_PRIVATE_DATA_ROOT", str(root / "data"))
+    os.environ.setdefault("FYP_PRIVATE_MODEL_ROOT", str(root / "models"))
     if args.small_fixture:
         os.environ["FYP_AUTONOMOUS_OUT"] = "outputs/autonomous/fixtures/out"
         os.environ["FYP_PANEL_V2"] = "outputs/autonomous/fixtures/hotel_aspect_quarter_v2.parquet"

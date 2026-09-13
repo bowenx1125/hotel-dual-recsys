@@ -49,3 +49,6 @@ outputs/autonomous/checkpoints/
 outputs/autonomous/**/human_pack_with_text.*
 *.safetensors
 Hotel_Reviews.csv
+
+# Consolidated local dataset cache
+data/cache/

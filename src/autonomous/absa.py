@@ -16,7 +16,7 @@ def run_absa_audit(root: Path, *, verify_only: bool = False) -> dict:
     odir.mkdir(parents=True, exist_ok=True)
     private = out_dir(root) / "private"
     pack_path = private / "human_annotation_pack.json"
-    model_root = Path(os.environ.get("FYP_PRIVATE_MODEL_ROOT") or (Path("/Users/xubosmell/Desktop/FYP1/models")))
+    model_root = Path(os.environ.get("FYP_PRIVATE_MODEL_ROOT") or (root / "models"))
     model_dir = model_root / "absa"
     weights = model_dir / "model.safetensors"
     out: dict = {
@@ -48,7 +48,7 @@ def run_absa_audit(root: Path, *, verify_only: bool = False) -> dict:
         from transformers import AutoModelForSequenceClassification, AutoTokenizer
         import torch
     except Exception as e:
-        absa_py = Path(os.environ.get("FYP_ABSA_PYTHON") or "/Users/xubosmell/Desktop/FYP1/.venv-absa/bin/python")
+        absa_py = Path(os.environ.get("FYP_ABSA_PYTHON") or str(root / ".venv-absa" / "bin" / "python"))
         script = root / "scripts" / "run_absa_agreement.py"
         if absa_py.exists() and script.exists() and not os.environ.get("FYP_SMALL_FIXTURE"):
             import subprocess
@@ -56,8 +56,8 @@ def run_absa_audit(root: Path, *, verify_only: bool = False) -> dict:
                 **os.environ,
                 "HF_HUB_OFFLINE": "1",
                 "TRANSFORMERS_OFFLINE": "1",
-                "FYP_PRIVATE_MODEL_ROOT": os.environ.get("FYP_PRIVATE_MODEL_ROOT", "/Users/xubosmell/Desktop/FYP1/models"),
-                "FYP_DATA_CACHE_ROOT": os.environ.get("FYP_DATA_CACHE_ROOT", "/Users/xubosmell/Desktop/FYP_DATA_CACHE"),
+                "FYP_PRIVATE_MODEL_ROOT": os.environ.get("FYP_PRIVATE_MODEL_ROOT", str(root / "models")),
+                "FYP_DATA_CACHE_ROOT": os.environ.get("FYP_DATA_CACHE_ROOT", str(root / "data" / "cache")),
             }
             print(f"  ABSA falling back to {absa_py}", flush=True)
             r = subprocess.run([str(absa_py), str(script)], cwd=str(root), env=env)
