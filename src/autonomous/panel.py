@@ -181,7 +181,7 @@ def run_wave0(root: Path) -> dict:
         "stale": man.get("n_cities_parsed") == 373,
         "correction": "373 came from last-token city parser; known-6-city detector is the research parser.",
     }
-    handoff = (root / "OVERNIGHT_RESEARCH_HANDOFF_2026-09-11.md").read_text(encoding="utf-8")
+    handoff = (overnight / "HANDOFF_HISTORICAL.md").read_text(encoding="utf-8")
     findings["questions"]["q11_stale_handoff_sha"] = {
         "handoff_final_sha_line_present": "365b548" in handoff,
         "actual_research_head_at_branch_creation": "2586827f40a9028177061fdf16daf170fb35f9d6",
@@ -621,7 +621,7 @@ def build_measurement_v2(root: Path, *, small_fixture: bool = False) -> dict:
         "status": "pack_generated_unannotated",
     }
     atomic_write_json(odir / "human_annotation_pack_manifest.json", manifest)
-    atomic_write_text(root / "HUMAN_ANNOTATION_PROTOCOL.md", HUMAN_PROTOCOL)
+    atomic_write_text(root / "docs" / "HUMAN_ANNOTATION_PROTOCOL.md", HUMAN_PROTOCOL)
 
     atomic_write_json(odir / "measurement_manifest.json", meas)
     atomic_write_text(odir / "MEASUREMENT_V2.md", _meas_md(meas))

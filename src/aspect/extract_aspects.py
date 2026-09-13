@@ -13,7 +13,7 @@ Phase 2：Aspect-Based Sentiment 提取（创新点 ③）
   data/processed/aspect_features.csv     每家酒店的 aspect 质量向量 + 差评热点分布
 
 差评定义：rating < 7（Booking 10 分制）。差评 aspect 热点在竞争集层面聚合更稳健
-（单店差评稀疏，见 RESEARCH_PLAN §2.3）。
+（单店差评稀疏）。
 
 运行（用专用 venv，避开 anaconda 的 numpy 冲突）：
   .venv-absa/bin/python src/aspect/extract_aspects.py

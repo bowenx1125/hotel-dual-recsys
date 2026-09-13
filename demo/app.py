@@ -328,9 +328,7 @@ def render_research_evidence_tab(st):
     st.subheader("Research Evidence")
     st.caption("Numbers come from outputs/autonomous/FACTS.json. Demo does not invent metrics.")
     facts_p = ROOT / "outputs" / "autonomous" / "FACTS.json"
-    claims_p = ROOT / "FINAL_CLAIMS_LEDGER.md"
-    if not claims_p.exists():
-        claims_p = ROOT / "outputs" / "autonomous" / "CLAIMS_LEDGER.md"
+    claims_p = ROOT / "outputs" / "autonomous" / "CLAIMS_LEDGER.md"
     if facts_p.exists():
         facts = json.loads(facts_p.read_text(encoding="utf-8"))
         waves = facts.get("waves") or {}

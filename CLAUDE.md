@@ -1,132 +1,37 @@
-# CLAUDE.md · 项目 Agent 守则
+# FYP1 项目协作守则
 
-> **本文件是 Claude Code 每次启动的入口。先读完这份，再读别的。**
-> 项目：双视角酒店推荐系统（Tourist + Manager），目标 RecSys 2027 / CIKM 2027。
-> 作者：徐伯闻 Bowen XU（BNBU，AI 专业，学号 2330034059）。导师：Dr. Sunny Jeong。
+## 当前入口
 
----
+工作目录 `Desktop/FYP1`，主线 `main`。先读 `README.md` 和 `PROJECT_STATUS.md`；当前研究事实以 `outputs/autonomous/FACTS.json` 为准，结论边界以同目录 `CLAIMS_LEDGER.md` 为准。代码和已记录实验优先于文字计划。当前 Track B / WORKING_PAPER_ONLY；Demo 为 DESCRIPTIVE，游客排序和因果业务收益未完成。
 
-## 0 · 2026-09-13 当前入口（优先于下面旧蓝图的状态描述）
+过时蓝图、重复交接及根目录 FINAL 副本已按用户要求删除。不要恢复旧入口或凭旧计划启动新研究阶段。版本与文件清理记录在 `docs/`，旧资料可从 Git 历史及 Documents 恢复备份追溯。
 
-唯一工作目录为 `Desktop/FYP1`、唯一主线 `main`。先读 `PROJECT_STATUS.md`、当前 `HANDOFF.md` 和 `NEXT.md`。最新研究证据是 `outputs/autonomous/FACTS.json` 与 `FINAL_CLAIMS_LEDGER.md`：Track B / WORKING_PAPER_ONLY；Demo DESCRIPTIVE；游客排序和因果业务收益仍未完成。下面研究蓝图中的目标、因果示例与时间表不是已实现的结果或已核实的投稿日期。
+## 环境与入口
 
-当前可用环境为 `.venv-fyp`（研究）、`.venv-demo`（UI）和 `.venv-absa`（离线模型），不要因为旧文档就重装 Anaconda。数据缓存已整合到 `data/cache/`；原来的 `FYP1-autonomous`、`FYP1-temporal` 和 Desktop 缓存目录不再作为入口。研究脚本是 `run_research.py`，不是 `run.py`。研究变更的 Gate 仍适用，目录整理不等于推进新 Stage。
+- `.venv-fyp`：研究与测试；依赖见 `requirements-research.txt`。
+- `.venv-demo`：Streamlit 演示；依赖见 `requirements-demo.txt`。
+- `.venv-absa` 与 `models/absa/`：既有本地模型，设置 `HF_HUB_OFFLINE=1`，不默认在线下载。
+- 全量研究入口 `run_research.py`；默认缓存 `data/cache/`，环境变量可覆盖。小样本用 `--small-fixture --verify-only`，必须与正式结果隔离。
 
-## 1 · 权威文档（按需读，不要一次全读）
+## 研究纪律
 
-| 文件 | 什么时候读 |
-|---|---|
-| **`RESEARCH_MASTER_PLAN.md`** | 开始任何 Stage 前，读对应章节。这是**唯一权威研究蓝图** |
-| **`CODE_PLAN.md`** | 写代码前，读对应 Stage 的任务与 Gate |
-| **`AUTORUN_SPEC.md`** | **执行主文件**。40 个 STEP 的全自动规范（每步含 怎么做/为什么/创新/预期结果）+ 预注册决策表 + 自动降级表。Agent 干活时读这一份 |
-| **`SPRINT_44D.md`** | **当前主线**。44 天冲刺 WWW 2027（摘要 2026-10-11 / 全文 2026-10-18），逐日计划 + Plan A/B/C |
-| **`PAPER_STRATEGY.md`** | 想清楚论文命题时读。顶会强度版本的核心论证（performativity）与写作蓝图 |
-| `BG.md` / `RESEARCH_PLAN.md` / `SCRAPING_SPEC.md` | **历史文档，已被上面几份取代**。只在追溯"当初为什么这么做"时读 |
+1. 每次研究变更前检查 `conf/autonomous_research.json` 中对应阈值与门槛、`outputs/autonomous/DECISIONS.md` 和 `outputs/decisions.md`；保留失败与负结果，不能为过关而调低门槛。
+2. 预测和评估按时间切分，排除不完整季度；不能使用包含未来信息的全期 Average_Score。A/B 评论折用于交叉拟合，不代替时间切分。
+3. 没有评论提及不等于中性质量；保留缺失标记和可靠性。地理参照酒店不自动等于经济竞争对手，评论变化不自动等于管理干预。
+4. 机器与弱标签的一致率不能称为人工 gold 准确率。人工核对遵循 `docs/HUMAN_ANNOTATION_PROTOCOL.md`。
+5. 所有方法更优或因果主张必须有相应评测支持；不把启发式权重、模拟滑块或单元测试当成商业收益证据。
+6. 若使用 LLM，只负责解释结构化结果，不能自行编造数字。论文引用必须核对原始文献；未核验的新颖性与投稿日期不能写成事实。
 
----
+## 执行与验证
 
-## 2 · 一句话讲清这个项目在做什么
+长时间爬取、训练、全量推理和大型实验默认由用户运行；代理负责代码、调试、结果分析及清晰命令。脚本支持幂等重跑、断点和进度输出，不程序化调用自身订阅做批处理。
 
-用一套**共享的、竞争集相对的酒店表征**，同时服务两个视角：
-- **Tourist**：在预算档位内选最优酒店（排序任务）
-- **Manager**：给出经**因果验证**的改进处方（"把清洁度提到竞争集第 30 百分位，预计评分 +0.18 [0.07, 0.29]"）
+用中文沟通，区分已实现、演示、测试、全量实验和真实效果；报告数字及局限。改动后运行相关测试与门槛，决策写入 `outputs/decisions.md`。当前基础验证为 unittest 全套和隔离小样本流程；它们不能替代人工或真实业务验收。
 
-**核心创新不是"做了个系统"，而是**：把「本地竞争集」同时用作产品意义上的可比市场**和**统计意义上的匹配对照组，从而让经理侧的建议第一次变得**可验证**。
+中间表优先使用 parquet，经现有 schema 校验后落盘。酒店 ID 遵循数据集前缀和稳定哈希，随机种子来自配置，正式实验回落到脚本。
 
-**当前所处位置**：进入 **44 天冲刺**（`SPRINT_44D.md`），目标 WWW 2027 全文截稿 2026-10-18。
-最关键的单一里程碑是 **Day 7（2026-09-11）画出粗糙版 Figure 1** —— 那是 Plan A/B/C 的分叉点。
-长期工程计划（`CODE_PLAN.md` 的 S0–S6）在冲刺结束后恢复。
+## 文件与数据
 
----
+事实文件、声明表、索引和每波审查结果各有唯一来源；不要生成根目录 FINAL 副本。给用户的总报告只维护 `PROJECT_STATUS.md`。早期实验输入虽然较旧，但仍可能被 Demo 或 Wave 0 核查使用，删除前必须检查读取依赖。
 
-## 3 · 环境（当前是坏的，先修）
-
-`python3`（Anaconda 3.12.4）里 **numpy 2.4.6 与 pandas/sklearn/pyarrow 二进制不兼容，import 直接崩**。旧脚本靠纯标准库 `csv` 绕开——**新代码不要再绕**。
-
-```bash
-source .venv-fyp/bin/activate     # 若不存在，按 CODE_PLAN.md §0.1 建
-python -c "import numpy,pandas,sklearn,lightgbm,statsmodels; print('env OK')"
-```
-
-- `.venv-absa/`：旧的 ABSA 环境（只有 transformers 系），S2 之前保留
-- `models/absa/`：本地 `yangheng/deberta-v3-base-absa` 权重。**HF 在线下载器在本机会卡死**，脚本必须设 `HF_HUB_OFFLINE=1` 并走本地路径
-
----
-
-## 4 · 工作模式（重要：省订阅额度）
-
-- **长时间任务由用户自己用 `python` 跑**：爬虫、LoRA 微调、全量推理、大规模 DiD。
-  Agent 的职责是**写好脚本 + 打印清晰进度 + 支持断点续跑**，然后告诉用户怎么跑。
-- **Agent 的额度只花在**：写代码、改代码、调 bug、分析结果、写论文。
-- 脚本必须支持中断后重跑不污染结果（幂等），且要打印 `已完成/总数/失败数`。
-- **不要**用 `claude -p` 程序化调用自己去跑批量任务。批量 LLM 标注用 **API key**，不用订阅额度。
-
----
-
-## 5 · 每次开工的固定动作
-
-1. 读 `CODE_PLAN.md` 里当前 Stage 的任务和 **Gate**
-2. 读 `outputs/decisions.md`（历史上偏离计划的决定，避免重复踩坑）
-3. 干活
-4. **跑该 Stage 的 Gate 检查**，把结果写进 `outputs/decisions.md`
-5. Gate 不过 → 执行 `RESEARCH_MASTER_PLAN.md` Part 8 里对应的止损方案，**不要硬推**
-
----
-
-## 6 · 编码约定
-
-- 中文注释 OK，变量名/函数名用英文
-- **中间产物一律 parquet**，不用 CSV（浮点精度 + 类型丢失）
-- 写盘前必须 `schema.validate(df, NAME)`，列名/类型不符直接报错退出
-- `hotel_id` 全局格式：`f"{dataset}:{sha1(原始主键)[:12]}"`
-- 每个脚本 `python -m src.xxx.yyy --config conf/config.yaml` 独立可运行
-- 随机种子统一从 `conf/config.yaml` 读（`seed: 42`）
-- 正式实验**不在 notebook 里做**；notebook 只探索，结论回落到脚本
-
----
-
-## 7 · 研究纪律（比代码规范更重要）
-
-1. **时序切分，永远不要随机切分。** 这是评论数据，随机切分 = 用未来预测过去。
-2. **结果好的第一嫌疑是泄漏。** 任何"哇效果很好"的时刻，先跑泄漏自检 pytest。
-   - 特别注意：D1 的 `Average_Score` 是**全期**平均分，含未来信息，**不能直接当特征**，必须用特征窗重算。
-3. **LLM 只做文本化，不做数值。** Manager 侧的所有数字来自结构化估计，LLM 只负责翻译成人话；输出后要正则校验每个数字都能在输入 dict 里找到。
-4. **负结果也要如实报。** 比如 mask-reviews 消融如果没下降，就写进论文——这本身回应了 SIGIR'20 对评论推荐的批评，是有价值的。
-5. **每个"我们的方法更好"的主张，都要配一个可证伪的检验。** 竞争集有 T1/T2，因果有 event study + placebo，处方有 Policy Value，双视角有 H1。
-6. 引用文献前**必须核对原文**，不要照抄 `RESEARCH_MASTER_PLAN.md` Part 9 的措辞（那是起始清单，不是已核实的引用）。
-
----
-
-## 8 · 数据与合规红线
-
-- 爬虫：3–8s 随机延迟、遵守 robots.txt、原始 HTML 落盘可复现、**绝不绕过验证码或任何 bot 检测**。遇到验证码就记为失败走降级方案。
-- 只抓研究必需的酒店级属性，不抓个人数据。
-- **任何凭证/API key 绝不写进代码或提交**，走 `.env` + `python-dotenv`，`.env` 进 `.gitignore`。
-- **不提交**：`data/raw/`、`.venv*`、模型权重、`.env`
-- **要提交**：`data/annotations/`（人工标注 gold set，这是论文资产）、`conf/`、`src/`、`outputs/tables/`
-
----
-
-## 9 · 当前目录里的历史资产（别重复造）
-
-| 路径 | 是什么 | 还能用吗 |
-|---|---|---|
-| `data/booking_reviews copy.csv` | 26,675 条比利时评论（2018–2021） | ✅ 归一化成 D3 |
-| `data/processed/hotels_all.csv` | 822 家爬取结果（745 坐标 / 321 价格 / 529 星级） | ✅ D3 + 价格代理模型的训练集 |
-| `data/scraped/html/*.gz` | 每家的原始 HTML 存档 | ✅ 可重解析补字段，不用重爬 |
-| `data/processed/compsets.csv` | 旧竞争集 MVP（**只有 34 家、1 个有效地理簇**） | ❌ 已知失效，S1 重建 |
-| `data/processed/aspect_features.csv` | 旧 ABSA MVP（24 家酒店） | ❌ S2 重建 |
-| `src/scrape/*.py` | 爬虫（Playwright，可用） | ✅ 需要补爬时复用 |
-| `src/compset/build_compsets.py` | 纯 Python 手写 DBSCAN+haversine（因环境坏才手写） | ⚠️ 环境修好后改用 sklearn |
-| `figures/*.png`, `build_thesis.js` | Partial Thesis 的图与生成脚本 | ✅ 写作阶段复用 |
-| `FYP1_Partial_Thesis.docx` | 已交的 partial thesis（5,589 词） | ✅ 论文 Introduction/动机素材 |
-
-**本机已知环境坑**：macOS 26.4 beta → brew 装不了 LibreOffice；Word 的 AppleScript 桥不稳。docx 渲染 QA 路径：`pandoc docx→html` + Chrome `--headless=new --screenshot`。
-
----
-
-## 10 · 沟通约定
-
-- 用户用中文，回复用中文，技术术语保留英文
-- 报告实验结果时**给数字，不给形容词**（"NDCG@10 = 0.412 vs 基线 0.387，Wilcoxon p=0.03"，不是"效果不错"）
-- Gate 没过就直说没过，并给出触发了哪条止损方案
+不提交凭证、`.env`、原始评论、私有标注文本、虚拟环境和模型权重；提交代码、配置和不含原始文本的研究结果。爬取仅收集必要酒店信息，遵守 robots、随机延迟与访问限制；不绕过验证码或 bot 检测。当前用户的授权与范围优先于历史惯例。
