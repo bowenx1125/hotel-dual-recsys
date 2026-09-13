@@ -1,0 +1,9 @@
+# Offline ABSA audit environment, verified on Python 3.12.4.
+# The model/tokenizer files themselves are external assets; see
+# scripts/verify_reproduction_assets.py.
+torch==2.12.0
+transformers==5.12.1
+sentencepiece==0.2.1
+safetensors==0.8.0
+tokenizers==0.22.2
+huggingface-hub==1.19.0

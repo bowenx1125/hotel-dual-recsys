@@ -1,6 +1,7 @@
 """Waves 2–7: strict events, peers, prediction, event study, policy, robustness."""
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import numpy as np
@@ -383,7 +384,7 @@ def run_wave2(root: Path, panel: pd.DataFrame, peers: pd.DataFrame, *, verify_on
     register_experiment(root, {
         "experiment_id": "W2-strict-main", "wave": 2, "name": "strict_crossfit_events",
         "preregistered": "yes", "status": verdict,
-        "artifact": "outputs/autonomous/wave2/strict_events.json",
+        "artifact": os.path.relpath(odir / "strict_events.json", root),
         "result_summary": f"n={out['strict_crossfit_events']}", "claim_ids": "C8",
     })
     merge_facts(root, "2", out)
@@ -992,53 +993,43 @@ def run_wave6(root: Path, panel: pd.DataFrame) -> dict:
     odir.mkdir(parents=True, exist_ok=True)
     facts = json.loads((out_dir(root) / "FACTS.json").read_text())
     track = select_track(facts)
-    # last complete period snapshot for policies
+    # The research batch and UI consume exactly the same panel adapter and policy functions.
+    from src.recommendation.panel_adapter import build_panel_snapshot
+    from src.recommendation.scoring import all_policies
+
+    policy_cfg = json.loads((root / "conf" / "demo.json").read_text())
+    policy_cfg["actionability"] = json.loads((root / "conf" / "actionability.json").read_text())["aspects"]
     complete = _complete_periods(panel)
-    last = complete[-1] if complete else None
-    snap = panel[(panel["period"] == last) & (panel["has_measurement"])].copy() if last else panel.head(0)
-    act = json.loads((root / "conf" / "actionability.json").read_text())["aspects"]
-
-    def policies(hotel_rows: pd.DataFrame) -> dict:
-        rows = hotel_rows.set_index("aspect")
-        def pick(score_fn, actionable_only=True):
-            best, best_s = None, -1e9
-            for a, r in rows.iterrows():
-                if actionable_only and not act.get(a, {}).get("eligible_for_direct_action", True):
-                    continue
-                if a == "location" and actionable_only:
-                    continue
-                s = score_fn(a, r)
-                if s > best_s:
-                    best, best_s = a, s
-            return best
-        weakest = pick(lambda a, r: -float(r["smoothed_net"]))
-        # peer gap not available here without peers; use low net as diagnostic
-        most_crit = pick(lambda a, r: float(r["negative_mentions"]))
-        rel_aware = pick(lambda a, r: (-float(r["smoothed_net"])) * float(r["measurement_reliability"]))
-        abstain = None
-        # abstain if all reliability < 0.3 or mentions < 5
-        ok = rows[(rows["total_mentions"] >= 5) & (rows["measurement_reliability"] >= 0.3)]
-        if len(ok) == 0:
-            abstain = "Insufficient evidence to recommend an action."
-        return {
-            "fix_weakest": weakest,
-            "most_criticized": most_crit,
-            "reliability_aware": rel_aware,
-            "abstention": abstain,
-        }
-
+    snapshot = build_panel_snapshot(
+        panel, build_main_peers(panel, k=int(cfg["peers"]["main"]["k"])), policy_cfg,
+        source_metadata={"synthetic": bool(os.environ.get("FYP_SMALL_FIXTURE")),
+                         "dataset_id": cfg["dataset"]["dataset_code"],
+                         "scoring_version": policy_cfg.get("policy_version", "shared-v1")},
+    ) if complete else {"hotels": [], "period": None, "n_eligible_hotels": 0}
+    policy_names = ["fix_weakest", "largest_peer_gap", "most_criticized", "peer_relative", "reliability_aware"]
     recs = []
-    loc_viol = 0
-    n_h = 0
-    for hid, g in snap.groupby("hotel_id"):
-        n_h += 1
-        pol = policies(g)
-        if pol["fix_weakest"] == "location":
-            loc_viol += 1
-        recs.append({"hotel_id": hid, "city": g["city"].iloc[0], **pol})
-    rdf = pd.DataFrame(recs)
-    if len(rdf):
-        rdf.to_csv(odir / "policy_assignments.csv", index=False)
+    violations = 0
+    selected_count = 0
+    for hotel in snapshot["hotels"]:
+        pol = all_policies(hotel, policy_cfg)
+        row = {"hotel_id": hotel["hotel_id"], "city": hotel["city"],
+               "period": snapshot["period"], "eligible": hotel["eligible"],
+               "ineligible_reason": hotel["ineligible_reason"]}
+        for name in policy_names:
+            chosen = pol[name]["chosen_aspect"] if hotel["eligible"] else None
+            row[name] = chosen
+            if chosen:
+                selected_count += 1
+                if chosen == "location" or not policy_cfg["actionability"].get(chosen, {}).get("eligible_for_direct_action", False):
+                    violations += 1
+        row["abstention"] = (pol["peer_relative"].get("abstention_reason")
+                             if hotel["eligible"] else hotel["ineligible_reason"])
+        row["excluded_aspects"] = json.dumps(pol["peer_relative"].get("excluded_aspects", {}), sort_keys=True)
+        recs.append(row)
+    n_h = len(recs)
+    rdf = pd.DataFrame(recs, columns=["hotel_id", "city", "period", "eligible", "ineligible_reason",
+                                     *policy_names, "abstention", "excluded_aspects"])
+    rdf.to_csv(odir / "policy_assignments.csv", index=False)
     formulation = {
         "A": "Exposure-Aware Action Recommendation (observational response × peer exposure × measurement uncertainty × actionability).",
         "B": "Actionability- and Reliability-Aware Provider Recommendation: diagnosis ≠ action; Location never a direct action; abstain when evidence is insufficient.",
@@ -1048,8 +1039,14 @@ def run_wave6(root: Path, panel: pd.DataFrame) -> dict:
         "selected_track": track,
         "formulation": formulation,
         "n_hotels_scored": n_h,
-        "location_violation_rate_action_policies": 0.0,
-        "baselines": ["random", "fix_weakest", "largest_peer_gap", "most_criticized", "reliability_aware", "peer_relative_heuristic", "abstention"],
+        "location_violation_rate_action_policies": violations / selected_count if selected_count else None,
+        "actionability_violation_count": violations,
+        "n_action_selections": selected_count,
+        "n_eligible_hotels": snapshot["n_eligible_hotels"],
+        "period": snapshot["period"],
+        "policy_version": policy_cfg.get("policy_version", "shared-v1"),
+        "baselines": policy_names,
+        "abstention_applies_to_choices": True,
         "no_ips_snips": True,
         "no_roi": True,
         "no_demand_lift": True,

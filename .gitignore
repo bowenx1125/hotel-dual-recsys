@@ -52,3 +52,9 @@ Hotel_Reviews.csv
 
 # Consolidated local dataset cache
 data/cache/
+
+# Independent reproduction runs and any nested private review packs
+outputs/runs/
+outputs/autonomous/reproduced/
+outputs/**/private/
+outputs/**/checkpoints/

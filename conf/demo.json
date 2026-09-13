@@ -1,5 +1,13 @@
 {
-  "aspects": ["location", "cleanliness", "breakfast", "service", "noise", "room", "value"],
+  "aspects": [
+    "location",
+    "cleanliness",
+    "breakfast",
+    "service",
+    "noise",
+    "room",
+    "value"
+  ],
   "aspect_labels": {
     "location": "Location",
     "cleanliness": "Cleanliness",
@@ -12,16 +20,40 @@
   "min_mentions": 5,
   "min_reviews_hotel": 10,
   "reliability_k": 10.0,
-  "weights": {"gap": 0.45, "criticism": 0.35, "unreliable": 0.20},
+  "weights": {
+    "gap": 0.45,
+    "criticism": 0.35,
+    "unreliable": 0.2
+  },
   "weight_grids": {
-    "current-default": {"gap": 0.45, "criticism": 0.35, "unreliable": 0.20},
-    "gap-dominant": {"gap": 0.70, "criticism": 0.20, "unreliable": 0.10},
-    "criticism-dominant": {"gap": 0.20, "criticism": 0.70, "unreliable": 0.10},
-    "reliability-conservative": {"gap": 0.30, "criticism": 0.20, "unreliable": 0.50},
-    "equal-weight": {"gap": 0.333333, "criticism": 0.333333, "unreliable": 0.333334}
+    "current-default": {
+      "gap": 0.45,
+      "criticism": 0.35,
+      "unreliable": 0.2
+    },
+    "gap-dominant": {
+      "gap": 0.7,
+      "criticism": 0.2,
+      "unreliable": 0.1
+    },
+    "criticism-dominant": {
+      "gap": 0.2,
+      "criticism": 0.7,
+      "unreliable": 0.1
+    },
+    "reliability-conservative": {
+      "gap": 0.3,
+      "criticism": 0.2,
+      "unreliable": 0.5
+    },
+    "equal-weight": {
+      "gap": 0.333333,
+      "criticism": 0.333333,
+      "unreliable": 0.333334
+    }
   },
   "scenario": {
-    "crowding_weight": 0.50,
+    "crowding_weight": 0.5,
     "default_intensity": 0.0,
     "intensity_min": 0.0,
     "intensity_max": 1.0
@@ -29,5 +61,8 @@
   "tie_break": "aspect_name_asc",
   "heuristic_name": "Peer-Relative Evidence-Weighted (heuristic)",
   "formula": "score = w_gap*gap_norm + w_criticism*criticism_norm - w_unreliable*(1-reliability) [design-choice weights; not learned returns]. Assumed crowding term is separate scenario analysis.",
-  "actionability_config": "conf/actionability.json"
+  "actionability_config": "conf/actionability.json",
+  "min_reliability": 0.3,
+  "min_measured_peers": 2,
+  "policy_version": "shared-v1"
 }

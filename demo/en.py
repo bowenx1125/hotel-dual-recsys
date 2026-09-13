@@ -62,6 +62,7 @@ POLICY_LABELS: dict[str, str] = {
 LANG_CODE = "en"
 
 UI: dict[str, str] = {
+    "snapshot_config_error": 'The snapshot lacks frozen configuration or is invalid. Rebuild it: {cmd} --overwrite',
     "page_title": "Hotel Improvement Assistant",
     "header_title": "Hotel Improvement Assistant",
     "header_desc": "Pick a hotel to see what to improve first and what the suggestion is based on.",
@@ -77,16 +78,34 @@ UI: dict[str, str] = {
     "peer_group": "Comparison hotel group",
     "peer_group_help": "Nearby hotels chosen for research reference; not proven direct competitors.",
     "hotel": "Select hotel",
+    "snapshot_missing_error": "Research demo snapshot not found: {path}. From the project directory run: {cmd}",
+    "data_period_caption": "Data period: {period} (latest complete quarter). Review counts are guest reviews in that quarter, not bookings.",
+    "version_caption": "Snapshot {schema} · scoring {scoring}",
+    "coverage_summary_heading": "Coverage summary",
+    "coverage_total": "Hotels in selected period",
+    "coverage_eligible": "Hotels shown in demo",
+    "coverage_excluded": "Excluded hotels",
+    "coverage_source_panel": "Source panel: {count} hotels",
+    "coverage_absent_period": "No data in selected period: {count}",
+    "coverage_exclusion_breakdown": "Exclusion reasons: {breakdown}",
+    "expander_excluded_hotels": "Excluded hotels and reasons",
+    "col_hotel_name": "Hotel name",
+    "col_hotel_id": "Hotel ID",
+    "col_exclusion_reason": "Exclusion reason",
     "snapshot_caption": "Demo snapshot: {total} hotels; {eligible} meet display criteria.",
     "no_eligible_hotels": "No hotels in the demo snapshot meet display criteria; hotel selection and suggestions are unavailable. Check that the snapshot was built correctly.",
     "metric_peer_count": "Hotels in comparison group",
-    "metric_reviews": "Reviews",
+    "metric_reviews": "Reviews this quarter",
+    "metric_nearby_hotels": "Nearby reference hotels",
+    "metric_aspects_review_evidence": "Aspects with enough review evidence",
+    "metric_aspects_peer_references": "Aspects with enough nearby references",
     "metric_low_reviews": "Low-score reviews",
     "metric_price_range": "Price range",
     "section_compare": "Your hotel vs comparison group",
     "chart_no_data": "Not enough aspect data for a comparison chart.",
     "chart_altair_fallback": "Chart library unavailable; table shows non-missing comparisons.",
-    "chart_caption": "Closer to 1 means more positive mentions; closer to −1 means more negative. Aspects not mentioned are not judged.",
+    "chart_caption": 'Closer to 1 means more positive reviews; closer to −1 means more negative reviews. Small samples are moderated; unmentioned aspects are not judged.',
+    "chart_smoothing_caption": "Low mention counts pull estimates toward neutral; missing data is not treated as neutral.",
     "chart_aspect_col": "Aspect",
     "chart_series_own": "Your hotel",
     "chart_series_peer": "Comparison group median",
@@ -102,6 +121,10 @@ UI: dict[str, str] = {
     "slider_label": "Assumed peer improvement intensity",
     "slider_help": "Hypothetical scenario value, not a fitted competition elasticity.",
     "recommendation_none": "None",
+    "recommendation_evidence_insufficient": "Not enough evidence to recommend an improvement",
+    "recommendation_evidence_insufficient_body": "Review volume and nearby-hotel references are not enough for a clear improvement suggestion.",
+    "policy_evidence_insufficient": "Insufficient evidence",
+    "excluded_aspect_generic": "Below recommendation threshold",
     "recommendation_fallback_actionable": "Based on gaps vs nearby hotels, complaint volume, and review counts, this aspect is the suggested focus.",
     "recommendation_fallback_none": "No clear weakness or actionable suggestion under current evidence.",
     "recommendation_evidence_note": "Suggestions come from past reviews; improving these areas has not been verified to raise scores or revenue.",
@@ -405,12 +428,49 @@ TARGET_LABEL: dict[str, str] = {
 
 SCORE_TERM_DEFINITIONS = (
     "**Terms (optional):** "
-    "Overall tendency = net of positive vs negative mentions for an aspect; "
+    "Overall tendency = Bayesian-shrunk net sentiment ≈ (positive−negative mentions)/(mention count+prior strength); "
+    "low counts pull toward neutral; "
     "Gap = comparison median tendency − your hotel; "
     "Negative rate = share of mentions that are negative; "
-    "Reliability = rises toward 1 with more mentions (shrinkage); "
+    "Reliability = rises toward 1 with more mentions (shrinkage); reflects mention volume, not truth or accuracy; "
     "Normalized gap/rate = 0–1 scale within actionable aspects for your hotel."
 )
+
+INELIGIBLE_REASONS: dict[str, str] = {
+    'missing_coordinates': 'Hotel coordinates unavailable',
+    'no_measured_aspects': 'No measured review aspects',
+
+    "compset_valid=0": "Invalid comparison group",
+    "peer_count<2": "Not enough nearby reference hotels",
+    "absent_selected_period": "No reviews in selected period",
+    "missing_from_panel": "Not in research panel",
+}
+
+ABSTENTION_REASONS: dict[str, str] = {
+    'missing_coordinates': 'Hotel coordinates unavailable',
+    'no_measured_aspects': 'No measured review aspects',
+    'no_eligible_aspects': 'No aspect meets the evidence and actionability requirements',
+    'crowding_data_unavailable': 'Nearby data for this scenario is unavailable',
+    'crowding_unavailable': 'Scenario data unavailable',
+    'hotel_ineligible': 'Hotel data does not meet eligibility requirements',
+    'insufficient_mentions': 'Too few relevant review mentions',
+    'insufficient_peers': 'Too few measured nearby references',
+    'insufficient_reliability': 'Insufficient evidence from review volume',
+    'invalid_counts': 'Review counts incomplete or invalid',
+    'invalid_neg_mentions': 'Valid negative mention count unavailable',
+    'invalid_neg_rate': 'Valid negative mention share unavailable',
+    'missing_aspect_record': 'Aspect record unavailable',
+    'missing_aspects': 'Review aspect data unavailable',
+    'no_measurement': 'This aspect was not measured',
+    'nonfinite_gap': 'Comparable nearby gap unavailable',
+    'nonfinite_net': 'Valid review tendency unavailable',
+    'not_actionable': 'Not directly actionable',
+    'unknown_aspect': 'No actionability rule defined for this aspect',
+
+    "insufficient_evidence": "Reviews and nearby references are insufficient",
+    "no_actionable_aspect": "No actionable aspect meets thresholds",
+    "all_aspects_excluded": "All aspects below recommendation thresholds",
+}
 
 LIMITATIONS = """
 - Review counts **do not equal** bookings or demand.
@@ -728,6 +788,55 @@ def feasibility_verdict_label(code: str | None) -> str:
     if not code:
         return "Unknown"
     return FEASIBILITY_VERDICT.get(code, code)
+
+
+def ineligible_reason_label(reason: str) -> str:
+    if not reason:
+        return fmt_na(None)
+    if reason in INELIGIBLE_REASONS:
+        return INELIGIBLE_REASONS[reason]
+    if reason.startswith("n_reviews<"):
+        return f"Too few reviews this quarter (need ≥{reason.split('<', 1)[1]})"
+    if reason.startswith("mention_count<"):
+        return f"Too few mentions (need ≥{reason.split('<', 1)[1]})"
+    if reason.startswith("reliability<"):
+        return f"Reliability too low (need ≥{reason.split('<', 1)[1]})"
+    if reason.startswith("peer_n<"):
+        return f"Too few nearby references (need ≥{reason.split('<', 1)[1]})"
+    return reason
+
+
+def abstention_reason_label(reason: str) -> str:
+    if not reason:
+        return fmt_na(None)
+    if reason in ABSTENTION_REASONS:
+        return ABSTENTION_REASONS[reason]
+    return ineligible_reason_label(reason)
+
+
+def format_excluded_aspect_reasons(
+    excluded: Any,
+    label_fn: Callable[[str], str],
+) -> str:
+    if not excluded:
+        return ""
+    pairs: list[tuple[str | None, str]] = []
+    if isinstance(excluded, dict):
+        pairs = [(str(k), str(v or "")) for k, v in excluded.items()]
+    elif isinstance(excluded, list):
+        for item in excluded:
+            if isinstance(item, str):
+                pairs.append((item, ""))
+            elif isinstance(item, dict):
+                pairs.append((item.get("aspect"), str(item.get("reason") or "")))
+    lines: list[str] = []
+    for aspect, reason in pairs:
+        if not aspect:
+            continue
+        lbl = label_fn(aspect)
+        reason_txt = abstention_reason_label(reason) if reason else UI["excluded_aspect_generic"]
+        lines.append(f"· {lbl}: {reason_txt}")
+    return "\n".join(lines)
 
 
 # Backward-compatible aliases used by older imports

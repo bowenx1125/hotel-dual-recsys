@@ -1,0 +1,34 @@
+{
+  "period": "2017Q2",
+  "hotels": 1487,
+  "policy_comparisons": 7435,
+  "mismatches": 0,
+  "wave6": {
+    "selected_track": "B",
+    "formulation": "Actionability- and Reliability-Aware Provider Recommendation: diagnosis ≠ action; Location never a direct action; abstain when evidence is insufficient.",
+    "n_hotels_scored": 1487,
+    "location_violation_rate_action_policies": 0.0,
+    "actionability_violation_count": 0,
+    "n_action_selections": 6110,
+    "n_eligible_hotels": 1223,
+    "period": "2017Q2",
+    "policy_version": "shared-v1",
+    "baselines": [
+      "fix_weakest",
+      "largest_peer_gap",
+      "most_criticized",
+      "peer_relative",
+      "reliability_aware"
+    ],
+    "abstention_applies_to_choices": true,
+    "no_ips_snips": true,
+    "no_roi": true,
+    "no_demand_lift": true,
+    "track_titles": {
+      "A": "Provider-Side Recommendation under Peer Exposure",
+      "B": "From Diagnosis to Action: Actionability- and Reliability-Aware Provider Recommendation",
+      "C": "Review Sentiment Change Is Not Service Improvement: Measurement Risks in Provider-Side Recommendation"
+    }
+  },
+  "note": "Batch research vs UI shared policy parity, not scientific superiority."
+}

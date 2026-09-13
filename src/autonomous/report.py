@@ -307,8 +307,9 @@ Do not mark READY_FOR_FULL_PAPER without confirmatory identification and human l
 def capture_demo_screenshots(root: Path, *, skip: bool) -> dict:
     odir = out_dir(root) / "demo"
     odir.mkdir(parents=True, exist_ok=True)
-    if skip:
-        man = {"status": "SKIPPED_VERIFY_ONLY_OR_NO_UI", "note": "Live screenshots required for full Wave 10 locally."}
+    if skip or os.environ.get("FYP_SKIP_UI") == "1":
+        man = {"status": "SKIPPED_UI_REQUESTED" if not skip else "SKIPPED_VERIFY_ONLY_OR_NO_UI",
+               "note": "UI capture skipped independently; this does not reduce statistical experiment settings."}
         atomic_write_json(odir / "screenshot_manifest.json", man)
         return man
     try:
@@ -358,7 +359,7 @@ def capture_demo_screenshots(root: Path, *, skip: bool) -> dict:
             page = browser.new_page(viewport={"width": 1400, "height": 900})
             page.goto(url, wait_until="networkidle", timeout=120000)
             page.get_by_text("酒店改善助手").first.wait_for(timeout=120000)
-            page.get_by_text("对比酒店数").first.wait_for(timeout=60000)
+            page.get_by_text("建议先关注").first.wait_for(timeout=60000)
             page.wait_for_timeout(2000)
             page.screenshot(path=str(odir / "manager_live.png"), full_page=True)
             # measurement / research tabs

@@ -65,7 +65,7 @@ def main() -> int:
             page = browser.new_page(viewport={"width": 1400, "height": 900})
             page.goto(url, wait_until="networkidle", timeout=120000)
             page.get_by_text("酒店改善助手").first.wait_for(timeout=120000)
-            page.get_by_text("对比酒店数").first.wait_for(timeout=60000)
+            page.get_by_text("建议先关注").first.wait_for(timeout=60000)
             page.wait_for_timeout(2500)
             page.get_by_role("tab", name="改善建议").click()
             page.wait_for_timeout(1200)
