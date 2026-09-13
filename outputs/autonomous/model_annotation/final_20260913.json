@@ -1,0 +1,68 @@
+{
+  "schema": "model_annotation_final_report_v1",
+  "status": "MODEL_AUDITED_REFERENCE",
+  "no_human_gold": true,
+  "no_population_accuracy": true,
+  "source_hash": "a4810c2757934f0a826a1b16a437eb67a38be45b1a22ad56772afce0b6c11af9",
+  "sample_hash": "8cf760ccff6a75d2b4d3ed23eab767764ead6d78fbb68a8fe8db43c2a956938a",
+  "protocol_hash": "daf88205c8296b067f3bacf101a1fc04468eabd4a29820de79a6db8c272c6800",
+  "cities_count": 6,
+  "hotel_count": 184,
+  "n_items": 210,
+  "requested_models": {
+    "grok": "cursor-grok-4.6-medium",
+    "reviewer": "claude-sonnet-5-medium"
+  },
+  "raw_agreement_rate": 0.9238095238095239,
+  "cohen_kappa": 0.8903823567793293,
+  "provisional_count": 170,
+  "audited_count": 54,
+  "disagreement_or_uncertain_count": 40,
+  "final_accepted_count": 202,
+  "final_unresolved_count": 8,
+  "changed_consensus_audit_count": 1,
+  "per_aspect_final_label_counts": {
+    "noise": {
+      "not_about_aspect": 6,
+      "positive": 13,
+      "negative": 10
+    },
+    "cleanliness": {
+      "negative": 11,
+      "positive": 11,
+      "not_about_aspect": 6,
+      "neutral": 1
+    },
+    "room": {
+      "positive": 8,
+      "neutral": 3,
+      "negative": 9,
+      "not_about_aspect": 9
+    },
+    "location": {
+      "not_about_aspect": 10,
+      "positive": 10,
+      "negative": 5,
+      "neutral": 4
+    },
+    "value": {
+      "negative": 11,
+      "not_about_aspect": 7,
+      "neutral": 2,
+      "positive": 9
+    },
+    "service": {
+      "positive": 15,
+      "not_about_aspect": 6,
+      "negative": 7,
+      "neutral": 1
+    },
+    "breakfast": {
+      "neutral": 3,
+      "negative": 10,
+      "not_about_aspect": 7,
+      "positive": 8
+    }
+  },
+  "audit_doc_hash": "df26fe8ce548f912cbe0c0421b56b4977e3b0c217d39806b5a350cbf6ae2dde2"
+}

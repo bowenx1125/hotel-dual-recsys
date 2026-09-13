@@ -61,3 +61,34 @@
 - 手工标注内容、原始评论、研究结果和数值门槛均未改；不增加低风险翻译断言测试。截图脚本只做语法与选择器对应检查，实际浏览器检查通过 CUA 完成，未运行全量研究或重新生成既有截图产物。
 
 - FYP-CURSOR-002 GitHub 验收：[99bc2d4 research-smoke](https://github.com/bowenx1125/hotel-dual-recsys/actions/runs/34761712547) 成功。测试与显示语言变更均不构成科研结论升级。
+
+
+## FYP-CURSOR-003 · 全自动模型标注与独立审计
+
+- 目标：全数据确定性分层抽样；Grok 标注、Claude 盲审、Codex 抽查；原始 126 项人工表不变。
+- 基线：388bad2；用户明确选择无需人类核验的模型参考标签路线。
+- 实现：Cursor CLI / Composer 2.5；标注 cursor-grok-4.6-medium；盲审 claude-sonnet-5-medium；协调与第三方抽查 Codex。
+- Cursor 可写：scripts/model_annotation.py、tests/test_model_annotation.py；协调者可写协作文档、当前指南、模型协议、无原文汇总及 Demo 说明。
+- 不可改：既有标注导出器、人工样本、原始数据、研究估计器/门槛、FACTS、其他 agent 文件、Git refs。编码者不得读取原文，不额外派 agent。
+- 预设规模：6 城市×7 方面×正负栏目×2=168 个关键词命中项，加 6×7=42 个该方面未命中项，共目标 210；完整 CSV 扫描，seed=42，截取前 800 字符后筛选。此为分层诊断样本，不是人口加权准确率或最终无偏测试集。
+- 验收：来源哈希、盲化与完整 ID 校验、原文证据子串校验、断点重试不覆盖成功批次；两模型独立、全量分歧复查及分层一致项抽查；合成单测、真实运行、只上传聚合结果。
+- 状态：REVIEW（标注与本地终审完成，等待同步 CI）。
+
+- FYP-CURSOR-003 已核对首次实现日志存在实际 AGENTS.md 读取调用；用户再次提醒后，后续编码派单显式重复先读规范要求。标注工作区只保留该角色需要的精简 AGENTS.md，避免注入其他答案。
+
+- FYP-CURSOR-003 补充文件分工：第二个 Cursor / Composer 2.5 调用只负责 scripts/finalize_model_annotation.py、tests/test_model_annotation_finalization.py、demo/app.py、demo/zh_cn.py；与修复初标脚本的 Cursor 不共享写文件。调用明确要求先读 AGENTS.md、不增派 agent、不得提交或读取真实评论。Codex 提供最终裁决数据并独立运行测试。
+- 首轮审计发现随机抽样遍历顺序、截断字段、提示词/输入哈希、恢复校验、锁及统计分母问题，退回修复。Cursor 内部测试命令被 CLI 拒绝且无具体原因，协调者改在本地直接运行；不把工具尝试记为测试通过。
+
+
+## FYP-CURSOR-004 · 深色 Demo UI（另一个用户主窗口）
+
+- 用户主窗口：01a09b2d-4230-76b2-949e-f07b1b391788；负责人该窗口 Codex + Cursor Composer 2.5。
+- 基线：388bad2；接手 app/zh_cn 时以 db066ee 中已提交的自动标注展示为准。
+- 可写：demo/app.py、demo/zh_cn.py、demo/theme.py、demo/assets/dark.css、.streamlit/config.toml、新增 i18n 文件与对应 UI 测试（用户追加中英文切换，中文需浅显易懂）；本窗口 FYP-CURSOR-003 不再写这些 UI 文件。
+- 不可改：研究算法、数据、标注管线/结果、其他窗口文件；不得把对方未提交改动一并提交。共享文档由本窗口登记，Git 提交/推送串行协调。
+- 验收：AppTest 与浏览器；该窗口独立验收深色样式，本窗口不冒认其完成。
+- 状态：IN_PROGRESS。
+
+- FYP-CURSOR-003 真实验收：完整 CSV 哈希匹配，210 样本/210 源评论/6 城市/184 酒店；独立来源复核210/210。Grok 11 次批次调用（一次引文失败重试）、Claude 10 次；最终各210标签。原始一致194/210=92.38%，κ=0.8904；Codex真实审查54项，最终202保留/8未决，包含1项确定共识的更正。
+- 代码验收：102 项 unittest 通过；初标与终审专项覆盖恢复、引文、路径、完整队列及原始答案篡改等风险。协调者另修正输出预检查/无覆盖发布与终审队列重建；测试后的旧 Demo 快照仅按原字节恢复。原 FACTS、研究门槛和人工包哈希不变。标注展示已单独提交 db066ee，并交还另一窗口美化；此后 UI 验收由 FYP-CURSOR-004 负责。
+- FYP-CURSOR-004 补充范围：scripts/capture_autonomous_screenshots.py、scripts/capture_live_demo_screenshots.py、src/autonomous/report.py 仅页面标题/页签选择器，禁止改变科研报告生成逻辑。

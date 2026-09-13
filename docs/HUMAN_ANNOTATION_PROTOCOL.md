@@ -1,3 +1,5 @@
+> 2026-09-13 当前路线已改为 [模型标注与独立审计](MODEL_ANNOTATION_PROTOCOL.md)，无需人类填写或核验。以下保留为历史/可选人工协议，不代表当前阻塞项。
+
 # HUMAN ANNOTATION PROTOCOL
 
 Status: **HUMAN_VALIDATION_REQUIRED** — this pack is generated, not labeled.

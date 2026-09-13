@@ -1,0 +1,32 @@
+{
+  "source_rows_scanned": 515738,
+  "source_pairs_independently_matched": 210,
+  "n_items": 210,
+  "unique_source_rows": 210,
+  "sample_hash": "8cf760ccff6a75d2b4d3ed23eab767764ead6d78fbb68a8fe8db43c2a956938a",
+  "requested_models": {
+    "grok": "cursor-grok-4.6-medium",
+    "reviewer": "claude-sonnet-5-medium"
+  },
+  "model_attempts": {
+    "grok": 11,
+    "reviewer": 10
+  },
+  "failed_attempts": [
+    {
+      "role": "grok",
+      "batch_index": 5,
+      "error_type": "AnnotationError",
+      "safe_error": "evidence must be exact nonempty substring"
+    }
+  ],
+  "code_and_protocol_file_hashes": {
+    "scripts/model_annotation.py": "0e8d13d3b939aafda9d91ff74652b5ce13ef3ac6d7accb869b2eb6a164601b88",
+    "scripts/finalize_model_annotation.py": "ea6beff310d2b3ebcb26a74831b32da420c56416af591e63ebed07f2324c6d37",
+    "docs/MODEL_ANNOTATION_PROTOCOL.md": "05b56a7671eaa8142708585f4197b964fbebae21f8e650517a1c55c2c9d86762"
+  },
+  "unit_tests_passed": 102,
+  "no_human_gold": true,
+  "no_population_accuracy": true,
+  "old_research_facts_changed": false
+}
