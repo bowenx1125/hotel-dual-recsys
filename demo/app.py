@@ -320,8 +320,8 @@ def render_manager_tab(st, snap, cfg):
             "默认「最受批评项」使用负面提及次数；比率与每评论指标仅供审计，不会静默替换。"
         )
 
-    with st.expander("人工需确认的事项（非自动验收）", expanded=False):
-        st.markdown(zh.HUMAN_CONFIRM_EXPANDER)
+    with st.expander("自动标注与使用边界", expanded=False):
+        st.markdown(zh.MODEL_ANNOTATION_BOUNDARY_EXPANDER)
 
     st.markdown("### 数据溯源")
     prov_rows = [
@@ -510,7 +510,7 @@ def render_research_evidence_tab(st):
         st.info(
             "经理诊断页保持**描述性**证据等级，除非本台账正式升级。"
             "无因果效应 / 投资回报 / 需求提升宣称。"
-            "测量证据与人工标注准确率是不同概念；**尚无独立人工复核验收**。"
+            "当前采用模型标注与独立审计；模型一致率不代表真实准确率。"
         )
         c1, c2, c3, c4 = st.columns(4)
         c1.metric("测量证据", zh.measurement_label(w1.get("measurement_verdict")))
@@ -580,8 +580,61 @@ def render_research_evidence_tab(st):
         with st.expander("原始 FACTS（可选下载）", expanded=False):
             _download_button(st, "下载 FACTS.json", facts_p, "application/json")
 
-    with st.expander("人工需确认的事项（非自动验收）", expanded=False):
-        st.markdown(zh.HUMAN_CONFIRM_EXPANDER)
+    _render_model_annotation_section(st)
+
+    with st.expander("自动标注与使用边界", expanded=False):
+        st.markdown(zh.MODEL_ANNOTATION_BOUNDARY_EXPANDER)
+
+
+def _render_model_annotation_section(st):
+    report_p = ROOT / zh.MODEL_ANNOTATION_REPORT_PATH
+    st.markdown("#### 自动标注审计")
+    if not report_p.exists():
+        st.info(
+            "模型标注终审报告尚未生成（预期路径："
+            f"`{zh.MODEL_ANNOTATION_REPORT_PATH}`）。"
+            "生成前本页不展示任何一致率或接受率数字。"
+        )
+        st.caption(
+            f"终审标签 CSV 将保存在本机私有目录 "
+            f"`{zh.MODEL_ANNOTATION_PRIVATE_CSV}`（含评论原文，仅本机保存）。"
+        )
+        return
+    report = json.loads(report_p.read_text(encoding="utf-8"))
+    if report.get("status") != "MODEL_AUDITED_REFERENCE":
+        st.warning("标注报告状态未知，以下数字仅作参考。")
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("样本条目", zh.fmt_na(report.get("n_items")))
+    c2.metric("终审接受", zh.fmt_na(report.get("final_accepted_count")))
+    c3.metric("未决", zh.fmt_na(report.get("final_unresolved_count")))
+    c4.metric("Codex 审计条目", zh.fmt_na(report.get("audited_count")))
+    st.caption(
+        zh.format_model_agreement_caption(
+            report.get("raw_agreement_rate"),
+            report.get("cohen_kappa"),
+        )
+    )
+    st.caption(
+        f"状态：{zh.model_annotation_status_label(report.get('status'))} · "
+        f"来源哈希 `{str(report.get('source_hash') or '')[:12]}…` · "
+        f"样本哈希 `{str(report.get('sample_hash') or '')[:12]}…`"
+    )
+    per_aspect = report.get("per_aspect_final_label_counts") or {}
+    if per_aspect:
+        import pandas as pd
+
+        rows = []
+        for aspect, counts in sorted(per_aspect.items()):
+            row: dict = {"维度": zh.aspect_label(aspect, aspect)}
+            for lab, col in zh.SENTIMENT_LABELS.items():
+                row[col] = counts.get(lab, 0)
+            rows.append(row)
+        st.markdown("##### 各维度终审标签计数")
+        st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
+    st.caption(
+        f"完整逐条标签（含原文）仅本机保存：`{zh.MODEL_ANNOTATION_PRIVATE_CSV}`。"
+        "公开报告不含评论原文、酒店名或逐条裁决理由。"
+    )
 
 
 def main():

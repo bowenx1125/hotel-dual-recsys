@@ -237,15 +237,52 @@ LIMITATIONS_ZH = """
 - 本演示**不宣称**事件研究、安慰剂或因果估计。
 """
 
-HUMAN_CONFIRM_EXPANDER = """
-人工仍需独立确认的事项（本演示**不能**替代人工标注或业务验收）：
+MODEL_ANNOTATION_BOUNDARY_EXPANDER = """
+**自动标注与使用边界**（本演示不宣称人工 gold 或真实业务验收）：
 
-1. **情感标注**：评论在某一维度上的正面/负面/中性判断是否准确？
-2. **行动可行性**：建议维度在当前酒店是否真正可运营干预（含资本、合规、供应链约束）？
-3. **证据充分性**：提及量、可靠性与时间覆盖是否足以支持决策，而非仅作探索性参考？
+1. **流程**：Grok 初标 → 不同模型盲审（如 Claude）→ 分歧与不确定项由 Codex 作最终裁决；证据不足时保留为未决。
+2. **一致率含义**：模型间原始一致率与 Cohen κ 仅反映标注一致性，**不等于**人工准确率或总体正确率。
+3. **经理决策**：界面建议仍为描述性证据；是否可运营干预、是否带来预订或收入变化，需管理层独立判断，**尚未经真实酒店业务验证**。
 
-弱标签一致率反映机器规则一致性，**不等于**人工标注准确率；本仓库尚未完成独立人工复核验收。
+完整标注文本与逐条理由保存在本机私有目录，不进入公开仓库。
 """
+
+# Backward-compatible name for callers that still import HUMAN_CONFIRM_EXPANDER.
+HUMAN_CONFIRM_EXPANDER = MODEL_ANNOTATION_BOUNDARY_EXPANDER
+
+SENTIMENT_LABELS: dict[str, str] = {
+    "positive": "正面",
+    "negative": "负面",
+    "neutral": "中性",
+    "not_about_aspect": "未提及",
+}
+
+MODEL_ANNOTATION_REPORT_PATH = "outputs/autonomous/model_annotation/final_20260913.json"
+MODEL_ANNOTATION_PRIVATE_CSV = (
+    "outputs/autonomous/private/model_annotation_rounds/round_20260913/final_labels.csv"
+)
+
+
+def model_annotation_status_label(status: str | None) -> str:
+    mapping = {
+        "MODEL_AUDITED_REFERENCE": "模型审计参考（非人工 gold）",
+        "accepted_consensus": "双模型一致（未抽审计）",
+        "accepted_codex": "Codex 裁决接受",
+        "unresolved": "未决（证据不足）",
+    }
+    return mapping.get(status or "", status or "暂无")
+
+
+def format_model_agreement_caption(raw_rate: float | None, kappa: float | None) -> str:
+    raw = f"{raw_rate * 100:.1f}%" if raw_rate is not None else "暂无"
+    if kappa is None:
+        kappa_s = "未定义"
+    else:
+        kappa_s = f"{kappa:.3f}"
+    return (
+        f"模型原始一致率 {raw} · Cohen κ {kappa_s}。"
+        "此为模型间配对一致率，不代表人工准确率或总体正确率。"
+    )
 
 
 def aspect_label(aspect_id: str, fallback: str | None = None) -> str:
