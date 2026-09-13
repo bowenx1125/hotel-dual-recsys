@@ -108,5 +108,13 @@
   },
   "research_readiness": "WORKING_PAPER_ONLY",
   "canonical_reference_unchanged": true,
-  "claims": "Reproduction and engineering acceptance only; weak agreement is not accuracy; no causal or business benefit validation."
+  "claims": "Reproduction and engineering acceptance only; weak agreement is not accuracy; no causal or business benefit validation.",
+  "final_code_commit": "6e2c1be45eb1e31298cce3f97ae46a3df5e7eac0",
+  "final_clone_acceptance": {
+    "unittest_passed": 238,
+    "small_fixture_waves": "0-10",
+    "bilingual_apptest": "PASS",
+    "ci_url": "https://github.com/bowenx1125/hotel-dual-recsys/actions/runs/34773710930",
+    "ci_conclusion": "success"
+  }
 }
