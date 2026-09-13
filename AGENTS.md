@@ -63,3 +63,11 @@
 - 不读取或打印 token、账户配置中的凭证或私人运行信息；评论仅限已授权标注与受控抽查，不在公开报告或常规日志中打印原文。爬取遵守 robots、访问限制，不绕验证码或 bot 检测。
 - 删除旧资产前检查运行依赖。禁止未经当前任务授权的 reset --hard、force-push、git clean -fdx 或广泛清空文件。
 - 重要决策记入 outputs/decisions.md；执行证据与任务状态记入 docs/AGENT_TASKS.md。用户沟通用中文，区分实现、测试、全量实验和真实业务验收。
+
+## 8. Demo 界面约定（用户 2026-09-13 追加）
+
+- 默认深色，提供中文 / English 切换；中文面向非技术酒店经理，先展示建议与依据，公式、原始字段和审计细节放入展开区。
+- UI 设计使用 UI UX Pro Max 与 Web Design Guidelines；本机已安装于 ~/.codex/skills/，源码来自 nextlevelbuilder/ui-ux-pro-max-skill 与 vercel-labs/agent-skills。跨机器若不可用先说明；仓库主题与翻译文件足以运行 Demo。
+- 文案在 demo/zh_cn.py 和 demo/en.py，语言选择由 demo/i18n.py 路由，禁止共享可变的全局语言状态。语言切换只改展示，不改酒店 ID、配置、分数或结论。
+- 城市/分组采用带语言后缀的控件 key，并用 mgr_city/mgr_cs 保存跨语言选择；修改后必须实际浏览器检查选项文字，不能仅依赖 AppTest。
+- 原生 Streamlit 工具栏/图表下载等平台控件可能保留英文，不宣称平台控件全部汉化。

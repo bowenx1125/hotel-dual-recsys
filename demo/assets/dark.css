@@ -1,0 +1,430 @@
+/* FYP-CURSOR-004 · hotel manager dashboard dark theme (custom layer on Streamlit base=dark) */
+
+:root {
+  --fyp-bg: #0b1120;
+  --fyp-panel: #141e30;
+  --fyp-fg: #f1f5f9;
+  --fyp-secondary: #aab8cb;
+  --fyp-accent: #5eead4;
+  --fyp-accent-muted: rgba(94, 234, 212, 0.14);
+  --fyp-border: rgba(170, 184, 203, 0.2);
+  --fyp-radius: 12px;
+  --fyp-font: "PingFang SC", "Microsoft YaHei", system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  --fyp-control-min: 44px;
+  --fyp-max-width: 1440px;
+}
+
+html {
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* App shell */
+[data-testid="stAppViewContainer"],
+[data-testid="stApp"],
+.stApp {
+  background-color: var(--fyp-bg);
+  color: var(--fyp-fg);
+  font-family: var(--fyp-font);
+  font-variant-numeric: tabular-nums;
+}
+
+[data-testid="stMainBlockContainer"],
+.main .block-container {
+  color: var(--fyp-fg);
+  max-width: var(--fyp-max-width);
+  padding-top: 4.5rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+/* Typography */
+[data-testid="stMarkdownContainer"] p,
+[data-testid="stMarkdownContainer"] li,
+[data-testid="stCaptionContainer"],
+[data-testid="stText"],
+label[data-testid="stWidgetLabel"] p,
+[data-testid="stWidgetLabel"] {
+  color: var(--fyp-fg);
+  font-family: var(--fyp-font);
+}
+
+[data-testid="stCaptionContainer"],
+[data-testid="stMarkdownContainer"] .stCaption,
+.stCaption {
+  color: var(--fyp-secondary) !important;
+}
+
+[data-testid="stHeading"] h1,
+[data-testid="stHeading"] h2,
+[data-testid="stHeading"] h3,
+[data-testid="stHeading"] h4,
+[data-testid="stHeading"] h5,
+[data-testid="stHeading"] h6 {
+  color: var(--fyp-fg);
+  font-family: var(--fyp-font);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+[data-testid="stHeading"] h1 {
+  font-size: 1.65rem;
+}
+
+[data-testid="stHeading"] h2,
+[data-testid="stHeading"] h3 {
+  font-size: 1.2rem;
+}
+
+/* Language selector row */
+[data-testid="stSelectbox"]:has(+ *) label[data-testid="stWidgetLabel"] p,
+div[data-testid="stSelectbox"] label p {
+  font-size: 0.875rem;
+  color: var(--fyp-secondary);
+}
+
+/* Custom semantic blocks (classes owned by demo/theme.py) */
+.fyp-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin: 0 0 1.25rem;
+  padding: 1rem 1.1rem;
+  background: var(--fyp-panel);
+  border: 1px solid var(--fyp-border);
+  border-radius: var(--fyp-radius);
+}
+
+.fyp-header__brand {
+  flex: 1 1 16rem;
+  min-width: 0;
+}
+
+.fyp-header__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--fyp-fg);
+  font-family: var(--fyp-font);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.fyp-header__desc {
+  margin: 0.4rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--fyp-secondary);
+  font-family: var(--fyp-font);
+  max-width: 42rem;
+}
+
+.fyp-header__badge {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  min-height: var(--fyp-control-min);
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--fyp-border);
+  background: var(--fyp-accent-muted);
+  color: var(--fyp-accent);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-family: var(--fyp-font);
+  white-space: normal;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.fyp-section-header {
+  margin: 1.25rem 0 0.65rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid var(--fyp-border);
+}
+
+.fyp-section-header__title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--fyp-fg);
+  font-family: var(--fyp-font);
+  line-height: 1.35;
+}
+
+.fyp-section-header--emphasis .fyp-section-header__title {
+  font-size: 1.5rem;
+}
+
+.fyp-section-header--recommendation .fyp-section-header__title {
+  font-size: 1.5rem;
+}
+
+.fyp-section-header__desc {
+  margin: 0.35rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--fyp-secondary);
+  font-family: var(--fyp-font);
+}
+
+.fyp-recommendation {
+  margin: 0.75rem 0;
+  padding: 0.85rem 1rem;
+  background: var(--fyp-panel);
+  border: 1px solid var(--fyp-border);
+  border-left: 3px solid var(--fyp-accent);
+  border-radius: var(--fyp-radius);
+}
+
+.fyp-recommendation__aspect {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--fyp-fg);
+  font-family: var(--fyp-font);
+  overflow-wrap: anywhere;
+}
+
+.fyp-recommendation__body {
+  margin: 0.45rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--fyp-fg);
+  font-family: var(--fyp-font);
+}
+
+.fyp-recommendation__reliability {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--fyp-secondary);
+  font-family: var(--fyp-font);
+}
+
+/* Metric cards */
+[data-testid="stMetric"] {
+  background: var(--fyp-panel);
+  border: 1px solid var(--fyp-border);
+  border-radius: var(--fyp-radius);
+  padding: 0.7rem 0.85rem;
+}
+
+[data-testid="stMetricLabel"] {
+  color: var(--fyp-secondary) !important;
+  font-size: 0.8125rem;
+  overflow-wrap: anywhere;
+}
+
+[data-testid="stMetricLabel"] p {
+  color: var(--fyp-secondary) !important;
+}
+
+[data-testid="stMetricValue"] {
+  color: var(--fyp-fg) !important;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+[data-testid="stMetricDelta"] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tabs */
+[data-testid="stTabs"] [role="tablist"] {
+  gap: 0.25rem;
+  border-bottom: 1px solid var(--fyp-border);
+}
+
+[data-testid="stTabs"] [role="tab"] {
+  min-height: var(--fyp-control-min);
+  padding: 0.5rem 0.85rem;
+  color: var(--fyp-secondary);
+  font-family: var(--fyp-font);
+  font-size: 0.9375rem;
+  border-radius: 8px 8px 0 0;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+[data-testid="stTabs"] [role="tab"]:hover {
+  color: var(--fyp-fg);
+  background: rgba(94, 234, 212, 0.06);
+}
+
+[data-testid="stTabs"] [role="tab"][aria-selected="true"] {
+  color: var(--fyp-fg);
+  border-bottom: 2px solid var(--fyp-accent);
+}
+
+[data-testid="stTabs"] [role="tab"]:focus-visible {
+  outline: 2px solid var(--fyp-accent);
+  outline-offset: 2px;
+}
+
+/* Expanders */
+[data-testid="stExpander"] {
+  background: var(--fyp-panel);
+  border: 1px solid var(--fyp-border);
+  border-radius: var(--fyp-radius);
+}
+
+[data-testid="stExpander"] summary,
+[data-testid="stExpander"] [data-testid="stExpanderToggleIcon"] {
+  color: var(--fyp-fg);
+}
+
+[data-testid="stExpander"] details {
+  border-radius: var(--fyp-radius);
+}
+
+[data-testid="stExpander"] summary {
+  min-height: var(--fyp-control-min);
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
+  transition: background-color 0.15s ease;
+}
+
+[data-testid="stExpander"] summary:hover {
+  background: rgba(94, 234, 212, 0.06);
+}
+
+/* Panels: dataframe, table, alerts */
+[data-testid="stDataFrame"],
+[data-testid="stTable"] {
+  border: 1px solid var(--fyp-border);
+  border-radius: var(--fyp-radius);
+  overflow: hidden;
+}
+
+[data-testid="stAlert"] {
+  border-radius: var(--fyp-radius);
+  border: 1px solid var(--fyp-border);
+}
+
+/* Form controls */
+[data-testid="stSelectbox"] label,
+[data-testid="stSlider"] label,
+[data-testid="stDownloadButton"] label {
+  color: var(--fyp-fg);
+}
+
+[data-testid="stSelectbox"] [data-baseweb="select"] > div,
+[data-testid="stMultiSelect"] [data-baseweb="select"] > div {
+  min-height: var(--fyp-control-min);
+  border-radius: 8px;
+  border-color: var(--fyp-border);
+  background: var(--fyp-panel);
+  color: var(--fyp-fg);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+[data-testid="stSelectbox"] [data-baseweb="select"]:focus-within > div,
+[data-testid="stMultiSelect"] [data-baseweb="select"]:focus-within > div {
+  border-color: var(--fyp-accent);
+  box-shadow: 0 0 0 1px var(--fyp-accent);
+}
+
+[data-testid="stSelectbox"] [data-baseweb="select"] span,
+[data-testid="stMultiSelect"] [data-baseweb="select"] span {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
+}
+
+[data-testid="stSlider"] [data-baseweb="slider"] {
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
+}
+
+/* Buttons */
+[data-testid="stButton"] button,
+[data-testid="stDownloadButton"] button,
+[data-testid="baseButton-secondary"],
+[data-testid="baseButton-primary"] {
+  min-height: var(--fyp-control-min);
+  padding: 0.45rem 1rem;
+  border-radius: 8px;
+  font-family: var(--fyp-font);
+  font-size: 0.9375rem;
+  border: 1px solid var(--fyp-border);
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+[data-testid="stButton"] button:hover,
+[data-testid="stDownloadButton"] button:hover,
+[data-testid="baseButton-secondary"]:hover,
+[data-testid="baseButton-primary"]:hover {
+  border-color: var(--fyp-accent);
+  background: rgba(94, 234, 212, 0.08);
+}
+
+[data-testid="stButton"] button:focus-visible,
+[data-testid="stDownloadButton"] button:focus-visible,
+[data-testid="baseButton-secondary"]:focus-visible,
+[data-testid="baseButton-primary"]:focus-visible,
+[data-testid="stExpander"] summary:focus-visible {
+  outline: 2px solid var(--fyp-accent);
+  outline-offset: 2px;
+}
+
+/* Long hotel names & numeric columns */
+[data-testid="column"],
+[data-testid="stColumn"] {
+  min-width: 0;
+}
+
+[data-testid="stDataFrame"] div,
+[data-testid="stTable"] table {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Mobile: stack column layouts (Streamlit 1.63+ stColumn and legacy column) */
+@media (max-width: 768px) {
+  [data-testid="stHorizontalBlock"] {
+    flex-wrap: wrap !important;
+  }
+
+  [data-testid="column"],
+  [data-testid="stColumn"] {
+    width: 100% !important;
+    flex: 1 1 100% !important;
+    min-width: 100% !important;
+  }
+
+  .fyp-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .fyp-header__badge {
+    align-self: flex-start;
+  }
+}
+
+/* Current Streamlit tab semantics and compact mobile header. */
+[data-testid="stSelectbox"] [role="combobox"] { min-height: 44px; }
+@media (max-width: 768px) {
+  .fyp-header__brand { flex: 0 1 auto; }
+  [data-testid="stTabs"] [role="tablist"] { flex-wrap: wrap; gap: 4px; height: auto; }
+  [data-testid="stTabs"] [role="tab"] { white-space: normal; flex: 1 1 30%; padding: 8px 6px; }
+  [data-testid="stTabs"] [role="tab"] p { white-space: normal; overflow-wrap: anywhere; }
+}

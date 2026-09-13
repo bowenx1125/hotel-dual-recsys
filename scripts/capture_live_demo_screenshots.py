@@ -64,15 +64,13 @@ def main() -> int:
             page = browser.new_page(viewport={"width": 1400, "height": 900})
             page.goto(url, wait_until="networkidle", timeout=120000)
             # Wait for Streamlit title + hydration
-            page.get_by_text("酒店经理决策演示").first.wait_for(timeout=120000)
-            page.get_by_text("描述性证据").first.wait_for(timeout=120000)
-            # Wait for hotel selector / metric
-            page.get_by_text("参考集规模").first.wait_for(timeout=60000)
+            page.get_by_text("酒店改善助手").first.wait_for(timeout=120000)
+            page.get_by_text("对比酒店数").first.wait_for(timeout=60000)
             page.wait_for_timeout(2500)
             page.screenshot(path=str(out / "manager_tab.png"), full_page=True)
 
             # Temporal tab
-            tab = page.get_by_role("tab", name="历史时序分析")
+            tab = page.get_by_role("tab", name="历史变化")
             tab.click()
             page.get_by_text("可行性判定").first.wait_for(timeout=60000)
             page.get_by_text("候选事件（宽松）").first.wait_for(timeout=60000)
