@@ -1,0 +1,219 @@
+# Demo notes — professor framework
+
+讲的时候按这四块走，不要再按旧的 What is it / How to process 顺序。
+
+开场一句：
+"I will explain the project in four parts: the data, the model, who uses it, and how it sits against recent work."
+
+四块各一句：
+- Data: public European hotel reviews, turned into hotel × quarter × aspect measurements.
+- Model: shrink sparse evidence, compare nearby hotels, then rank one actionable aspect or abstain.
+- Who Use It: hotel managers, not guests.
+- Recent Work: the pieces already exist; this project joins them, and the saved tests do not yet show a profit or causal gain.
+
+---
+
+## 1. Data
+
+先说：
+"The data is the public dataset 515K Hotel Reviews in Europe. These are historical guest reviews, not live 2026 hotel operations."
+
+规模：
+- 515,738 reviews
+- 1,493 hotel IDs
+- 6 cities: London, Paris, Amsterdam, Barcelona, Vienna, Milan
+- dates: 4 Aug 2015 – 3 Aug 2017, about two years
+- raw CSV about 238 MB
+
+原始一行是什么：
+one row = one guest review
+
+原始字段：
+- hotel name, hotel address
+- review date, reviewer score
+- positive comment and negative comment
+  （栏目只是弱标签 weak label，不是每个方面的标准答案）
+- latitude, longitude
+
+怎么变成研究用的表：
+1. 用关键词看这条评论有没有提到某个方面。
+   Location, Cleanliness, Breakfast, Service, Noise, Room, Value
+   Value = money relative to quality.
+2. 按酒店、完整季度、方面，数正面提及 P、负面提及 N。
+3. 首尾季度天数不完整（2015Q3、2017Q3），不拿来和完整季度比。
+   可用完整季度是 2015Q4–2017Q2，共 7 季。
+   Demo 用的“最近一季”是数据集里的 2017Q2，不是今年。
+
+汇总后一行是什么：
+one row = one hotel × one quarter × one aspect
+
+例子：
+Hotel A
+2017Q2
+Breakfast
+P = positive mentions = 1
+N = negative mentions = 1
+m = P + N = 2
+
+如果这个方面一次都没被提到，P = N = 0，记为缺失。
+缺失不是中性。不能把“没人提早餐”说成“早餐一般”。
+
+评分怎么用：
+Reviewer score 是后面预测用的结果。
+不能用整段时期的 Average Score 当特征，因为那个平均里含有未来评论。
+
+Demo 实际喂给模型的一条输入（Hotel Arena, Amsterdam, 2017Q2, Cleanliness）：
+- aspect score q = -0.22
+- mentions m = 8
+- negative mentions N = 6
+- negative rate = 0.75
+- reliability = 0.44
+- peer median = 0.24
+- peer gap = 0.46
+- peer count = 6
+- actionable = yes
+
+如果教授问覆盖：
+2017Q2 有数据的酒店 1,487 家，另外 6 家当季没有评论。
+1,223 家可以展示。
+264 家排除：247 家评论太少，17 家缺坐标。
+
+---
+
+## 2. Model
+
+先说：
+"This is not a chatbot. The demo does not send each review to a large language model. The model is a fixed scoring pipeline, so every number can be traced."
+
+Step 1. 方面识别
+关键词检查评论里有没有这个方面。
+正负栏目给出弱情感。
+离线 ABSA（aspect-based sentiment analysis）只用来检查测量，不是网页实时模型。
+
+Step 2. 原始方面分
+Raw net = (P − N) / (P + N)
+范围大约 −1 到 +1。全正是 1，全负是 −1，正负一样是 0。
+这不是酒店 0–10 的总分。
+没有提及时不算这个公式，保持缺失。
+
+Step 3. Bayesian shrinkage（贝叶斯收缩）
+先验强度 k = 10。
+q = (P − N) / (P + N + 10)
+评论很少时，极端分数会被拉向中间。
+例：只有 1 次正面、0 次负面，原始分是 1，收缩后大约 0.09。
+评论很多时，收缩改变很小。
+这是固定先验，不是从数据里学出来的 empirical Bayes。
+
+Step 4. 证据可靠性
+r = m / (m + 10)
+提及越多，r 越大。5 次大约 0.33，10 次是 0.5。
+r 是样本量，不是准确率。r = 0.9 不是“90% 正确”。
+
+Step 5. 附近参照 kNN
+同一城市里，用经纬度找最近 k = 10 家酒店。
+距离是 Haversine，不是步行时间，也不是已经证明的竞争对手。
+参照水平用这些酒店收缩分的中位数 median，不用平均数。
+Peer gap = peer median − this hotel's q
+gap 为正：这家店在这个方面低于附近中位数。
+先要有测量，再算差距。附近有 10 家，不代表每个方面都有 10 家可比。
+
+Step 6. 证据门槛，过了才进入排序
+- 这个方面至少 5 次提及
+- reliability 至少 0.3
+- 如果规则要和附近比：至少 2 家酒店在这个方面有测量
+- Location 可以诊断，但不进入行动推荐。酒店不能靠这个系统“搬家”。
+
+Step 7. 四条策略，只在合格方面里选
+A. Fix weakest
+   本店方面分最低。
+B. Largest peer gap
+   和附近中位数的差距最大。
+C. Most criticized
+   负面提及次数最多。谈得多的方面，次数自然更大。
+D. 我们的 priority score，只在这一家酒店内部排序
+   S = 0.45 × Gap_norm + 0.35 × Criticism_norm − 0.20 × (1 − Reliability)
+   Criticism = N / m，是负面率，不是负面次数。
+   Norm 把这家酒店合格方面的该指标拉到 0–1。
+   最后一项是证据不足的扣分，不是给不可靠加分。
+   0.45 / 0.35 / 0.20 是设计权重，不是学出来的收益系数。
+
+输出：
+recommended aspect + priority score + 公式里的每个数。
+没有方面过门槛就弃权 abstention：
+"Insufficient evidence to recommend an action."
+
+同一家 Hotel Arena，四条策略答案不同：
+- Fix weakest → Value
+- Largest peer gap → Cleanliness
+- Most criticized → Room
+- Priority score → Cleanliness，S ≈ 0.61
+
+0.61 是排序分，不是 61% 成功率，也不是利润。
+
+清洁这一项如果被追问：
+P = 2, N = 6, m = 8
+q = (2 − 6) / (8 + 10) = −0.22
+r = 8 / 18 ≈ 0.44
+negative rate = 6 / 8 = 0.75
+6 家有效参照，中位数约 0.24，gap 约 0.46
+
+---
+
+## 3. Who Use It
+
+先说：
+"The user is the hotel manager. This is provider-side recommendation: which service aspect should be investigated first."
+
+经理用它来：
+- 看总分背后是哪个方面
+- 看是只有自己落后，还是附近酒店也这样
+- 看证据够不够
+- 证据不够时，系统明确不给建议
+
+现在不用它来：
+- 给游客选酒店。游客排序还没做。
+- 决定花多少钱。没有成本，也没有收益预测。
+- 当成已经验证过的整改方案。
+
+为什么是这个用户：
+A. 两家酒店总分接近，可能一家早餐差、另一家客房差。总分不够用。
+B. 负面次数最多，不一定最先改。客房被谈论得多，负面次数会自然更大。
+C. 本店偏低，可能附近也偏低；要有参照才知道是不是自己落后。
+D. 能看出来的问题，不一定能执行。位置是诊断，不是行动。
+E. 经理仍然做决定。系统给优先级和依据，不代替现场判断。
+
+我要回答的问题：
+How can we turn noisy hotel review evidence into an explainable and cautious priority for a hotel manager?
+
+---
+
+## 4. Recent Work
+
+先说：
+"I am not claiming a new sentiment model or a new nearest-neighbor method. Recent work already measures aspects, recommends items, and compares nearby businesses. This project joins those pieces for a manager, and checks what the data can and cannot support."
+
+别人已经在做的（文献还没系统查完，不要说 first / 首创 / 最优）：
+- Aspect-based sentiment：一条评论可以对房间满意、对早餐不满意。方面要拆开测。
+- Recommender systems：多数是帮客人选酒店，也就是 consumer side。本项目是反过来，帮酒店看先查哪一项。
+- Nearby comparison and panel methods：用同城其他酒店和时间作背景。地理近邻还不是证明过的经济竞争对手。
+- Shrinkage and weak labels：小样本要收缩；正负栏目是便宜标签，不是人工 gold。
+
+本项目接在这些工作后面、准备拿出来讲的点：
+- 诊断和行动分开。位置可以展示，不直接推荐。
+- 提及量、可靠性和附近证据不够时，弃权，不硬排。
+- Demo 和研究用同一套打分，建议可以追溯到 P、N、gap、r。
+- 四条简单规则留着当对照，不把综合分自己评价自己当成“方法更好”。
+
+我们自己最近保存下来的结果，讲的时候把边界说出来：
+- 当前 Demo 是描述性的。它展示 2017Q2 的优先级，没有证明预订或利润会上升。
+- 四条策略各给 1,222 家酒店建议，各有 1 家弃权。Hotel Arena 说明同一输入会选出不同方面。
+- 严格的评论变化事件有 456 个。这是评论里看出来的变化，不是已经核实的经理整改。
+- 预测下一期评分：误差从 0.370 到 0.369。增益的区间跨过 0。不要说方法显著更好。
+- 210 个方面样本上，模型之间大约 92% 一致。这是模型一致，不是人工准确率。
+- 评论随机分成 fold A / B，是为了评估：一半用来发现变化，另一半用来看评分结果。这是交叉拟合，不是把酒店随机分成“真的去整改”和“不整改”。
+
+如果教授问还缺什么：
+- 游客端还没做。
+- 没有人工 gold。
+- 没有经理是否采纳、是否整改、以及收入和利润的数据。
+- 所以现在能讲的是：可解释的优先级，以及什么时候不该下结论。
