@@ -1,0 +1,159 @@
+{
+  "schema_version": "1.0",
+  "design": "matched DiD, nearest neighbour on pre-event level and pre-trend",
+  "matching_covariates": "detection-fold smoothed_net at t-1 and pre-trend (t-2 -> t-1)",
+  "min_scored_reviews_per_fold": 3,
+  "modes": {
+    "wave5_pooled_net": {
+      "mode": "wave5_pooled_net",
+      "n_events_matched": 315,
+      "n_rows": 2432,
+      "att_rel_to_m1": {
+        "-2": {
+          "beta": -0.04490211164045611,
+          "se": 0.006279886012123912,
+          "t": -7.150147559011159,
+          "p": 6.11882560075063e-12,
+          "n": 485,
+          "n_clusters": 315,
+          "ci95": [
+            -0.057210462148322545,
+            -0.03259376113258968
+          ],
+          "pretrend_ok": true
+        },
+        "-1": {
+          "beta": 0.0,
+          "se": 0.0,
+          "t": NaN,
+          "p": NaN,
+          "n": 488,
+          "n_clusters": 315,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        "0": {
+          "beta": 0.16971589236138307,
+          "se": 0.011466163961028685,
+          "t": 14.801453471118604,
+          "p": 5.694258846922345e-38,
+          "n": 488,
+          "n_clusters": 315,
+          "ci95": [
+            0.14724262377966946,
+            0.19218916094309668
+          ]
+        },
+        "1": {
+          "beta": 0.04343831794892444,
+          "se": 0.012338747474655526,
+          "t": 3.5204803435801866,
+          "p": 0.0004945349364852509,
+          "n": 486,
+          "n_clusters": 315,
+          "ci95": [
+            0.0192548170935087,
+            0.06762181880434018
+          ]
+        },
+        "2": {
+          "beta": 0.02321690905952871,
+          "se": 0.012341755327741899,
+          "t": 1.8811675035674666,
+          "p": 0.06087718970896099,
+          "n": 485,
+          "n_clusters": 314,
+          "ci95": [
+            -0.0009724870796536146,
+            0.04740630519871103
+          ]
+        }
+      },
+      "att_at_k0": 0.16971589236138307,
+      "att_at_k0_p": 5.694258846922345e-38,
+      "pretrend_ok": true
+    },
+    "crossfit_rating": {
+      "mode": "crossfit_rating",
+      "n_events_matched": 308,
+      "n_rows": 2326,
+      "att_rel_to_m1": {
+        "-2": {
+          "beta": -0.02189747901594165,
+          "se": 0.036972633098649024,
+          "t": -0.5922618212642741,
+          "p": 0.5541274105262222,
+          "n": 459,
+          "n_clusters": 297,
+          "ci95": [
+            -0.09436250887450219,
+            0.050567550842618894
+          ],
+          "pretrend_ok": true
+        },
+        "-1": {
+          "beta": 0.0,
+          "se": 0.0,
+          "t": NaN,
+          "p": NaN,
+          "n": 476,
+          "n_clusters": 308,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        "0": {
+          "beta": 0.1139333059953554,
+          "se": 0.03637503576914975,
+          "t": 3.132184026386142,
+          "p": 0.0019029528900057695,
+          "n": 472,
+          "n_clusters": 307,
+          "ci95": [
+            0.042639545389109565,
+            0.1852270666016012
+          ]
+        },
+        "1": {
+          "beta": 0.04372805063213901,
+          "se": 0.0373150519696093,
+          "t": 1.171860906632334,
+          "p": 0.242188943648037,
+          "n": 463,
+          "n_clusters": 299,
+          "ci95": [
+            -0.02940810788642431,
+            0.11686420915070234
+          ]
+        },
+        "2": {
+          "beta": 0.05635949358226228,
+          "se": 0.0373417550351334,
+          "t": 1.5092888250494876,
+          "p": 0.13228449697838057,
+          "n": 456,
+          "n_clusters": 299,
+          "ci95": [
+            -0.016829001983417927,
+            0.12954798914794247
+          ]
+        }
+      },
+      "att_at_k0": 0.1139333059953554,
+      "att_at_k0_p": 0.0019029528900057695,
+      "pretrend_ok": true
+    }
+  },
+  "comparison": {
+    "wave5_pooled_net_att_k0": 0.16971589236138307,
+    "crossfit_rating_att_k0": 0.1139333059953554,
+    "note": "wave5_pooled_net is self-referential (events detected per fold, outcome measured on the pooled index that contains that fold). crossfit_rating uses the other fold's guest rating: a downstream, disjoint-review outcome. Units are NOT comparable (smoothed_net vs 0-10 rating points)."
+  },
+  "verdict": {
+    "status": "AMBER_ASSOCIATIONAL",
+    "note": "456 events concentrated in 2016Q2-Q4; after requiring fold-outcome coverage the matched sample is small and this check is low-powered. It is a consistency check on the P2b continuous estimates, not a standalone result."
+  }
+}

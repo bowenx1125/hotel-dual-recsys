@@ -1,0 +1,22 @@
+{
+  "counters": {
+    "rows_read": 515738,
+    "rows_with_usable_date": 515738,
+    "fold_reviews": {
+      "A": 258244,
+      "B": 257494
+    },
+    "fold_review_intersection": 0,
+    "hotel_quarters": 12725,
+    "elapsed_sec": 15.3
+  },
+  "validation": {
+    "rows_fold_only": 0,
+    "rows_panel_only": 0,
+    "rows_both": 12725,
+    "n_reviews_mismatch": 0,
+    "max_abs_mean_score_diff": 2.3092638912203256e-14,
+    "ok": true
+  },
+  "artifact": "C:\\Users\\zzysqzhang\\WorkBuddy\\2026-09-14-14-32-45\\hotel-dual-recsys\\data\\processed\\hotel_quarter_fold.parquet"
+}
