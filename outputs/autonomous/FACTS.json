@@ -418,7 +418,244 @@
       "failures": 0,
       "device": "mps",
       "wording": "agreement with structurally weak section labels; not gold accuracy"
+    },
+    "11": {
+      "p2c_matched_did": {
+        "wave5_pooled_net_att_k0": 0.16971589236138307,
+        "crossfit_rating_att_k0": 0.1139333059953554,
+        "n_matched_crossfit": 308,
+        "n_matched_wave5": 315,
+        "verdict": "AMBER_ASSOCIATIONAL",
+        "low_power": true
+      },
+      "experiment": "crossfit_continuous_aspect_to_rating",
+      "spec": {
+        "unit": "hotel x aspect x quarter (complete quarters only)",
+        "treatment": "aspect sentiment (smoothed_net) on detection fold F",
+        "outcome": "mean reviewer score on the other fold G (disjoint reviews)",
+        "fixed_effects": [
+          "hotel x aspect (absorbed)",
+          "period dummies"
+        ],
+        "cluster": "hotel",
+        "min_scored_reviews_per_fold": 3,
+        "main_aspects": [
+          "cleanliness",
+          "breakfast",
+          "service",
+          "noise",
+          "room",
+          "value"
+        ],
+        "seed": 42,
+        "timings": {
+          "lagged_change": "x=d_sn_F(t-1->t), y=ms_G(t->t+1)  [temporal precedence]",
+          "contemp_change": "x=d_sn_F(t-1->t), y=ms_G(t-1->t)  [contemporaneous]",
+          "lagged_level": "x=sn_F(t), y=ms_G(t+1)  [temporal precedence, levels]",
+          "contemp_level": "x=sn_F(t), y=ms_G(t)  [contemporaneous, levels]"
+        }
+      },
+      "lead_beta": -0.03395915105977122,
+      "lead_se": 0.022414004762452484,
+      "lead_p": 0.12999841427506778,
+      "lead_ci95": [
+        -0.07788979349000665,
+        0.0099714913704642
+      ],
+      "contemp_beta": 0.10071876894228465,
+      "contemp_se": 0.019581392136596844,
+      "contemp_p": 3.1034858844451165e-07,
+      "contemp_ci95": [
+        0.06233994528467175,
+        0.13909759259989757
+      ],
+      "lead_significant_at_0.05": false,
+      "verdict": "AMBER_ASSOCIATIONAL",
+      "own_fold_mechanical_contrast": {
+        "lagged_change": {
+          "beta": -0.3766173436864628,
+          "se": 0.023905672913026206,
+          "p": 3.139563057310107e-51,
+          "ci95": [
+            -0.4234716019917693,
+            -0.32976308538115634
+          ],
+          "rows": 24732
+        },
+        "contemp_change": {
+          "beta": 0.7550925655863905,
+          "se": 0.02417560912624651,
+          "p": 1.0804816005444318e-160,
+          "ci95": [
+            0.7077092420208758,
+            0.8024758891519052
+          ],
+          "rows": 30222
+        },
+        "lagged_level": {
+          "beta": -0.07182117335204329,
+          "se": 0.01880309284996236,
+          "p": 0.00013951084411411508,
+          "ci95": [
+            -0.10867455842662692,
+            -0.03496778827745965
+          ],
+          "rows": 34224
+        },
+        "contemp_level": {
+          "beta": 0.8335185944559567,
+          "se": 0.02075338592393031,
+          "p": 4.144748051654454e-237,
+          "ci95": [
+            0.7928427051669465,
+            0.8741944837449668
+          ],
+          "rows": 41497
+        }
+      },
+      "location_negative_control": {
+        "lagged_change": {
+          "beta": -0.010343163926604036,
+          "se": 0.05259621702938347,
+          "p": 0.8441321472384363,
+          "ci95": [
+            -0.11342985584038258,
+            0.09274352798717451
+          ],
+          "rows": 5201
+        },
+        "contemp_change": {
+          "beta": 0.042740491404263954,
+          "se": 0.0467727941549926,
+          "p": 0.36099911609851065,
+          "ci95": [
+            -0.04893250131893196,
+            0.13441348412745988
+          ],
+          "rows": 6356
+        },
+        "lagged_level": {
+          "beta": 0.03801342367162286,
+          "se": 0.04218288802485265,
+          "p": 0.3676646358665163,
+          "ci95": [
+            -0.04466351827311944,
+            0.12069036561636516
+          ],
+          "rows": 6765
+        },
+        "contemp_level": {
+          "beta": 0.07968335090667661,
+          "se": 0.039811528506898994,
+          "p": 0.045526678400389785,
+          "ci95": [
+            0.001654188248180824,
+            0.1577125135651724
+          ],
+          "rows": 8190
+        }
+      },
+      "outcome": "guest_rating_NOT_revenue",
+      "no_roi": true,
+      "no_demand_lift": true
+    },
+    "12": {
+      "experiment": "direct_method_cross_fit_policy_evaluation",
+      "ope_method": "direct_method_cross_fit",
+      "no_ips_snips": true,
+      "no_logged_policy": true,
+      "discrimination_gap": 0.026026637788037276,
+      "discrimination_sd": 0.004984911142123525,
+      "placebo_gap": 0.02161994904379739,
+      "verdict": "AMBER_NO_DISCRIMINATION",
+      "placebo_ratio": 1.2038251216648512
+    },
+    "13": {
+      "experiment": "cross_sectional_aspect_value_vector",
+      "target": "hotel cross-section: fold-A aspect profile -> fold-B rating level",
+      "cv_r2_out_of_hotel": 0.4412998738092708,
+      "placebo_r2": -0.0014505303208609543,
+      "placebo_ratio": 304.233470657366,
+      "half_half_corr_actionable": 0.982483752267953,
+      "policy_placebo_ratio": 2.307574806631615,
+      "value_vector_status": "REAL_AND_STABLE",
+      "policy_gain_status": "GAIN_BEATS_PLACEBO",
+      "associational_only": true,
+      "no_ips_snips": true
+    },
+    "14": {
+      "experiment": "revealed_intervention_event_study",
+      "estimand": "rating change after a persistent, fold-pure aspect improvement",
+      "pooled_att": 0.0656,
+      "pooled_t": 3.4615921846534445,
+      "gap_best_minus_worst": 0.11521689066092483,
+      "placebo_gap": 0.11192259567390439,
+      "placebo_ratio": 1.0294336900175067,
+      "placebo_p": 0.40166666666666667,
+      "pre_trend_diff": -0.02104496075979518,
+      "pre_trend_t": -0.9433462639967984,
+      "specificity_t": 8.231875416722048,
+      "mde_rating_points": 0.17143320523912547,
+      "status": "IMPROVEMENTS_HELP_BUT_NOT_ASPECT_SPECIFIC",
+      "adoption_unidentified": true,
+      "revenue_unidentified": true,
+      "no_ips_snips": true,
+      "verdict_status": "IMPROVEMENT_PAYS_REPLICATED_ACROSS_FOLDS__SPECIFICITY_DIRECTION_DEPENDENT",
+      "improvement_pays": "REPLICATED_ACROSS_FOLDS",
+      "aspect_specificity": "DIRECTION_DEPENDENT",
+      "replication": {
+        "A->B": {
+          "pooled_att": 0.0656,
+          "pooled_t": 3.46,
+          "pre_trend_diff": -0.021,
+          "pre_trend_t": -0.94,
+          "gap": 0.1152,
+          "placebo_gap": 0.1119,
+          "placebo_ratio": 1.029,
+          "placebo_p": 0.402,
+          "best_aspect": "cleanliness",
+          "specificity_t": 8.23,
+          "pooled_ok": true,
+          "gap_ok": false,
+          "trend_clean": true
+        },
+        "B->A": {
+          "pooled_att": 0.0652,
+          "pooled_t": 3.43,
+          "pre_trend_diff": -0.0425,
+          "pre_trend_t": -2.11,
+          "gap": 0.2035,
+          "placebo_gap": 0.1092,
+          "placebo_ratio": 1.863,
+          "placebo_p": 0.008,
+          "best_aspect": "value",
+          "specificity_t": 8.44,
+          "pooled_ok": true,
+          "gap_ok": true,
+          "trend_clean": false
+        }
+      },
+      "pooled_att_by_direction": {
+        "A->B": 0.0656,
+        "B->A": 0.0652
+      },
+      "gap_ratio_by_direction": {
+        "A->B": 1.029,
+        "B->A": 1.863
+      },
+      "best_aspect_by_direction": {
+        "A->B": "cleanliness",
+        "B->A": "value"
+      },
+      "pre_trend_by_direction": {
+        "A->B": -0.94,
+        "B->A": -2.11
+      },
+      "transfer_status": "NO_TRANSFER",
+      "n_events": 1605,
+      "n_hotel_quarters": 9632,
+      "sigma_dY_control": 0.9091301638899005
     }
   },
-  "facts_sha256": "03d1ac060245fc0402043f1dd4022c52597a30b2bc4200e16b74dcdf9f8f1d65"
+  "facts_sha256": "6a4ab895e4e3cb2cfb818374b2f9c1b29f54457f218a809c103689cf40b700b8"
 }
