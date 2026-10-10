@@ -42,3 +42,7 @@
 ./.venv-fyp/Scripts/python.exe -m unittest discover -s tests -q
 ./.venv-fyp/Scripts/python.exe -m src.effect.run_p5a --seed 20260915 --reps 600
 ```
+
+## 在 Demo 网站里看
+
+这四轮结论已经接入 `demo/app.py`「研究进展」标签页顶部的「能否证明能提升收益？」板块：4 个关键指标卡片（方面价值向量 R²、策略区分力、改善后评分回升、最小可检测差异，均实时读自 `FACTS.json`）+ 四轮对比表 + 四份报告下载按钮。启动方式见仓库根 [README.md](../../README.md) 的「五分钟启动 Demo」。

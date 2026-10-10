@@ -266,6 +266,27 @@ UI: dict[str, str] = {
     "col_model": "Model",
     "track_prefix": "Track",
     "recommendation_aria": "Improvement suggestion",
+    "revenue_proof_heading": "Can this prove a revenue increase? (P1-P5A research progress)",
+    "revenue_proof_verdict": "**Bottom line: the algorithm side has real, verified signal; the revenue side cannot be proven with the data on hand -- what is missing is manager-adoption and revenue records, not a better algorithm.**",
+    "revenue_metric_r2": "Aspect value vector out-of-hotel R2",
+    "revenue_metric_r2_caption": "304x a label-shuffled placebo",
+    "revenue_metric_discrimination": "Policy discrimination (gap / placebo)",
+    "revenue_metric_discrimination_caption": "Needs >=1.5 to count as distinguishing policies",
+    "revenue_metric_pooled": "Rating recovery after improvement",
+    "revenue_metric_pooled_caption": "Replicates across two independent directions",
+    "revenue_metric_mde": "Current minimum detectable effect",
+    "revenue_metric_mde_caption": "Smaller between-aspect gaps are invisible at this sample size",
+    "revenue_proof_table_heading": "Four independent studies, four different methods, one consistent conclusion",
+    "col_round": "Round",
+    "col_question": "Question",
+    "col_method": "Method",
+    "col_verdict": "Verdict",
+    "col_numbers": "Key numbers",
+    "revenue_proof_downloads_heading": "Full reports (download, with complete methodology and data provenance)",
+    "download_p1p2": "Download the P1/P2 effect-estimation report",
+    "download_p4": "Download the P4 offline policy evaluation report",
+    "download_p3": "Download the P3 aspect value vector report",
+    "download_p5a": "Download the P5-A revealed-intervention report",
 }
 
 
@@ -481,6 +502,46 @@ LIMITATIONS = """
 - Location may show as a weakness but is **not** a direct operational lever.
 - This demo does **not** claim event-study, placebo, or causal estimates.
 """
+
+REVENUE_PROOF_ROWS_EN: list[dict[str, str]] = [
+    {
+        "round": "P1 / P2",
+        "question": "Does improving an aspect raise next quarter's rating?",
+        "method": "Cross-fold fixed-effects regression + matched event study (two independent designs cross-check each other)",
+        "verdict": "Associational only, not causal -- contemporaneous co-movement is robust, but the forward (lead) effect is a null result",
+        "numbers": "Contemporaneous level +0.187 (p<0.001); lagged level +0.057 (p=0.003, not robust under an alternate spec)",
+    },
+    {
+        "round": "P4",
+        "question": "Does the shipped ranking rule actually pick the most valuable aspect?",
+        "method": "Direct Method offline policy evaluation under no logged policy (IPS/SNIPS is disallowed by project rules)",
+        "verdict": "The evaluation itself cannot tell a good policy from a bad one",
+        "numbers": "Best-vs-worst gap against a permuted placebo: ratio only 1.20 (needs >=1.5 to count)",
+    },
+    {
+        "round": "P3",
+        "question": "Can a learned aspect value vector replace the hand-designed weights?",
+        "method": "Aspect value vector regression (cross-section: own aspect profile -> other hotels' rating level)",
+        "verdict": "The vector itself is real, stable and transferable, but plugging it back into the shipped system moves the revenue proxy by nothing",
+        "numbers": "Out-of-fold R2 0.44 (304x placebo); agrees with the shipped policy on only 59.2% of picks; all 4 configurations |t|<=0.95",
+    },
+    {
+        "round": "P5-A",
+        "question": "From another angle: are real, revealed improvement events paid off?",
+        "method": "Revealed-intervention event study (detection/outcome folds disjoint, checked in both directions)",
+        "verdict": "Improvements do raise ratings and this replicates in both directions; but which aspect pays most is direction-dependent and not identified",
+        "numbers": "Both directions ~+0.065 rating points (t~3.4); the best aspect flips between cleanliness and value depending on detection direction",
+    },
+]
+
+REVENUE_PROOF_WHY_EN = (
+    "**This is not one round going wrong.** Association analysis, policy evaluation, value-vector "
+    "regression, and event-study -- four completely independent methods all hit the same wall: the "
+    "data has no record of whether a manager actually acted on a recommendation, and no revenue series. "
+    "P5-A turns that gap into a concrete number: reliably telling which aspect pays most would need "
+    "roughly 1,950-31,140 logged improvement events (depending on the precision wanted); right now "
+    "there are only about 100-300 per aspect."
+)
 
 MODEL_ANNOTATION_BOUNDARY_EXPANDER = """
 **Automated labeling and limits** (this demo does not claim human-verified labels or real business validation):
@@ -854,3 +915,5 @@ CLAIM_NOTES_ZH = CLAIM_NOTES
 MODEL_NAME_ZH = MODEL_NAME
 TARGET_LABEL_ZH = TARGET_LABEL
 HEURISTIC_NAME_ZH = POLICY_LABELS["peer_relative"]
+REVENUE_PROOF_ROWS_ZH = REVENUE_PROOF_ROWS_EN
+REVENUE_PROOF_WHY_ZH = REVENUE_PROOF_WHY_EN
