@@ -1,3 +1,21 @@
 experiment_id,wave,name,preregistered,status,artifact,result_summary,claim_ids
 W0-legacy-reproduce,0,reproduce_permissive_events,yes,PASS,outputs/autonomous/wave0/findings.json,n=5774 match=true,C4
 W2-strict-main,2,strict_crossfit_events,yes,AMBER_ASSOCIATIONAL,outputs/autonomous/wave2/strict_events.json,n=456,C8
+P2-crossfit-continuous,11,crossfit_continuous_aspect_to_rating,yes,AMBER_ASSOCIATIONAL,outputs/autonomous/p2/effect_estimates.json,beta=-0.03395915105977122,P2
+P2-crossfit-continuous,11,crossfit_continuous_aspect_to_rating,yes,AMBER_ASSOCIATIONAL,outputs/autonomous/p2/effect_estimates.json,lead_beta=-0.03395915105977122 (p=0.12999841427506778); contemp_beta=0.10071876894228465 (p=3.1034858844451165e-07),P2
+P2c-crossfit-matched-did,11,matched_did_crossfit_vs_wave5_outcome,yes,AMBER_ASSOCIATIONAL,outputs/autonomous/p2/event_study_p2c.json,wave5=0.21589145284911354 crossfit_rating=0.1139333059953554,P2
+P2c-crossfit-matched-did,11,matched_did_crossfit_vs_wave5_outcome,yes,AMBER_ASSOCIATIONAL,outputs/autonomous/p2/event_study_p2c.json,wave5=0.21589145284911354 crossfit_rating=0.1139333059953554,P2
+P2-crossfit-continuous,11,crossfit_continuous_aspect_to_rating,yes,AMBER_ASSOCIATIONAL,outputs/autonomous/p2/effect_estimates.json,lead_beta=-0.03395915105977122 (p=0.12999841427506778); contemp_beta=0.10071876894228465 (p=3.1034858844451165e-07),P2
+P2-crossfit-continuous,11,crossfit_continuous_aspect_to_rating,yes,AMBER_ASSOCIATIONAL,outputs/autonomous/p2/effect_estimates.json,lead_beta=-0.03395915105977122 (p=0.12999841427506778); contemp_beta=0.10071876894228465 (p=3.1034858844451165e-07),P2
+P2c-crossfit-matched-did,11,matched_did_crossfit_vs_wave5_outcome,yes,AMBER_ASSOCIATIONAL,outputs/autonomous/p2/event_study_p2c.json,wave5=0.16971589236138307 crossfit_rating=0.1139333059953554,P2
+P4-direct-method-ope,12,direct_method_cross_fit_policy_evaluation,yes,AMBER_ASSOCIATIONAL,outputs/autonomous/p4/ope_values.json,discrimination_gap=0.026026637788037276,P4
+P4-direct-method-ope,12,direct_method_cross_fit_policy_evaluation,yes,AMBER_ASSOCIATIONAL,outputs/autonomous/p4/ope_values.json,discrimination_gap=0.026026637788037276,P4
+P4-direct-method-ope,12,direct_method_cross_fit_policy_evaluation,yes,AMBER_ASSOCIATIONAL,outputs/autonomous/p4/ope_values.json,discrimination_gap=0.026026637788037276,P4
+P4-direct-method-ope,12,direct_method_cross_fit_policy_evaluation,yes,AMBER_ASSOCIATIONAL,outputs/autonomous/p4/ope_values.json,discrimination_gap=0.026026637788037276,P4
+P4-direct-method-ope,12,direct_method_cross_fit_policy_evaluation,yes,AMBER_NO_DISCRIMINATION,outputs/autonomous/p4/ope_values.json,discrimination_gap=0.026026637788037276,P4
+P4-direct-method-ope,12,direct_method_cross_fit_policy_evaluation,yes,AMBER_NO_DISCRIMINATION,outputs/autonomous/p4/ope_values.json,discrimination_gap=0.026026637788037276,P4
+P3-aspect-value-vector,13,cross_sectional_aspect_value_vector_and_value_aware_policy,yes,REAL_AND_STABLE,outputs/autonomous/p3/p3_values.json,cv_r2=0.4412998738092708 placebo_ratio=304.233470657366,P3
+P3-aspect-value-vector,13,cross_sectional_aspect_value_vector_and_value_aware_policy,yes,REAL_AND_STABLE,outputs/autonomous/p3/p3_values.json,cv_r2=0.4412998738092708 placebo_ratio=304.233470657366,P3
+P5A-revealed-interventions,14,revealed_intervention_event_study_and_power_analysis,yes,IMPROVEMENTS_HELP_BUT_NOT_ASPECT_SPECIFIC,outputs/autonomous/p5a/p5a.json,pooled=0.06555652458672687 gap_ratio=1.024192703306458 mde=0.17143320523912547,P5A
+P5A-revealed-interventions,14,revealed_intervention_event_study_and_power_analysis,yes,IMPROVEMENTS_HELP_BUT_NOT_ASPECT_SPECIFIC,outputs/autonomous/p5a/p5a.json,pooled=0.06555652458672687 gap_ratio=1.0294336900175067 mde=0.17143320523912547,P5A
+P5A-revealed-interventions,14,revealed_intervention_event_study_and_power_analysis,yes,IMPROVEMENT_PAYS_REPLICATED_ACROSS_FOLDS__SPECIFICITY_DIRECTION_DEPENDENT,outputs/autonomous/p5a/p5a.json,REPLICATED_ACROSS_FOLDS; SPECIFICITY DIRECTION_DEPENDENT; pooled A->B +0.0656 (t=3.46) / B->A +0.0652 (t=3.43); gap_ratio A->B 1.029 / B->A 1.863; transfer NO_TRANSFER; mde 0.1714,P5A
