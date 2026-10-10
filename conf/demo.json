@@ -64,5 +64,8 @@
   "actionability_config": "conf/actionability.json",
   "min_reliability": 0.3,
   "min_measured_peers": 2,
-  "policy_version": "shared-v1"
+  "policy_version": "shared-v1",
+  "use_learned_value_vector": false,
+  "value_vector_path": "outputs/autonomous/p3/value_vector.json",
+  "value_spec": "conditional"
 }

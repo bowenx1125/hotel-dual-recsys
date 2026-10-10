@@ -1,0 +1,64 @@
+{
+  "schema": "p3-aspect-value-vector-v1",
+  "seed": 20260915,
+  "units": "rating points per 1 SD of fold-specific smoothed_net",
+  "estimand": "hotel cross-section: mean aspect profile on the detection fold -> mean reviewer score on the disjoint outcome fold",
+  "n_hotels": {
+    "A->B": 1300,
+    "B->A": 1292
+  },
+  "vectors": {
+    "conditional": {
+      "location": -0.05759917503173461,
+      "cleanliness": -0.09876928069571742,
+      "breakfast": -0.012856398739873667,
+      "service": 0.2658979727109661,
+      "noise": 0.08261815907351255,
+      "room": 0.2843023689206187,
+      "value": -0.009106369795704434
+    },
+    "marginal": {
+      "location": 0.01510760472081154,
+      "cleanliness": 0.16773134481639124,
+      "breakfast": 0.048413191854849574,
+      "service": 0.26425792602158316,
+      "noise": 0.21615391797471073,
+      "room": 0.3535543000769123,
+      "value": 0.007796478368962759
+    }
+  },
+  "recommended_spec": "conditional",
+  "recommended_spec_reason": "Both specs beat a scrambled-v placebo on the Q3b out-of-hotel outcome probe; only the conditional spec also clears the random-aspect reference. The marginal vector is nearly flat after normalisation, so it barely changes which aspect is picked.",
+  "normalized_preview": {
+    "conditional": {
+      "cleanliness": 0.0,
+      "breakfast": 0.0,
+      "service": 2.5210827978135715,
+      "noise": 0.7833351172393787,
+      "room": 2.6955820849470493,
+      "value": 0.0
+    },
+    "marginal": {
+      "cleanliness": 0.9513009343293997,
+      "breakfast": 0.274579057932207,
+      "service": 1.4987586977464864,
+      "noise": 1.2259331990296436,
+      "room": 2.0052097976530128,
+      "value": 0.04421831330925115
+    }
+  },
+  "provenance": {
+    "cv_r2_A_B": 0.4412998738092708,
+    "cv_r2_B_A": 0.4600759211208473,
+    "placebo_r2_A_B": -0.0014505303208609543,
+    "half_half_corr_A_B": 0.982483752267953,
+    "condition_number": 3.089590164160469,
+    "alpha": 10.0
+  },
+  "caveats": [
+    "Associational cross-sectional level coefficient, NOT the effect of intervening. No intervention data exists in this project.",
+    "conditional and marginal specifications disagree in sign for cleanliness and location; the choice between them is untestable without interventions. See P3.md.",
+    "Estimated on 1292-1300 hotels with >=30 outcome-fold reviews; coverage is not the full panel."
+  ],
+  "enabled_by_default": false
+}
