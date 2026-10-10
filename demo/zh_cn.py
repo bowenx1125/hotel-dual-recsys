@@ -263,6 +263,27 @@ UI: dict[str, str] = {
     "col_model": "模型",
     "track_prefix": "轨道",
     "recommendation_aria": "改善建议",
+    "revenue_proof_heading": "能否证明能提升收益？（P1–P5A 研究进展）",
+    "revenue_proof_verdict": "**一句话结论：算法侧已验证有真实信号，收益侧按现有数据无法证明——缺的是经理采纳记录和收入数据，不是更好的算法。**",
+    "revenue_metric_r2": "方面价值向量样本外 R²",
+    "revenue_metric_r2_caption": "比随机打乱安慰剂高 304 倍",
+    "revenue_metric_discrimination": "策略区分力（差距/安慰剂）",
+    "revenue_metric_discrimination_caption": "需 ≥1.5 才算能区分好坏策略",
+    "revenue_metric_pooled": "改善后评分回升",
+    "revenue_metric_pooled_caption": "两个独立方向互相复现",
+    "revenue_metric_mde": "当前最小可检测差异",
+    "revenue_metric_mde_caption": "比这更小的方面间差异，现有样本看不出来",
+    "revenue_proof_table_heading": "四轮独立研究，方法互不相同，结论互相印证",
+    "col_round": "轮次",
+    "col_question": "要回答的问题",
+    "col_method": "方法",
+    "col_verdict": "结论",
+    "col_numbers": "关键数字",
+    "revenue_proof_downloads_heading": "完整报告（可下载，含全部方法细节与原始数据出处）",
+    "download_p1p2": "下载 P1/P2 效应估计报告",
+    "download_p4": "下载 P4 离线策略评估报告",
+    "download_p3": "下载 P3 方面价值向量报告",
+    "download_p5a": "下载 P5-A 揭示性干预报告",
 }
 
 
@@ -481,6 +502,44 @@ LIMITATIONS_ZH = """
 - 位置可呈现为短板，但**不是**可直接运营的行动杠杆。
 - 本演示**不宣称**事件研究、安慰剂或因果估计。
 """
+
+REVENUE_PROOF_ROWS_ZH: list[dict[str, str]] = [
+    {
+        "round": "P1 / P2",
+        "question": "改善一个方面之后，下一季度的评分会提升吗？",
+        "method": "交叉折固定效应回归 + 匹配事件研究（两种独立设计互相印证）",
+        "verdict": "仅关联性，非因果确认 —— 同步关联稳健，但领先效应（改善会不会带来下季度提升）是负结果",
+        "numbers": "同期·水平 +0.187（p<0.001）；滞后·水平 +0.057（p=0.003，另一规格下不稳健）",
+    },
+    {
+        "round": "P4",
+        "question": "现有的排序规则，选对了最值钱的方面吗？",
+        "method": "无记录策略下的直接法评估（项目规则禁止用 IPS/SNIPS 包装）",
+        "verdict": "评估方法本身无法区分好策略与坏策略",
+        "numbers": "最好策略与最差策略的差距，对比随机置换安慰剂，比值仅 1.20（需 ≥1.5 才算数）",
+    },
+    {
+        "round": "P3",
+        "question": "能不能学出一个更准的方面价值排序，取代人工设计的权重？",
+        "method": "方面价值向量回归（横截面：本店方面画像 → 其他酒店评分水平）",
+        "verdict": "向量本身真实、稳定、可迁移，但套回现役系统后收益没有变化",
+        "numbers": "样本外 R² 0.44（安慰剂比值 304）；与现役一致率仅 59.2%；收益差 4 种配置全部 |t|≤0.95",
+    },
+    {
+        "round": "P5-A",
+        "question": "换个角度：评论里真实发生的改善事件，收益回报可信吗？",
+        "method": "揭示性干预事件研究（检测/结果两折互斥，双向跨折复现）",
+        "verdict": "改善确实带来评分回升，且两个方向都复现；但哪个方面更值钱方向依赖、不可判定",
+        "numbers": "两个方向均 +0.065 分左右（t≈3.4）；最佳方面随检测方向在 cleanliness / value 间翻转",
+    },
+]
+
+REVENUE_PROOF_WHY_ZH = (
+    "**这不是某一轮没做好。** 关联分析、策略评估、价值回归、事件研究——四种完全独立的方法，"
+    "全部卡在同一个地方：数据里没有「经理是否真的照做了」和「收入」这两项记录。"
+    "P5-A 把这个缺口量化成了具体数字：要可信地判断哪个方面更值钱，大约需要 1,950–31,140 条"
+    "已记录的改善事件（取决于想要的判定精度），现在每个方面大约只有 100–300 条。"
+)
 
 MODEL_ANNOTATION_BOUNDARY_EXPANDER = """
 **自动标注与使用边界**（本演示不要求人工填写标签，也不宣称真实业务验收）：

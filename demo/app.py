@@ -24,6 +24,7 @@ from demo.theme import apply_theme, render_header, render_recommendation, render
 
 SNAPSHOT_PATH = ROOT / "outputs" / "demo" / "research_snapshot.json"
 BUILD_SNAPSHOT_CMD = ".venv-fyp/bin/python scripts/build_research_demo.py"
+DOCS_FYP1 = ROOT / "docs" / "fyp1"
 
 MGR_HOTEL_KEY = "mgr_hotel"
 
@@ -850,6 +851,85 @@ def render_temporal_tab(st, loc):
             _download_button(st, loc.UI["download_go_no_go"], gate_path, "text/markdown")
 
 
+def _fmt_metric_float(value, fmt: str, loc) -> str:
+    if value is None:
+        return loc.fmt_na(None)
+    try:
+        return format(float(value), fmt)
+    except (TypeError, ValueError):
+        return loc.fmt_na(None)
+
+
+def _render_revenue_proof_section(st, loc, waves: dict) -> None:
+    """P1-P5A revenue-proof pipeline: headline metrics + 4-round table + downloads.
+
+    Pulls headline numbers live from FACTS.json (waves 12/13/14) so the page
+    stays accurate if the research is ever rerun; the narrative table and
+    closing explanation are vetted static copy cross-checked against the
+    four reports in docs/fyp1/.
+    """
+    render_section_header(st, loc.UI["revenue_proof_heading"])
+    st.markdown(loc.UI["revenue_proof_verdict"])
+
+    w12 = waves.get("12") or {}
+    w13 = waves.get("13") or {}
+    w14 = waves.get("14") or {}
+
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric(loc.UI["revenue_metric_r2"], _fmt_metric_float(w13.get("cv_r2_out_of_hotel"), ".2f", loc))
+    c1.caption(loc.UI["revenue_metric_r2_caption"])
+    c2.metric(
+        loc.UI["revenue_metric_discrimination"],
+        _fmt_metric_float(w12.get("placebo_ratio"), ".2f", loc),
+    )
+    c2.caption(loc.UI["revenue_metric_discrimination_caption"])
+    pooled = w14.get("pooled_att")
+    c3.metric(
+        loc.UI["revenue_metric_pooled"],
+        f"+{pooled:.3f}" if pooled is not None else loc.fmt_na(None),
+    )
+    c3.caption(loc.UI["revenue_metric_pooled_caption"])
+    c4.metric(loc.UI["revenue_metric_mde"], _fmt_metric_float(w14.get("mde_rating_points"), ".3f", loc))
+    c4.caption(loc.UI["revenue_metric_mde_caption"])
+
+    st.markdown(f"#### {loc.UI['revenue_proof_table_heading']}")
+    st.dataframe(
+        [
+            {
+                loc.UI["col_round"]: r["round"],
+                loc.UI["col_question"]: r["question"],
+                loc.UI["col_method"]: r["method"],
+                loc.UI["col_verdict"]: r["verdict"],
+                loc.UI["col_numbers"]: r["numbers"],
+            }
+            for r in loc.REVENUE_PROOF_ROWS_ZH
+        ],
+        hide_index=True,
+        use_container_width=True,
+    )
+    st.markdown(loc.REVENUE_PROOF_WHY_ZH)
+
+    with st.expander(loc.UI["revenue_proof_downloads_heading"], expanded=False):
+        _download_button(
+            st, loc.UI["download_p1p2"], DOCS_FYP1 / "FYP1_P1P2_效应估计结果.md", "text/markdown"
+        )
+        _download_button(
+            st, loc.UI["download_p4"], DOCS_FYP1 / "FYP1_P4_离线策略评估与P3目标.md", "text/markdown"
+        )
+        _download_button(
+            st,
+            loc.UI["download_p3"],
+            DOCS_FYP1 / "FYP1_P3_方面价值向量与价值感知排序.md",
+            "text/markdown",
+        )
+        _download_button(
+            st,
+            loc.UI["download_p5a"],
+            DOCS_FYP1 / "FYP1_P5A_揭示性干预与样本量要求.md",
+            "text/markdown",
+        )
+
+
 def render_research_evidence_tab(st, loc):
     st.subheader(loc.UI["research_subheader"])
     st.caption(loc.UI["research_caption"])
@@ -861,6 +941,11 @@ def render_research_evidence_tab(st, loc):
         facts = json.loads(facts_p.read_text(encoding="utf-8"))
         facts_sha = str(facts.get("facts_sha256") or "")[:16]
         waves = facts.get("waves") or {}
+
+        if waves.get("14"):
+            _render_revenue_proof_section(st, loc, waves)
+            st.divider()
+
         w0 = waves.get("0") or {}
         w1, w2, w4, w5, w6 = (
             waves.get("1") or {},
