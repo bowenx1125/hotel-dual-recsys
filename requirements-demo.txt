@@ -1,5 +1,5 @@
 # Streamlit demo and the full quarterly-panel adapter.
-# Verified on Python 3.12.3.
+# Verified on Python 3.12.3 and 3.13.12.
 streamlit==1.63.0
 matplotlib==3.11.1
 pandas==3.0.5
