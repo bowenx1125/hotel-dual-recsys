@@ -1,0 +1,165 @@
+{
+  "schema_version": "1.0",
+  "frozen_at_utc": "2026-09-14T07:32:08+00:00",
+  "purpose": "P1 baseline freeze; reference point for P3 algorithm optimisation.",
+  "git": {
+    "head": "378981c13ca4673f0c68e76f66c47cfab36270be",
+    "head_subject": "Record final clone and CI acceptance for colleague handoff",
+    "dirty": [
+      "M models/absa/config.json",
+      "?? data/processed/hotel_quarter_fold.parquet",
+      "?? outputs/autonomous/p2/",
+      "?? src/effect/"
+    ]
+  },
+  "artifacts": {
+    "conf/demo.json": {
+      "sha256": "9f57c7d9bf0201925a43346a6053ff06836f857229e2027f4f9320f9b35c8c5f",
+      "bytes": 1670
+    },
+    "conf/autonomous_research.json": {
+      "sha256": "c0419ea673cd1e9485f04268011384f0609e074eeff775a5b1d4c0f1cd7131dd",
+      "bytes": 3526
+    },
+    "src/recommendation/scoring.py": {
+      "sha256": "7924dfd0b00ec3ff0d33442953ff2e7b880dbbd8da7b8af63526f10a1037cef2",
+      "bytes": 24646
+    },
+    "src/autonomous/panel.py": {
+      "sha256": "b44e2670ac1e1ba5ce3e9a77814926cdd4b4dbd05e998c211eab4020df8e15bd",
+      "bytes": 36456
+    },
+    "src/autonomous/infer.py": {
+      "sha256": "506de7468d65994075a35be1d213093ca52a2d2ba1e8495caa2cd0769da53351",
+      "bytes": 51298
+    },
+    "src/autonomous/common.py": {
+      "sha256": "b7860caa7d9afdee0b403a5f1c6313cac97078c3bcc3620d4db4acec8b7ed2ed",
+      "bytes": 11133
+    },
+    "data/processed/hotel_aspect_quarter_v2.parquet": {
+      "sha256": "429530b8b9adc4bb32f2fa7b1ab1cc0df2ba8d7b7d660dd01030266d9d406fd2",
+      "bytes": 1673743
+    },
+    "outputs/autonomous/FACTS.json": {
+      "sha256": "2f24c2164bfbfd3bc8efdb2972a4175579cb2c8f3debb504171cc38aac0fbec7",
+      "bytes": 13548
+    },
+    "outputs/autonomous/CLAIMS_LEDGER.md": {
+      "sha256": "c83349bb59282b7907ba7ffb941db6b0d5fadeceefec2af68fba0991d3e986b6",
+      "bytes": 873
+    }
+  },
+  "algorithm": {
+    "heuristic": "peer_relative (Peer-Relative Evidence-Weighted)",
+    "weights": {
+      "gap": 0.45,
+      "criticism": 0.35,
+      "unreliable": 0.2
+    },
+    "weight_grids": [
+      "current-default",
+      "gap-dominant",
+      "criticism-dominant",
+      "reliability-conservative",
+      "equal-weight"
+    ],
+    "weights_are_design_choices": true,
+    "min_mentions": 5,
+    "min_reviews_hotel": 10,
+    "reliability_k": 10.0
+  },
+  "research_gates": {
+    "seed": 42,
+    "crossfit_rule": "detect_on_one_fold_measure_outcome_on_the_other",
+    "prior_strength_main": 10,
+    "expected_complete_periods": [
+      "2015Q4",
+      "2016Q1",
+      "2016Q2",
+      "2016Q3",
+      "2016Q4",
+      "2017Q1",
+      "2017Q2"
+    ],
+    "event_main": {
+      "complete_quarters_only": true,
+      "min_current_mentions": 5,
+      "min_previous_mentions": 5,
+      "min_pre2_mentions": 3,
+      "delta_posterior_net": 0.15,
+      "min_p_delta_gt0": 0.9,
+      "min_eligible_measured_peers": 5,
+      "cooldown_quarters": 2,
+      "primary": "earliest_per_hotel_aspect_fold",
+      "exclude_location_from_main": true
+    }
+  },
+  "panel_stats": {
+    "panel_rows": 89075,
+    "aspects": 7,
+    "hotel_quarters": 12725,
+    "complete_hotel_quarters": 9960,
+    "hotels": 1493,
+    "cities": 6,
+    "hotels_with_ge4_complete_quarters": 1445,
+    "measured_cells": 80686,
+    "measured_cells_A": 72485,
+    "measured_cells_B": 72828,
+    "prior_only_cells": 8389,
+    "mean_reviewer_score_mean": 8.446737560066493,
+    "mean_reviewer_score_std": 0.7899959975391496,
+    "total_reviews_mean": 40.52950884086444
+  },
+  "incumbent_effects": {
+    "wave5_att_rel_to_m1": {
+      "-2": {
+        "mean": -0.04368673403253936,
+        "n": 481
+      },
+      "-1": {
+        "mean": 0.0,
+        "n": 488
+      },
+      "0": {
+        "mean": 0.16971589236138307,
+        "n": 488
+      },
+      "1": {
+        "mean": 0.04282576487321873,
+        "n": 479
+      },
+      "2": {
+        "mean": 0.02363754312916644,
+        "n": 476
+      }
+    },
+    "wave5_att_at_event_k0": 0.16971589236138307,
+    "wave5_pretrend_k_minus2": -0.04368673403253936,
+    "wave5_observational_interaction_beta": [
+      0.011209409291070366,
+      0.01120940929107038,
+      0.02859567931014817,
+      0.02859567931014817
+    ],
+    "wave5_location_placebo": "ran_n=33",
+    "wave6_no_roi": true,
+    "wave6_no_demand_lift": true,
+    "strict_crossfit_events": 456,
+    "legacy_permissive_event_count": 5774,
+    "defects": {
+      "self_referential_outcome": "Wave5 measures y with POOLED smoothed_net while events are detected per fold; the treatment and the outcome come from the same reviews.",
+      "violates_preregistered_crossfit_rule": "conf/autonomous_research.json crossfit.rule = 'detect_on_one_fold_measure_outcome_on_the_other' is not executed by Wave5.",
+      "outcome_is_not_downstream": "smoothed_net is an aspect-sentiment index, not a hotel revenue/rating outcome; a change in it cannot be read as hotel benefit.",
+      "n_456_concentrated_in_2016Q2_Q4": "Strict events cluster in few periods; quarter-score sd limits detectable effect."
+    }
+  },
+  "p3_acceptance": {
+    "must_beat": "P2 cross-fit effect estimate (downstream outcome, fold-separated).",
+    "forbidden": [
+      "lowering configured significance / delta thresholds",
+      "tuning weights on the same data used to report the gain",
+      "claiming ROI or booking growth from review data (no price or volume fields exist)"
+    ]
+  }
+}
