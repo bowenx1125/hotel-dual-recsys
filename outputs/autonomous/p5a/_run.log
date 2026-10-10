@@ -1,0 +1,17 @@
+=== Q1/Q2 revealed-intervention event study ===
+  direction A->B
+  direction B->A
+=== Q3 transfer of the P3 value vector ===
+   {"n_replicates": 24, "mean_gamma_delta_value_minus_peer": 0.0208832897772249, "z_vs_scrambled": 0.7530659034199271, "p_value_scrambled": 0.22708333333333333}
+=== Q4 power / MDE ===
+  MDE = 0.1714 rating points; sigma = 0.909
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\zzysqzhang\WorkBuddy\2026-09-14-14-32-45\hotel-dual-recsys\src\effect\run_p5a.py", line 608, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "C:\Users\zzysqzhang\WorkBuddy\2026-09-14-14-32-45\hotel-dual-recsys\src\effect\run_p5a.py", line 525, in main
+    "result_summary": f"pooled={pooled.get('att')} gap_ratio={ratio} mde={out['power']['mde_rating_points']}",
+                                ^^^^^^
+NameError: name 'pooled' is not defined. Did you mean: 'n_pooled'?

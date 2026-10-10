@@ -1,0 +1,1213 @@
+{
+  "seed": 20260915,
+  "tau": 0.25,
+  "directions": {
+    "A->B": {
+      "direction": "A->B",
+      "n_hotel_quarters": 9632,
+      "inventory": {
+        "tau": 0.25,
+        "n_events": 1607,
+        "n_hotels": 800,
+        "events_per_hotel_quarter": 0.1668,
+        "by_aspect": {
+          "service": 371,
+          "room": 294,
+          "breakfast": 259,
+          "location": 227,
+          "cleanliness": 220,
+          "value": 137,
+          "noise": 99
+        },
+        "median_jump": 0.3326315789473685,
+        "median_persist": 0.2685185185185185
+      },
+      "improvement": {
+        "tau_used": null,
+        "pooled": {
+          "att": 0.06555652458672687,
+          "se": 0.018938257625310078,
+          "t": 3.4615921846534445,
+          "ci95": [
+            0.027694470763800542,
+            0.10433441461546751
+          ],
+          "share_positive": 1.0,
+          "n_treated": 1313
+        },
+        "pre_trend": {
+          "diff": -0.02104496075979518,
+          "se": 0.022308839885188333,
+          "t": -0.9433462639967984,
+          "n": 1011
+        },
+        "n_events": 1605,
+        "n_control": 7997,
+        "control_mean_dY": -0.020727351981615256,
+        "sigma_dY_control": 0.9091301638899005,
+        "att_by_aspect": {
+          "location": {
+            "n": 227,
+            "att": 0.049052394285727934,
+            "se_unclustered": 0.0402221393795414,
+            "t_unclustered": 1.2195371763511405,
+            "se": 0.04308742363459787,
+            "ci95": [
+              -0.033473064326337024,
+              0.13571188183232955
+            ],
+            "t": 1.1384387867261663,
+            "share_positive": 0.8483333333333334
+          },
+          "cleanliness": {
+            "n": 220,
+            "att": 0.12383046197789452,
+            "se_unclustered": 0.03360769797050172,
+            "t_unclustered": 3.684586254214242,
+            "se": 0.03451744936923273,
+            "ci95": [
+              0.05311082678677697,
+              0.1913140914928807
+            ],
+            "t": 3.587474284478021,
+            "share_positive": 1.0
+          },
+          "breakfast": {
+            "n": 259,
+            "att": 0.05146474498448973,
+            "se_unclustered": 0.03055963055227348,
+            "t_unclustered": 1.6840761506084705,
+            "se": 0.030065586140654434,
+            "ci95": [
+              -0.0072376758963334014,
+              0.1093208507573897
+            ],
+            "t": 1.7117492652138764,
+            "share_positive": 0.9533333333333334
+          },
+          "service": {
+            "n": 371,
+            "att": 0.11875373033450676,
+            "se_unclustered": 0.03526187916041161,
+            "t_unclustered": 3.367765223012594,
+            "se": 0.03575814658514104,
+            "ci95": [
+              0.042382623599946614,
+              0.18089579234101916
+            ],
+            "t": 3.321025882920167,
+            "share_positive": 1.0
+          },
+          "noise": {
+            "n": 99,
+            "att": 0.008613571316969689,
+            "se_unclustered": 0.04544149289169613,
+            "t_unclustered": 0.18955300032723424,
+            "se": 0.04728198592733537,
+            "ci95": [
+              -0.08906452595011424,
+              0.10050870929985917
+            ],
+            "t": 0.18217448248064982,
+            "share_positive": 0.5833333333333334
+          },
+          "room": {
+            "n": 292,
+            "att": 0.08518021732357589,
+            "se_unclustered": 0.039607974896581084,
+            "t_unclustered": 2.150582491177264,
+            "se": 0.040526487903044736,
+            "ci95": [
+              0.012646452906809474,
+              0.16090444243389934
+            ],
+            "t": 2.101840591944715,
+            "share_positive": 0.99
+          },
+          "value": {
+            "n": 137,
+            "att": 0.07404646140884726,
+            "se_unclustered": 0.03949028954048765,
+            "t_unclustered": 1.8750549127509102,
+            "se": 0.040255215776160806,
+            "ci95": [
+              -0.0024296031242192154,
+              0.1466234933582129
+            ],
+            "t": 1.839425276480512,
+            "share_positive": 0.9683333333333334
+          }
+        },
+        "gap": {
+          "observed": 0.11521689066092483,
+          "bootstrap_se": 0.0423108351767694,
+          "bootstrap_ci95": [
+            0.07255663917856145,
+            0.25178891405105636
+          ]
+        },
+        "placebo_gap": {
+          "mean": 0.11192259567390439,
+          "p95": 0.17985969708840607,
+          "max": 0.24934249681490253,
+          "reps": 600,
+          "ratio_observed_over_placebo": 1.0294336900175067,
+          "p_value": 0.40166666666666667
+        },
+        "best_aspect": "cleanliness",
+        "worst_aspect": "noise"
+      },
+      "deterioration": {
+        "tau_used": null,
+        "pooled": {
+          "att": -0.011788848970840343,
+          "se": 0.01830426030507066,
+          "t": -0.6440494603092258,
+          "ci95": [
+            -0.04671496579089918,
+            0.022059582454601708
+          ],
+          "share_positive": 0.2833333333333333,
+          "n_treated": 1134
+        },
+        "pre_trend": {
+          "diff": -0.04409753212735079,
+          "se": 0.01780719792082357,
+          "t": -2.4763880495641346,
+          "n": 1012
+        },
+        "n_events": 1349,
+        "n_control": 8176,
+        "control_mean_dY": -0.010045904987490088,
+        "sigma_dY_control": 0.907146976277992,
+        "att_by_aspect": {
+          "location": {
+            "n": 181,
+            "att": 0.04607518170166412,
+            "se_unclustered": 0.04616333891746151,
+            "t_unclustered": 0.998090319767489,
+            "se": 0.045373923889688986,
+            "ci95": [
+              -0.047599408851691324,
+              0.12603439297709576
+            ],
+            "t": 1.0154550841509762,
+            "share_positive": 0.8466666666666667
+          },
+          "cleanliness": {
+            "n": 177,
+            "att": -0.061093686548724116,
+            "se_unclustered": 0.03712959833198219,
+            "t_unclustered": -1.6454173837937822,
+            "se": 0.03756318109546117,
+            "ci95": [
+              -0.1424426127762897,
+              0.0072473050983304765
+            ],
+            "t": -1.6264247267414256,
+            "share_positive": 0.04666666666666667
+          },
+          "breakfast": {
+            "n": 194,
+            "att": -0.04577825325226907,
+            "se_unclustered": 0.03615134390682255,
+            "t_unclustered": -1.266294646480064,
+            "se": 0.03613130332589195,
+            "ci95": [
+              -0.11521156022543075,
+              0.03126103067762159
+            ],
+            "t": -1.26699700919629,
+            "share_positive": 0.1
+          },
+          "service": {
+            "n": 241,
+            "att": -0.004077332195225703,
+            "se_unclustered": 0.03957239672061088,
+            "t_unclustered": -0.10303475485734394,
+            "se": 0.038023011893374176,
+            "ci95": [
+              -0.07610308107039564,
+              0.0791709356969247
+            ],
+            "t": -0.10723327774926247,
+            "share_positive": 0.49333333333333335
+          },
+          "noise": {
+            "n": 117,
+            "att": -0.011623465270694012,
+            "se_unclustered": 0.04036392468070493,
+            "t_unclustered": -0.2879666772406388,
+            "se": 0.03717740887530604,
+            "ci95": [
+              -0.09173067389722198,
+              0.056286921197231804
+            ],
+            "t": -0.3126486116791895,
+            "share_positive": 0.36333333333333334
+          },
+          "room": {
+            "n": 270,
+            "att": -0.006540334064336909,
+            "se_unclustered": 0.03634702381794424,
+            "t_unclustered": -0.1799413920957126,
+            "se": 0.034938909631760065,
+            "ci95": [
+              -0.06897006051177308,
+              0.06826009564480344
+            ],
+            "t": -0.18719342226958433,
+            "share_positive": 0.43333333333333335
+          },
+          "value": {
+            "n": 169,
+            "att": -0.03734319826595556,
+            "se_unclustered": 0.03522354688287028,
+            "t_unclustered": -1.060177113626115,
+            "se": 0.03566124296470503,
+            "ci95": [
+              -0.1082372274110534,
+              0.035617819263943626
+            ],
+            "t": -1.0471647974501397,
+            "share_positive": 0.17333333333333334
+          }
+        },
+        "gap": {
+          "observed": 0.10716886825038824,
+          "bootstrap_se": 0.03713150676066879,
+          "bootstrap_ci95": [
+            0.07741916742493973,
+            0.22153235996416396
+          ]
+        },
+        "placebo_gap": {
+          "mean": 0.10604310511955252,
+          "p95": 0.16452292102121374,
+          "max": 0.2270084029769679,
+          "reps": 300,
+          "ratio_observed_over_placebo": 1.0106160898397547,
+          "p_value": 0.43333333333333335
+        },
+        "best_aspect": "location",
+        "worst_aspect": "cleanliness"
+      },
+      "specificity": {
+        "n": 1607,
+        "mean_self_minus_other": 0.03861767002074576,
+        "se": 0.004691235965779887,
+        "t": 8.231875416722048,
+        "share_positive": 0.5756067205973865
+      },
+      "tau_sensitivity": [
+        {
+          "tau": 0.2,
+          "n_events": 2506,
+          "pooled_att": 0.07350649855285091,
+          "pooled_t": 4.451585536046023,
+          "pre_trend_diff": -0.025675747732048185,
+          "gap": 0.12143464393665512,
+          "placebo_gap": 0.09060377608863839,
+          "placebo_ratio": 1.3402823720929098,
+          "placebo_p": 0.155,
+          "best": "service",
+          "worst": "noise"
+        },
+        {
+          "tau": 0.25,
+          "n_events": 1605,
+          "pooled_att": 0.06555652458672687,
+          "pooled_t": 3.47532909985608,
+          "pre_trend_diff": -0.02104496075979518,
+          "gap": 0.11521689066092483,
+          "placebo_gap": 0.11065303657166912,
+          "placebo_ratio": 1.0412447252299284,
+          "placebo_p": 0.42,
+          "best": "cleanliness",
+          "worst": "noise"
+        },
+        {
+          "tau": 0.3,
+          "n_events": 969,
+          "pooled_att": 0.07368774673204977,
+          "pooled_t": 3.4883637158154936,
+          "pre_trend_diff": -0.030801998731076093,
+          "gap": 0.1670936119997073,
+          "placebo_gap": 0.14135648335944612,
+          "placebo_ratio": 1.1820725022906513,
+          "placebo_p": 0.235,
+          "best": "service",
+          "worst": "noise"
+        },
+        {
+          "tau": 0.4,
+          "n_events": 288,
+          "pooled_att": 0.08177546419696277,
+          "pooled_t": 2.569372376602581,
+          "pre_trend_diff": -0.06248178029975552,
+          "gap": 0.14100061092201097,
+          "placebo_gap": 0.2120573245586707,
+          "placebo_ratio": 0.664917428414503,
+          "placebo_p": 0.81,
+          "best": "value",
+          "worst": "room"
+        }
+      ],
+      "_boot": 600
+    },
+    "B->A": {
+      "direction": "B->A",
+      "n_hotel_quarters": 9632,
+      "inventory": {
+        "tau": 0.25,
+        "n_events": 1568,
+        "n_hotels": 827,
+        "events_per_hotel_quarter": 0.1628,
+        "by_aspect": {
+          "breakfast": 300,
+          "service": 294,
+          "room": 288,
+          "location": 225,
+          "cleanliness": 195,
+          "value": 152,
+          "noise": 114
+        },
+        "median_jump": 0.32499999999999996,
+        "median_persist": 0.26190476190476186
+      },
+      "improvement": {
+        "tau_used": null,
+        "pooled": {
+          "att": 0.06524193207934569,
+          "se": 0.019029726084260012,
+          "t": 3.4284220272255523,
+          "ci95": [
+            0.028255167424908856,
+            0.10170077976467398
+          ],
+          "share_positive": 0.9966666666666667,
+          "n_treated": 1320
+        },
+        "pre_trend": {
+          "diff": -0.04249148491457033,
+          "se": 0.020114156708513152,
+          "t": -2.112516350068316,
+          "n": 1034
+        },
+        "n_events": 1568,
+        "n_control": 7980,
+        "control_mean_dY": -0.005752952851260065,
+        "sigma_dY_control": 0.900640965141362,
+        "att_by_aspect": {
+          "location": {
+            "n": 225,
+            "att": 0.09676190119537474,
+            "se_unclustered": 0.04569519770770731,
+            "t_unclustered": 2.1175507722785083,
+            "se": 0.04457252783038311,
+            "ci95": [
+              0.013471277672764487,
+              0.18517805987555863
+            ],
+            "t": 2.1708865506482775,
+            "share_positive": 0.9833333333333333
+          },
+          "cleanliness": {
+            "n": 195,
+            "att": 0.05407355322007107,
+            "se_unclustered": 0.038778539633633126,
+            "t_unclustered": 1.3944195354167588,
+            "se": 0.0406690681583221,
+            "ci95": [
+              -0.030744679624851563,
+              0.13140414920199078
+            ],
+            "t": 1.3295990212897468,
+            "share_positive": 0.91
+          },
+          "breakfast": {
+            "n": 300,
+            "att": 0.07077835275747561,
+            "se_unclustered": 0.03168289519901293,
+            "t_unclustered": 2.2339610162798724,
+            "se": 0.030663407077245363,
+            "ci95": [
+              0.014756634079253336,
+              0.13364562036466254
+            ],
+            "t": 2.308235108354892,
+            "share_positive": 0.9883333333333333
+          },
+          "service": {
+            "n": 294,
+            "att": 0.09054110581833173,
+            "se_unclustered": 0.0346386666104647,
+            "t_unclustered": 2.613873877898589,
+            "se": 0.035166328420107335,
+            "ci95": [
+              0.02606489998076945,
+              0.15617242584649696
+            ],
+            "t": 2.574653365477936,
+            "share_positive": 0.995
+          },
+          "noise": {
+            "n": 114,
+            "att": -0.039722307497399176,
+            "se_unclustered": 0.037525094289850534,
+            "t_unclustered": -1.0585531695290884,
+            "se": 0.037780448916479414,
+            "ci95": [
+              -0.11394243638426928,
+              0.028012420323662975
+            ],
+            "t": -1.0513985046925354,
+            "share_positive": 0.14833333333333334
+          },
+          "room": {
+            "n": 288,
+            "att": 0.06737426327243239,
+            "se_unclustered": 0.03999032682393294,
+            "t_unclustered": 1.6847640072826569,
+            "se": 0.04009251551993979,
+            "ci95": [
+              -0.009307892439301987,
+              0.14803376371472482
+            ],
+            "t": 1.6804698432784586,
+            "share_positive": 0.9616666666666667
+          },
+          "value": {
+            "n": 152,
+            "att": 0.16380754628141367,
+            "se_unclustered": 0.03328505188161292,
+            "t_unclustered": 4.921354692912557,
+            "se": 0.03171264373351727,
+            "ci95": [
+              0.0979961619926178,
+              0.22493973233959508
+            ],
+            "t": 5.165370243423904,
+            "share_positive": 1.0
+          }
+        },
+        "gap": {
+          "observed": 0.20352985377881283,
+          "bootstrap_se": 0.04411208377807891,
+          "bootstrap_ci95": [
+            0.124582650645836,
+            0.29976935466187893
+          ]
+        },
+        "placebo_gap": {
+          "mean": 0.10923628538766439,
+          "p95": 0.1750897053231577,
+          "max": 0.244065380543179,
+          "reps": 600,
+          "ratio_observed_over_placebo": 1.863207386231724,
+          "p_value": 0.008333333333333333
+        },
+        "best_aspect": "value",
+        "worst_aspect": "noise"
+      },
+      "deterioration": {
+        "tau_used": null,
+        "pooled": {
+          "att": -0.046058578226134184,
+          "se": 0.01890344730420101,
+          "t": -2.436517397326696,
+          "ci95": [
+            -0.08318451263930317,
+            -0.013755936792647262
+          ],
+          "share_positive": 0.01,
+          "n_treated": 1150
+        },
+        "pre_trend": {
+          "diff": -0.030141786684519906,
+          "se": 0.01718050547953,
+          "t": -1.7544179198006042,
+          "n": 1032
+        },
+        "n_events": 1374,
+        "n_control": 8150,
+        "control_mean_dY": 0.00920260793420129,
+        "sigma_dY_control": 0.893238028009378,
+        "att_by_aspect": {
+          "location": {
+            "n": 179,
+            "att": 0.03797059293481443,
+            "se_unclustered": 0.04927836501948036,
+            "t_unclustered": 0.770532726071658,
+            "se": 0.046230691845775614,
+            "ci95": [
+              -0.052113610729422055,
+              0.12606296545250634
+            ],
+            "t": 0.82132867622841,
+            "share_positive": 0.7866666666666666
+          },
+          "cleanliness": {
+            "n": 181,
+            "att": -0.10231505159465326,
+            "se_unclustered": 0.041263237060579994,
+            "t_unclustered": -2.479569197260045,
+            "se": 0.03993175143790513,
+            "ci95": [
+              -0.18241697769687312,
+              -0.02750114480821235
+            ],
+            "t": -2.562248033466694,
+            "share_positive": 0.0033333333333333335
+          },
+          "breakfast": {
+            "n": 208,
+            "att": -0.047633487120270795,
+            "se_unclustered": 0.03499839175025403,
+            "t_unclustered": -1.3610193136924658,
+            "se": 0.034777712295990956,
+            "ci95": [
+              -0.11262014954835275,
+              0.021710454474407975
+            ],
+            "t": -1.3696555631625547,
+            "share_positive": 0.08666666666666667
+          },
+          "service": {
+            "n": 228,
+            "att": -0.14667316310194856,
+            "se_unclustered": 0.043675331924224896,
+            "t_unclustered": -3.3582609825706906,
+            "se": 0.04512149962138443,
+            "ci95": [
+              -0.23758989102646433,
+              -0.06422430527668738
+            ],
+            "t": -3.2506269590480485,
+            "share_positive": 0.0033333333333333335
+          },
+          "noise": {
+            "n": 132,
+            "att": 0.0028047097805000646,
+            "se_unclustered": 0.03375526328098416,
+            "t_unclustered": 0.08308955427641657,
+            "se": 0.03143874803831976,
+            "ci95": [
+              -0.05186128714823289,
+              0.06321542192661783
+            ],
+            "t": 0.08921187882804642,
+            "share_positive": 0.55
+          },
+          "room": {
+            "n": 281,
+            "att": -0.07287274324146925,
+            "se_unclustered": 0.042696212788942686,
+            "t_unclustered": -1.7067730011955902,
+            "se": 0.04056124798791098,
+            "ci95": [
+              -0.14600075531445117,
+              -0.0019086566412539125
+            ],
+            "t": -1.796609987522783,
+            "share_positive": 0.023333333333333334
+          },
+          "value": {
+            "n": 165,
+            "att": -0.023842103915892674,
+            "se_unclustered": 0.034956178466721534,
+            "t_unclustered": -0.6820569341866269,
+            "se": 0.034469956450656085,
+            "ci95": [
+              -0.08967564502746403,
+              0.04345398660385486
+            ],
+            "t": -0.6916778078911345,
+            "share_positive": 0.25666666666666665
+          }
+        },
+        "gap": {
+          "observed": 0.18464375603676297,
+          "bootstrap_se": 0.0496509990347924,
+          "bootstrap_ci95": [
+            0.11045147912443647,
+            0.2994189829300625
+          ]
+        },
+        "placebo_gap": {
+          "mean": 0.11745840601289614,
+          "p95": 0.1822606724315973,
+          "max": 0.26796615012042196,
+          "reps": 300,
+          "ratio_observed_over_placebo": 1.5719926934517596,
+          "p_value": 0.04666666666666667
+        },
+        "best_aspect": "location",
+        "worst_aspect": "service"
+      },
+      "specificity": {
+        "n": 1568,
+        "mean_self_minus_other": 0.04065843453436766,
+        "se": 0.004816184046033681,
+        "t": 8.442043357510704,
+        "share_positive": 0.5854591836734694
+      },
+      "tau_sensitivity": [
+        {
+          "tau": 0.2,
+          "n_events": 2453,
+          "pooled_att": 0.061022045730147585,
+          "pooled_t": 3.9145902960534626,
+          "pre_trend_diff": -0.020337165196010754,
+          "gap": 0.13763214401183363,
+          "placebo_gap": 0.08268622020380809,
+          "placebo_ratio": 1.6645112531760766,
+          "placebo_p": 0.03,
+          "best": "value",
+          "worst": "noise"
+        },
+        {
+          "tau": 0.25,
+          "n_events": 1568,
+          "pooled_att": 0.06524193207934569,
+          "pooled_t": 3.513679080215483,
+          "pre_trend_diff": -0.04249148491457033,
+          "gap": 0.20352985377881283,
+          "placebo_gap": 0.10879595562598457,
+          "placebo_ratio": 1.870748343610323,
+          "placebo_p": 0.005,
+          "best": "value",
+          "worst": "noise"
+        },
+        {
+          "tau": 0.3,
+          "n_events": 932,
+          "pooled_att": 0.05540553542711257,
+          "pooled_t": 2.6634925657252713,
+          "pre_trend_diff": -0.044909061176738256,
+          "gap": 0.1963324018327163,
+          "placebo_gap": 0.14280468438335384,
+          "placebo_ratio": 1.3748316638246216,
+          "placebo_p": 0.1,
+          "best": "value",
+          "worst": "noise"
+        },
+        {
+          "tau": 0.4,
+          "n_events": 256,
+          "pooled_att": 0.11034014599762623,
+          "pooled_t": 3.1699152364170016,
+          "pre_trend_diff": -0.0557269357120992,
+          "gap": 0.08620061438254917,
+          "placebo_gap": 0.18366767456105812,
+          "placebo_ratio": 0.46932926323893104,
+          "placebo_p": 0.905,
+          "best": "value",
+          "worst": "service"
+        }
+      ],
+      "_boot": 600
+    }
+  },
+  "main": {
+    "direction": "A->B",
+    "n_hotel_quarters": 9632,
+    "inventory": {
+      "tau": 0.25,
+      "n_events": 1607,
+      "n_hotels": 800,
+      "events_per_hotel_quarter": 0.1668,
+      "by_aspect": {
+        "service": 371,
+        "room": 294,
+        "breakfast": 259,
+        "location": 227,
+        "cleanliness": 220,
+        "value": 137,
+        "noise": 99
+      },
+      "median_jump": 0.3326315789473685,
+      "median_persist": 0.2685185185185185
+    },
+    "improvement": {
+      "tau_used": null,
+      "pooled": {
+        "att": 0.06555652458672687,
+        "se": 0.018938257625310078,
+        "t": 3.4615921846534445,
+        "ci95": [
+          0.027694470763800542,
+          0.10433441461546751
+        ],
+        "share_positive": 1.0,
+        "n_treated": 1313
+      },
+      "pre_trend": {
+        "diff": -0.02104496075979518,
+        "se": 0.022308839885188333,
+        "t": -0.9433462639967984,
+        "n": 1011
+      },
+      "n_events": 1605,
+      "n_control": 7997,
+      "control_mean_dY": -0.020727351981615256,
+      "sigma_dY_control": 0.9091301638899005,
+      "att_by_aspect": {
+        "location": {
+          "n": 227,
+          "att": 0.049052394285727934,
+          "se_unclustered": 0.0402221393795414,
+          "t_unclustered": 1.2195371763511405,
+          "se": 0.04308742363459787,
+          "ci95": [
+            -0.033473064326337024,
+            0.13571188183232955
+          ],
+          "t": 1.1384387867261663,
+          "share_positive": 0.8483333333333334
+        },
+        "cleanliness": {
+          "n": 220,
+          "att": 0.12383046197789452,
+          "se_unclustered": 0.03360769797050172,
+          "t_unclustered": 3.684586254214242,
+          "se": 0.03451744936923273,
+          "ci95": [
+            0.05311082678677697,
+            0.1913140914928807
+          ],
+          "t": 3.587474284478021,
+          "share_positive": 1.0
+        },
+        "breakfast": {
+          "n": 259,
+          "att": 0.05146474498448973,
+          "se_unclustered": 0.03055963055227348,
+          "t_unclustered": 1.6840761506084705,
+          "se": 0.030065586140654434,
+          "ci95": [
+            -0.0072376758963334014,
+            0.1093208507573897
+          ],
+          "t": 1.7117492652138764,
+          "share_positive": 0.9533333333333334
+        },
+        "service": {
+          "n": 371,
+          "att": 0.11875373033450676,
+          "se_unclustered": 0.03526187916041161,
+          "t_unclustered": 3.367765223012594,
+          "se": 0.03575814658514104,
+          "ci95": [
+            0.042382623599946614,
+            0.18089579234101916
+          ],
+          "t": 3.321025882920167,
+          "share_positive": 1.0
+        },
+        "noise": {
+          "n": 99,
+          "att": 0.008613571316969689,
+          "se_unclustered": 0.04544149289169613,
+          "t_unclustered": 0.18955300032723424,
+          "se": 0.04728198592733537,
+          "ci95": [
+            -0.08906452595011424,
+            0.10050870929985917
+          ],
+          "t": 0.18217448248064982,
+          "share_positive": 0.5833333333333334
+        },
+        "room": {
+          "n": 292,
+          "att": 0.08518021732357589,
+          "se_unclustered": 0.039607974896581084,
+          "t_unclustered": 2.150582491177264,
+          "se": 0.040526487903044736,
+          "ci95": [
+            0.012646452906809474,
+            0.16090444243389934
+          ],
+          "t": 2.101840591944715,
+          "share_positive": 0.99
+        },
+        "value": {
+          "n": 137,
+          "att": 0.07404646140884726,
+          "se_unclustered": 0.03949028954048765,
+          "t_unclustered": 1.8750549127509102,
+          "se": 0.040255215776160806,
+          "ci95": [
+            -0.0024296031242192154,
+            0.1466234933582129
+          ],
+          "t": 1.839425276480512,
+          "share_positive": 0.9683333333333334
+        }
+      },
+      "gap": {
+        "observed": 0.11521689066092483,
+        "bootstrap_se": 0.0423108351767694,
+        "bootstrap_ci95": [
+          0.07255663917856145,
+          0.25178891405105636
+        ]
+      },
+      "placebo_gap": {
+        "mean": 0.11192259567390439,
+        "p95": 0.17985969708840607,
+        "max": 0.24934249681490253,
+        "reps": 600,
+        "ratio_observed_over_placebo": 1.0294336900175067,
+        "p_value": 0.40166666666666667
+      },
+      "best_aspect": "cleanliness",
+      "worst_aspect": "noise"
+    },
+    "deterioration": {
+      "tau_used": null,
+      "pooled": {
+        "att": -0.011788848970840343,
+        "se": 0.01830426030507066,
+        "t": -0.6440494603092258,
+        "ci95": [
+          -0.04671496579089918,
+          0.022059582454601708
+        ],
+        "share_positive": 0.2833333333333333,
+        "n_treated": 1134
+      },
+      "pre_trend": {
+        "diff": -0.04409753212735079,
+        "se": 0.01780719792082357,
+        "t": -2.4763880495641346,
+        "n": 1012
+      },
+      "n_events": 1349,
+      "n_control": 8176,
+      "control_mean_dY": -0.010045904987490088,
+      "sigma_dY_control": 0.907146976277992,
+      "att_by_aspect": {
+        "location": {
+          "n": 181,
+          "att": 0.04607518170166412,
+          "se_unclustered": 0.04616333891746151,
+          "t_unclustered": 0.998090319767489,
+          "se": 0.045373923889688986,
+          "ci95": [
+            -0.047599408851691324,
+            0.12603439297709576
+          ],
+          "t": 1.0154550841509762,
+          "share_positive": 0.8466666666666667
+        },
+        "cleanliness": {
+          "n": 177,
+          "att": -0.061093686548724116,
+          "se_unclustered": 0.03712959833198219,
+          "t_unclustered": -1.6454173837937822,
+          "se": 0.03756318109546117,
+          "ci95": [
+            -0.1424426127762897,
+            0.0072473050983304765
+          ],
+          "t": -1.6264247267414256,
+          "share_positive": 0.04666666666666667
+        },
+        "breakfast": {
+          "n": 194,
+          "att": -0.04577825325226907,
+          "se_unclustered": 0.03615134390682255,
+          "t_unclustered": -1.266294646480064,
+          "se": 0.03613130332589195,
+          "ci95": [
+            -0.11521156022543075,
+            0.03126103067762159
+          ],
+          "t": -1.26699700919629,
+          "share_positive": 0.1
+        },
+        "service": {
+          "n": 241,
+          "att": -0.004077332195225703,
+          "se_unclustered": 0.03957239672061088,
+          "t_unclustered": -0.10303475485734394,
+          "se": 0.038023011893374176,
+          "ci95": [
+            -0.07610308107039564,
+            0.0791709356969247
+          ],
+          "t": -0.10723327774926247,
+          "share_positive": 0.49333333333333335
+        },
+        "noise": {
+          "n": 117,
+          "att": -0.011623465270694012,
+          "se_unclustered": 0.04036392468070493,
+          "t_unclustered": -0.2879666772406388,
+          "se": 0.03717740887530604,
+          "ci95": [
+            -0.09173067389722198,
+            0.056286921197231804
+          ],
+          "t": -0.3126486116791895,
+          "share_positive": 0.36333333333333334
+        },
+        "room": {
+          "n": 270,
+          "att": -0.006540334064336909,
+          "se_unclustered": 0.03634702381794424,
+          "t_unclustered": -0.1799413920957126,
+          "se": 0.034938909631760065,
+          "ci95": [
+            -0.06897006051177308,
+            0.06826009564480344
+          ],
+          "t": -0.18719342226958433,
+          "share_positive": 0.43333333333333335
+        },
+        "value": {
+          "n": 169,
+          "att": -0.03734319826595556,
+          "se_unclustered": 0.03522354688287028,
+          "t_unclustered": -1.060177113626115,
+          "se": 0.03566124296470503,
+          "ci95": [
+            -0.1082372274110534,
+            0.035617819263943626
+          ],
+          "t": -1.0471647974501397,
+          "share_positive": 0.17333333333333334
+        }
+      },
+      "gap": {
+        "observed": 0.10716886825038824,
+        "bootstrap_se": 0.03713150676066879,
+        "bootstrap_ci95": [
+          0.07741916742493973,
+          0.22153235996416396
+        ]
+      },
+      "placebo_gap": {
+        "mean": 0.10604310511955252,
+        "p95": 0.16452292102121374,
+        "max": 0.2270084029769679,
+        "reps": 300,
+        "ratio_observed_over_placebo": 1.0106160898397547,
+        "p_value": 0.43333333333333335
+      },
+      "best_aspect": "location",
+      "worst_aspect": "cleanliness"
+    },
+    "specificity": {
+      "n": 1607,
+      "mean_self_minus_other": 0.03861767002074576,
+      "se": 0.004691235965779887,
+      "t": 8.231875416722048,
+      "share_positive": 0.5756067205973865
+    },
+    "tau_sensitivity": [
+      {
+        "tau": 0.2,
+        "n_events": 2506,
+        "pooled_att": 0.07350649855285091,
+        "pooled_t": 4.451585536046023,
+        "pre_trend_diff": -0.025675747732048185,
+        "gap": 0.12143464393665512,
+        "placebo_gap": 0.09060377608863839,
+        "placebo_ratio": 1.3402823720929098,
+        "placebo_p": 0.155,
+        "best": "service",
+        "worst": "noise"
+      },
+      {
+        "tau": 0.25,
+        "n_events": 1605,
+        "pooled_att": 0.06555652458672687,
+        "pooled_t": 3.47532909985608,
+        "pre_trend_diff": -0.02104496075979518,
+        "gap": 0.11521689066092483,
+        "placebo_gap": 0.11065303657166912,
+        "placebo_ratio": 1.0412447252299284,
+        "placebo_p": 0.42,
+        "best": "cleanliness",
+        "worst": "noise"
+      },
+      {
+        "tau": 0.3,
+        "n_events": 969,
+        "pooled_att": 0.07368774673204977,
+        "pooled_t": 3.4883637158154936,
+        "pre_trend_diff": -0.030801998731076093,
+        "gap": 0.1670936119997073,
+        "placebo_gap": 0.14135648335944612,
+        "placebo_ratio": 1.1820725022906513,
+        "placebo_p": 0.235,
+        "best": "service",
+        "worst": "noise"
+      },
+      {
+        "tau": 0.4,
+        "n_events": 288,
+        "pooled_att": 0.08177546419696277,
+        "pooled_t": 2.569372376602581,
+        "pre_trend_diff": -0.06248178029975552,
+        "gap": 0.14100061092201097,
+        "placebo_gap": 0.2120573245586707,
+        "placebo_ratio": 0.664917428414503,
+        "placebo_p": 0.81,
+        "best": "value",
+        "worst": "room"
+      }
+    ],
+    "_boot": 600
+  },
+  "q3": {
+    "n_replicates": 24,
+    "mean_gamma_delta_value_minus_peer": 0.0208832897772249,
+    "se": 0.0032272105885536,
+    "share_positive": 0.9166666666666666,
+    "null_mean": 0.00044608603834764244,
+    "null_sd": 0.027138665614875136,
+    "z_vs_scrambled": 0.7530659034199271,
+    "p_value_scrambled": 0.22708333333333333,
+    "n_null_draws": 960,
+    "note": "gamma is estimated from revealed events on the training half and applied to picks on the held-out half; the null re-scrambles gamma across aspects."
+  },
+  "power": {
+    "sigma_outcome_per_hotel_quarter": 0.9091301638899005,
+    "n_treated_per_aspect": 227,
+    "n_control": 7997,
+    "mde_rating_points": 0.17143320523912547,
+    "detection_threshold_note": "A between-aspect gap must also clear the permutation placebo (see placebo_gap.p95) before it counts as detected.",
+    "required_n_per_aspect": [
+      {
+        "target_effect_rating_points": 0.02,
+        "n_per_arm_needed": 32437,
+        "detectable_now": false
+      },
+      {
+        "target_effect_rating_points": 0.05,
+        "n_per_arm_needed": 5190,
+        "detectable_now": false
+      },
+      {
+        "target_effect_rating_points": 0.1,
+        "n_per_arm_needed": 1298,
+        "detectable_now": false
+      },
+      {
+        "target_effect_rating_points": 0.2,
+        "n_per_arm_needed": 325,
+        "detectable_now": true
+      },
+      {
+        "target_effect_rating_points": 0.5,
+        "n_per_arm_needed": 52,
+        "detectable_now": true
+      }
+    ],
+    "required_total_for_6_actionable": [
+      {
+        "target_effect_rating_points": 0.02,
+        "total_logged_interventions": 194622
+      },
+      {
+        "target_effect_rating_points": 0.05,
+        "total_logged_interventions": 31140
+      },
+      {
+        "target_effect_rating_points": 0.1,
+        "total_logged_interventions": 7788
+      },
+      {
+        "target_effect_rating_points": 0.2,
+        "total_logged_interventions": 1950
+      },
+      {
+        "target_effect_rating_points": 0.5,
+        "total_logged_interventions": 312
+      }
+    ],
+    "revenue_sensitivity": {
+      "adr_anchor": 129.0,
+      "adr_source": "scraped Booking prices, Belgium sample (NOT the panel cities -- scale anchor only, not joined)",
+      "pct_revenue_per_rating_point": [
+        0.01,
+        0.02,
+        0.05
+      ],
+      "implied_mde_pct_revenue": [
+        0.171,
+        0.343,
+        0.857
+      ],
+      "caveat": "elasticity values are external assumptions, not estimates from this data"
+    }
+  },
+  "replication": {
+    "A->B": {
+      "pooled_att": 0.0656,
+      "pooled_t": 3.46,
+      "pre_trend_diff": -0.021,
+      "pre_trend_t": -0.94,
+      "gap": 0.1152,
+      "placebo_gap": 0.1119,
+      "placebo_ratio": 1.029,
+      "placebo_p": 0.402,
+      "best_aspect": "cleanliness",
+      "specificity_t": 8.23,
+      "pooled_ok": true,
+      "gap_ok": false,
+      "trend_clean": true
+    },
+    "B->A": {
+      "pooled_att": 0.0652,
+      "pooled_t": 3.43,
+      "pre_trend_diff": -0.0425,
+      "pre_trend_t": -2.11,
+      "gap": 0.2035,
+      "placebo_gap": 0.1092,
+      "placebo_ratio": 1.863,
+      "placebo_p": 0.008,
+      "best_aspect": "value",
+      "specificity_t": 8.44,
+      "pooled_ok": true,
+      "gap_ok": true,
+      "trend_clean": false
+    }
+  },
+  "verdict": {
+    "status": "IMPROVEMENT_PAYS_REPLICATED_ACROSS_FOLDS__SPECIFICITY_DIRECTION_DEPENDENT",
+    "improvement_pays": "REPLICATED_ACROSS_FOLDS",
+    "aspect_specificity": "DIRECTION_DEPENDENT",
+    "best_aspect_by_direction": {
+      "A->B": "cleanliness",
+      "B->A": "value"
+    },
+    "pre_trend_by_direction": {
+      "A->B": -0.94,
+      "B->A": -2.11
+    },
+    "pooled_by_direction": {
+      "A->B": 0.0656,
+      "B->A": 0.0652
+    },
+    "gap_ratio_by_direction": {
+      "A->B": 1.029,
+      "B->A": 1.863
+    },
+    "transfer_status": "NO_TRANSFER",
+    "mde_rating_points": 0.1714,
+    "no_ips_snips": true,
+    "implications": [
+      "Persistent improvements ARE followed by higher ratings, and it replicates across both fold directions: A->B +0.0656 (t=3.46) / B->A +0.0652 (t=3.43). Events are also aspect-specific (the event aspect moves more than the others, specificity t=8.2+).",
+      "Which aspect pays most is DIRECTION-DEPENDENT: A->B gap ratio 1.029 (p=0.402, best=cleanliness); B->A gap ratio 1.863 (p=0.008, best=value). One fold direction clears the placebo, the other does not, and they do not name the same aspect. Targeting is NOT established -- reporting either direction alone would be cherry-picking.",
+      "The direction that shows specificity (B->A) is also the one with an unresolved pre-trend (t=-2.11): those hotels were already moving before the event, so part of that gap is mean reversion, not payoff.",
+      "So the defensible claim is 'act on your weakest reliably measured aspect', NOT 'act on aspect X because it pays more'. The shipped peer-relative ranking already implements the first.",
+      "P3's cross-sectional value vector does not transfer to this intervention estimand (scrambled-gamma z=0.7530659034199271), which is consistent: it was estimated on levels, not on changes.",
+      "The smallest between-aspect difference detectable with the current sample is 0.1714 rating points; anything smaller needs more logged interventions, not a better estimator.",
+      "Adoption probability and revenue remain unidentified: there is no adoption log and no ADR/occupancy for these hotels. Closing the original goal requires logged interventions, not a better estimator."
+    ]
+  }
+}
