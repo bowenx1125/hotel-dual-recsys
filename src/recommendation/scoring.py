@@ -726,7 +726,7 @@ def explain_action_vs_diagnostic(hotel: dict, cfg: dict) -> dict:
 
 
 def all_policies(hotel: dict, cfg: dict, assumed_intensity: float = 0.0) -> dict[str, dict]:
-    return {
+    out = {
         "fix_weakest": policy_fix_weakest(hotel, cfg),
         "largest_peer_gap": policy_largest_peer_gap_actionable(hotel, cfg),
         "most_criticized": policy_most_criticized(hotel, cfg),
@@ -734,6 +734,16 @@ def all_policies(hotel: dict, cfg: dict, assumed_intensity: float = 0.0) -> dict
         "competition_aware": policy_peer_relative(hotel, cfg, assumed_intensity),
         "reliability_aware": policy_reliability_aware(hotel, cfg),
     }
+    # P3 value-aware variant: opt-in only. Off by default, so every existing
+    # call site keeps its current behaviour (and its current test expectations).
+    if cfg.get("use_learned_value_vector"):
+        from src.recommendation.value_policy import (  # lazy: avoids a cycle
+            load_value_vector, policy_value_aware,
+        )
+        vv = load_value_vector(cfg)
+        if vv:
+            out["value_aware"] = policy_value_aware(hotel, cfg, vv, assumed_intensity)
+    return out
 
 
 def ranking_under_intensity(

@@ -1,0 +1,1170 @@
+{
+  "seed": 20260915,
+  "periods": [
+    "2016Q1",
+    "2016Q2",
+    "2016Q3",
+    "2016Q4",
+    "2017Q1"
+  ],
+  "method": "cross_sectional_value_vector + direct_method_cross_check",
+  "directions": {
+    "A->B": {
+      "n_hotels": 1300,
+      "alpha": 10.0,
+      "r2_in_sample": 0.4502404437500457,
+      "cv": {
+        "n_hotels": 1300,
+        "r2_out_of_hotel": 0.4412998738092708,
+        "rmse": 0.4606480634589621,
+        "sd_target": 0.6165197102675344,
+        "corr": 0.6643123468293486,
+        "alphas": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "n_splits": 5
+      },
+      "coef_per_sd": {
+        "location": -0.056422851029093585,
+        "cleanliness": -0.08144329114229587,
+        "breakfast": -0.01019713936587487,
+        "service": 0.259862214816951,
+        "noise": 0.0813582876866746,
+        "room": 0.2786373157878329,
+        "value": 0.0004040417926133669
+      },
+      "coef_marginal_per_sd": {
+        "location": 0.01957436808922768,
+        "cleanliness": 0.18009725852462943,
+        "breakfast": 0.04704813112307449,
+        "service": 0.2661971343634952,
+        "noise": 0.21989167321359473,
+        "room": 0.3551459986290132,
+        "value": 0.010616294266665787
+      },
+      "coef_raw": {
+        "location": -0.3473424472155005,
+        "cleanliness": -0.7386655917444672,
+        "breakfast": -0.08244463249063845,
+        "service": 2.0064702917989914,
+        "noise": 0.847452682820493,
+        "room": 2.432178152851205,
+        "value": 0.004660142523809081
+      },
+      "collinearity": {
+        "correlation": {
+          "location": {
+            "location": 1.0,
+            "cleanliness": 0.29867671114908717,
+            "breakfast": 0.195399564956053,
+            "service": 0.5886815809754898,
+            "noise": -0.14000174322290174,
+            "room": -0.13898915167639367,
+            "value": -0.2704205808576185
+          },
+          "cleanliness": {
+            "location": 0.29867671114908717,
+            "cleanliness": 0.9999999999999999,
+            "breakfast": 0.2295316990510516,
+            "service": 0.5057477677359716,
+            "noise": 0.19154471960624403,
+            "room": 0.4821061285072178,
+            "value": 0.04591555342069293
+          },
+          "breakfast": {
+            "location": 0.19539956495605298,
+            "cleanliness": 0.22953169905105159,
+            "breakfast": 0.9999999999999999,
+            "service": 0.2980175381111778,
+            "noise": 0.0017664098625947559,
+            "room": 0.03373273114729173,
+            "value": 0.13889729425720254
+          },
+          "service": {
+            "location": 0.5886815809754898,
+            "cleanliness": 0.5057477677359716,
+            "breakfast": 0.2980175381111778,
+            "service": 1.0,
+            "noise": 0.08383707691164424,
+            "room": 0.26919947338789235,
+            "value": -0.12399222588645521
+          },
+          "noise": {
+            "location": -0.14000174322290174,
+            "cleanliness": 0.19154471960624403,
+            "breakfast": 0.0017664098625947559,
+            "service": 0.08383707691164424,
+            "noise": 1.0,
+            "room": 0.4442659982912804,
+            "value": 0.1265364408145303
+          },
+          "room": {
+            "location": -0.13898915167639367,
+            "cleanliness": 0.4821061285072178,
+            "breakfast": 0.03373273114729173,
+            "service": 0.2691994733878924,
+            "noise": 0.44426599829128033,
+            "room": 1.0,
+            "value": 0.07907490562430054
+          },
+          "value": {
+            "location": -0.2704205808576185,
+            "cleanliness": 0.04591555342069293,
+            "breakfast": 0.13889729425720254,
+            "service": -0.12399222588645521,
+            "noise": 0.1265364408145303,
+            "room": 0.07907490562430054,
+            "value": 0.9999999999999999
+          }
+        },
+        "condition_number": 3.089590164160469,
+        "max_abs_offdiag": 0.5886815809754898
+      },
+      "bootstrap": {
+        "n_boot": 300,
+        "aspects": {
+          "location": {
+            "coef": -0.05774299616044407,
+            "se": 0.021601251896477595,
+            "ci95": [
+              -0.09865560669146028,
+              -0.015610735882073602
+            ],
+            "t": -2.6731319294443265,
+            "share_positive": 0.006666666666666667
+          },
+          "cleanliness": {
+            "coef": -0.08184740935214618,
+            "se": 0.015335029468589756,
+            "ci95": [
+              -0.11158257433115343,
+              -0.05147578499595357
+            ],
+            "t": -5.337284125850008,
+            "share_positive": 0.0
+          },
+          "breakfast": {
+            "coef": -0.009845844786801262,
+            "se": 0.0111207551147545,
+            "ci95": [
+              -0.03235224883119914,
+              0.011108409524148252
+            ],
+            "t": -0.8853575755605169,
+            "share_positive": 0.19
+          },
+          "service": {
+            "coef": 0.2614440709793274,
+            "se": 0.01927795554033593,
+            "ci95": [
+              0.22084339204464898,
+              0.29608965261017284
+            ],
+            "t": 13.561815226324129,
+            "share_positive": 1.0
+          },
+          "noise": {
+            "coef": 0.08259708144426241,
+            "se": 0.014031297627775184,
+            "ci95": [
+              0.05586453472394703,
+              0.10923186844052785
+            ],
+            "t": 5.886631702598919,
+            "share_positive": 1.0
+          },
+          "room": {
+            "coef": 0.277757118792038,
+            "se": 0.01819456756500634,
+            "ci95": [
+              0.24230352203745484,
+              0.3125622630569101
+            ],
+            "t": 15.265936813263375,
+            "share_positive": 1.0
+          },
+          "value": {
+            "coef": -0.00020832539526030784,
+            "se": 0.013823286427191564,
+            "ci95": [
+              -0.025984406496606865,
+              0.028749885422210585
+            ],
+            "t": -0.015070612647547714,
+            "share_positive": 0.5
+          }
+        }
+      },
+      "target_mean": 8.471347471761053,
+      "target_sd": 0.6165197102675344,
+      "placebo": {
+        "n_reps": 5,
+        "mean_r2": -0.0014505303208609543,
+        "sd_r2": 0.0036148290304061415,
+        "max_r2": 0.00429190772268262
+      },
+      "placebo_ratio": 304.233470657366,
+      "half_stability": {
+        "n_reps": 40,
+        "corr_actionable_mean": 0.982483752267953,
+        "corr_actionable_sd": 0.010432939817791314,
+        "corr_all7_mean": 0.9785684526775043,
+        "share_positive": 1.0
+      },
+      "direction": "A->B",
+      "min_cells": 5,
+      "min_reviews": 30
+    },
+    "B->A": {
+      "n_hotels": 1292,
+      "alpha": 1.0,
+      "r2_in_sample": 0.4679186918431719,
+      "cv": {
+        "n_hotels": 1292,
+        "r2_out_of_hotel": 0.4600759211208473,
+        "rmse": 0.4452440472769708,
+        "sd_target": 0.6061776357535348,
+        "corr": 0.6783003952543488,
+        "alphas": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "n_splits": 5
+      },
+      "coef_per_sd": {
+        "location": -0.058775499034375636,
+        "cleanliness": -0.11609527024913897,
+        "breakfast": -0.015515658113872465,
+        "service": 0.2719337306049812,
+        "noise": 0.08387803046035053,
+        "room": 0.28996742205340453,
+        "value": -0.018616781384022237
+      },
+      "coef_marginal_per_sd": {
+        "location": 0.010640841352395403,
+        "cleanliness": 0.15536543110815304,
+        "breakfast": 0.04977825258662466,
+        "service": 0.2623187176796712,
+        "noise": 0.21241616273582675,
+        "room": 0.3519626015248114,
+        "value": 0.0049766624712597315
+      },
+      "coef_raw": {
+        "location": -0.36311901262905627,
+        "cleanliness": -1.0317673403430598,
+        "breakfast": -0.12897148311214038,
+        "service": 2.130017740003219,
+        "noise": 0.8722275075786567,
+        "room": 2.510925303901958,
+        "value": -0.21774817217539505
+      },
+      "collinearity": {
+        "correlation": {
+          "location": {
+            "location": 1.0,
+            "cleanliness": 0.2959927302078167,
+            "breakfast": 0.19133451584590855,
+            "service": 0.5865767664157286,
+            "noise": -0.1756858446113587,
+            "room": -0.14956656872710045,
+            "value": -0.2894955735970805
+          },
+          "cleanliness": {
+            "location": 0.2959927302078167,
+            "cleanliness": 1.0,
+            "breakfast": 0.21339842400910014,
+            "service": 0.493116098872167,
+            "noise": 0.23648935631949028,
+            "room": 0.4813810364625417,
+            "value": 0.06753499199171212
+          },
+          "breakfast": {
+            "location": 0.19133451584590858,
+            "cleanliness": 0.21339842400910014,
+            "breakfast": 0.9999999999999999,
+            "service": 0.30689774026900923,
+            "noise": 0.022466849277418294,
+            "room": 0.06383063267230576,
+            "value": 0.1355163044002942
+          },
+          "service": {
+            "location": 0.5865767664157286,
+            "cleanliness": 0.49311609887216706,
+            "breakfast": 0.30689774026900923,
+            "service": 1.0,
+            "noise": 0.06205516166080573,
+            "room": 0.27260288378265013,
+            "value": -0.1294531620343519
+          },
+          "noise": {
+            "location": -0.1756858446113587,
+            "cleanliness": 0.23648935631949025,
+            "breakfast": 0.022466849277418294,
+            "service": 0.062055161660805734,
+            "noise": 1.0,
+            "room": 0.45533773586802456,
+            "value": 0.15883139350664358
+          },
+          "room": {
+            "location": -0.14956656872710045,
+            "cleanliness": 0.48138103646254166,
+            "breakfast": 0.06383063267230576,
+            "service": 0.27260288378265013,
+            "noise": 0.45533773586802456,
+            "room": 1.0,
+            "value": 0.13248364479537095
+          },
+          "value": {
+            "location": -0.2894955735970805,
+            "cleanliness": 0.06753499199171212,
+            "breakfast": 0.1355163044002942,
+            "service": -0.1294531620343519,
+            "noise": 0.15883139350664358,
+            "room": 0.13248364479537095,
+            "value": 1.0
+          }
+        },
+        "condition_number": 3.0116120606652994,
+        "max_abs_offdiag": 0.5865767664157286
+      },
+      "bootstrap": {
+        "n_boot": 300,
+        "aspects": {
+          "location": {
+            "coef": -0.05882246109428981,
+            "se": 0.0226022031360881,
+            "ci95": [
+              -0.10385801302692248,
+              -0.015340969309187697
+            ],
+            "t": -2.602510062409366,
+            "share_positive": 0.0033333333333333335
+          },
+          "cleanliness": {
+            "coef": -0.11585116785790804,
+            "se": 0.014760446597094556,
+            "ci95": [
+              -0.14207180190729746,
+              -0.08481186328543483
+            ],
+            "t": -7.848757630457616,
+            "share_positive": 0.0
+          },
+          "breakfast": {
+            "coef": -0.015440259921887642,
+            "se": 0.011233142270568984,
+            "ci95": [
+              -0.037576288600661076,
+              0.004742574484968924
+            ],
+            "t": -1.3745272293346962,
+            "share_positive": 0.07666666666666666
+          },
+          "service": {
+            "coef": 0.2717854651031706,
+            "se": 0.017918698557624506,
+            "ci95": [
+              0.23487656619561897,
+              0.30457145721273676
+            ],
+            "t": 15.167701171440509,
+            "share_positive": 1.0
+          },
+          "noise": {
+            "coef": 0.0832377036412925,
+            "se": 0.012717559752947818,
+            "ci95": [
+              0.056158356818633605,
+              0.10904111675253056
+            ],
+            "t": 6.545100259662529,
+            "share_positive": 1.0
+          },
+          "room": {
+            "coef": 0.2891457460320366,
+            "se": 0.018036140956933153,
+            "ci95": [
+              0.25292123481191836,
+              0.3229555742769486
+            ],
+            "t": 16.031464087714838,
+            "share_positive": 1.0
+          },
+          "value": {
+            "coef": -0.01887928819142111,
+            "se": 0.012961799427641361,
+            "ci95": [
+              -0.04339121364395023,
+              0.005736790473305946
+            ],
+            "t": -1.4565329680353296,
+            "share_positive": 0.07666666666666666
+          }
+        }
+      },
+      "target_mean": 8.478647636831763,
+      "target_sd": 0.6061776357535348,
+      "placebo": {
+        "n_reps": 5,
+        "mean_r2": -0.004757203659700071,
+        "sd_r2": 0.0029226491774470794,
+        "max_r2": -0.0016573491523530492
+      },
+      "placebo_ratio": 96.71141999202402,
+      "half_stability": {
+        "n_reps": 40,
+        "corr_actionable_mean": 0.9860052287979698,
+        "corr_actionable_sd": 0.010475279240492633,
+        "corr_all7_mean": 0.9822135364439092,
+        "share_positive": 1.0
+      },
+      "direction": "B->A",
+      "min_cells": 5,
+      "min_reviews": 30
+    }
+  },
+  "value_vector_artifact": {
+    "schema": "p3-aspect-value-vector-v1",
+    "seed": 20260915,
+    "units": "rating points per 1 SD of fold-specific smoothed_net",
+    "estimand": "hotel cross-section: mean aspect profile on the detection fold -> mean reviewer score on the disjoint outcome fold",
+    "n_hotels": {
+      "A->B": 1300,
+      "B->A": 1292
+    },
+    "vectors": {
+      "conditional": {
+        "location": -0.05759917503173461,
+        "cleanliness": -0.09876928069571742,
+        "breakfast": -0.012856398739873667,
+        "service": 0.2658979727109661,
+        "noise": 0.08261815907351255,
+        "room": 0.2843023689206187,
+        "value": -0.009106369795704434
+      },
+      "marginal": {
+        "location": 0.01510760472081154,
+        "cleanliness": 0.16773134481639124,
+        "breakfast": 0.048413191854849574,
+        "service": 0.26425792602158316,
+        "noise": 0.21615391797471073,
+        "room": 0.3535543000769123,
+        "value": 0.007796478368962759
+      }
+    },
+    "recommended_spec": "conditional",
+    "recommended_spec_reason": "Both specs beat a scrambled-v placebo on the Q3b out-of-hotel outcome probe; only the conditional spec also clears the random-aspect reference. The marginal vector is nearly flat after normalisation, so it barely changes which aspect is picked.",
+    "normalized_preview": {
+      "conditional": {
+        "cleanliness": 0.0,
+        "breakfast": 0.0,
+        "service": 2.5210827978135715,
+        "noise": 0.7833351172393787,
+        "room": 2.6955820849470493,
+        "value": 0.0
+      },
+      "marginal": {
+        "cleanliness": 0.9513009343293997,
+        "breakfast": 0.274579057932207,
+        "service": 1.4987586977464864,
+        "noise": 1.2259331990296436,
+        "room": 2.0052097976530128,
+        "value": 0.04421831330925115
+      }
+    },
+    "provenance": {
+      "cv_r2_A_B": 0.4412998738092708,
+      "cv_r2_B_A": 0.4600759211208473,
+      "placebo_r2_A_B": -0.0014505303208609543,
+      "half_half_corr_A_B": 0.982483752267953,
+      "condition_number": 3.089590164160469,
+      "alpha": 10.0
+    },
+    "caveats": [
+      "Associational cross-sectional level coefficient, NOT the effect of intervening. No intervention data exists in this project.",
+      "conditional and marginal specifications disagree in sign for cleanliness and location; the choice between them is untestable without interventions. See P3.md.",
+      "Estimated on 1292-1300 hotels with >=30 outcome-fold reviews; coverage is not the full panel."
+    ],
+    "enabled_by_default": false
+  },
+  "transfer": {
+    "conditional": {
+      "n_reps": 40,
+      "policies": {
+        "peer_relative": {
+          "mean": 1.606643658734022,
+          "se": 0.007160253636799599,
+          "ci95": [
+            1.5926098193750258,
+            1.6206774980930183
+          ]
+        },
+        "value_aware": {
+          "mean": 2.5794090033103423,
+          "se": 0.012628457741350576,
+          "ci95": [
+            2.554657680761774,
+            2.6041603258589108
+          ]
+        },
+        "placebo_permuted_v": {
+          "mean": 1.6844454180949469,
+          "se": 0.08665140410149011,
+          "ci95": [
+            1.514611785506574,
+            1.8542790506833198
+          ]
+        },
+        "random_uniform": {
+          "mean": 1.0,
+          "se": 1.8645510086115624e-17,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "oracle_best_v_eval": {
+          "mean": 2.7018666367903896,
+          "se": 0.020867264530493198,
+          "ci95": [
+            2.660967549532146,
+            2.7427657240486334
+          ]
+        }
+      },
+      "agreement_value_vs_peer": {
+        "mean": 0.5919798034063019,
+        "se": 0.004419730705582652,
+        "ci95": [
+          0.5833172903336653,
+          0.6006423164789384
+        ]
+      },
+      "contrasts": {
+        "value_aware - peer_relative": {
+          "diff": 0.97276534457632,
+          "se": 0.007855796749555551,
+          "t": 123.82771290911455,
+          "ci95": [
+            0.9573682657558741,
+            0.988162423396766
+          ],
+          "share_positive": 1.0
+        },
+        "value_aware - random_uniform": {
+          "diff": 1.5794090033103423,
+          "se": 0.012628457741350572,
+          "t": 125.06744969646861,
+          "ci95": [
+            1.5546576807617738,
+            1.6041603258589108
+          ],
+          "share_positive": 1.0
+        },
+        "placebo_permuted_v - random_uniform": {
+          "diff": 0.684445418094947,
+          "se": 0.08665140410149011,
+          "t": 7.898838168776734,
+          "ci95": [
+            0.5146117855065739,
+            0.85427905068332
+          ],
+          "share_positive": 0.9
+        },
+        "value_aware - placebo_permuted_v": {
+          "diff": 0.8949635852153952,
+          "se": 0.08521880293774305,
+          "t": 10.501949738360144,
+          "ci95": [
+            0.7279377993343246,
+            1.0619893710964659
+          ],
+          "share_positive": 0.975
+        }
+      },
+      "placebo_ratio": 2.307574806631615,
+      "half_half_corr": {
+        "mean": 0.9845142135086717,
+        "sd": 0.010212182316934987,
+        "share_positive": 1.0,
+        "n": 40
+      }
+    },
+    "marginal": {
+      "n_reps": 40,
+      "policies": {
+        "peer_relative": {
+          "mean": 1.2585789624710095,
+          "se": 0.004168845941589068,
+          "ci95": [
+            1.2504081745039488,
+            1.2667497504380703
+          ]
+        },
+        "value_aware": {
+          "mean": 1.7880377932256082,
+          "se": 0.00817741802631069,
+          "ci95": [
+            1.7720103482810883,
+            1.804065238170128
+          ]
+        },
+        "placebo_permuted_v": {
+          "mean": 1.309458501003219,
+          "se": 0.04120751646149273,
+          "ci95": [
+            1.2286932522092857,
+            1.3902237497971521
+          ]
+        },
+        "random_uniform": {
+          "mean": 1.0,
+          "se": 2.3851416643053662e-17,
+          "ci95": [
+            1.0,
+            1.0
+          ]
+        },
+        "oracle_best_v_eval": {
+          "mean": 1.9703345148183804,
+          "se": 0.012608915577033131,
+          "ci95": [
+            1.9456214942083563,
+            1.9950475354284045
+          ]
+        }
+      },
+      "agreement_value_vs_peer": {
+        "mean": 0.5472335626143079,
+        "se": 0.006974783920477346,
+        "ci95": [
+          0.5335632372223934,
+          0.5609038880062224
+        ]
+      },
+      "contrasts": {
+        "value_aware - peer_relative": {
+          "diff": 0.5294588307545984,
+          "se": 0.0061079203042655045,
+          "t": 86.68397824130867,
+          "ci95": [
+            0.517487526843369,
+            0.5414301346658279
+          ],
+          "share_positive": 1.0
+        },
+        "value_aware - random_uniform": {
+          "diff": 0.788037793225608,
+          "se": 0.00817741802631069,
+          "t": 96.36755644509196,
+          "ci95": [
+            0.7720103482810879,
+            0.804065238170128
+          ],
+          "share_positive": 1.0
+        },
+        "placebo_permuted_v - random_uniform": {
+          "diff": 0.30945850100321887,
+          "se": 0.04120751646149273,
+          "t": 7.509758596890913,
+          "ci95": [
+            0.2286932522092857,
+            0.390223749797152
+          ],
+          "share_positive": 0.85
+        },
+        "value_aware - placebo_permuted_v": {
+          "diff": 0.4785792922223891,
+          "se": 0.04068351243844596,
+          "t": 11.76347034800592,
+          "ci95": [
+            0.3988410724494828,
+            0.5583175119952954
+          ],
+          "share_positive": 1.0
+        }
+      },
+      "placebo_ratio": 2.5465055594559707,
+      "half_half_corr": {
+        "mean": 0.9845142135086717,
+        "sd": 0.010212182316934987,
+        "share_positive": 1.0,
+        "n": 40
+      }
+    }
+  },
+  "single_aspect": {
+    "conditional": {
+      "spec": "conditional",
+      "n_reps": 40,
+      "policies": {
+        "value_aware": {
+          "mean_r2": 0.07620803736164708,
+          "se": 0.006920956089447588,
+          "ci95": [
+            0.06264321258074902,
+            0.08977286214254514
+          ]
+        },
+        "placebo_permuted_v": {
+          "mean_r2": 0.058028185230587746,
+          "se": 0.007418077775242699,
+          "ci95": [
+            0.04348901984191196,
+            0.07256735061926353
+          ]
+        },
+        "largest_deficit": {
+          "mean_r2": 0.014918973539465336,
+          "se": 0.001434176371734672,
+          "ci95": [
+            0.01210803948121476,
+            0.01772990759771591
+          ]
+        },
+        "random_uniform": {
+          "mean_r2": 0.04408635010283435,
+          "se": 0.0027143651445883225,
+          "ci95": [
+            0.038766292136586444,
+            0.04940640806908225
+          ]
+        },
+        "oracle_marginal": {
+          "mean_r2": 0.3341189657262229,
+          "se": 0.0033593041822313472,
+          "ci95": [
+            0.32753485046400005,
+            0.34070308098844576
+          ]
+        }
+      },
+      "contrasts": {
+        "value_aware - placebo_permuted_v": {
+          "diff": 0.018179852131059323,
+          "se": 0.009386736668851444,
+          "t": 1.936759576028865,
+          "share_positive": 0.6
+        },
+        "value_aware - largest_deficit": {
+          "diff": 0.06128906382218173,
+          "se": 0.0065757557228652615,
+          "t": 9.320459336569787,
+          "share_positive": 0.975
+        },
+        "value_aware - random_uniform": {
+          "diff": 0.032121687258812724,
+          "se": 0.007323360671470251,
+          "t": 4.386194904198801,
+          "share_positive": 0.625
+        }
+      },
+      "beats_placebo": true,
+      "beats_random_uniform": true
+    },
+    "marginal": {
+      "spec": "marginal",
+      "n_reps": 40,
+      "policies": {
+        "value_aware": {
+          "mean_r2": 0.03454802030180724,
+          "se": 0.0017205047710650203,
+          "ci95": [
+            0.031175892888691555,
+            0.03792014771492292
+          ]
+        },
+        "placebo_permuted_v": {
+          "mean_r2": 0.03140237612708463,
+          "se": 0.003966627257497512,
+          "ci95": [
+            0.023627929500970778,
+            0.03917682275319848
+          ]
+        },
+        "largest_deficit": {
+          "mean_r2": 0.014918973539465336,
+          "se": 0.001434176371734672,
+          "ci95": [
+            0.01210803948121476,
+            0.01772990759771591
+          ]
+        },
+        "random_uniform": {
+          "mean_r2": 0.04408635010283435,
+          "se": 0.0027143651445883225,
+          "ci95": [
+            0.038766292136586444,
+            0.04940640806908225
+          ]
+        },
+        "oracle_marginal": {
+          "mean_r2": 0.3341189657262229,
+          "se": 0.0033593041822313472,
+          "ci95": [
+            0.32753485046400005,
+            0.34070308098844576
+          ]
+        }
+      },
+      "contrasts": {
+        "value_aware - placebo_permuted_v": {
+          "diff": 0.0031456441747226005,
+          "se": 0.00374560327704607,
+          "t": 0.8398231051323137,
+          "share_positive": 0.55
+        },
+        "value_aware - largest_deficit": {
+          "diff": 0.0196290467623419,
+          "se": 0.0009749701577455788,
+          "t": 20.132971872421304,
+          "share_positive": 1.0
+        },
+        "value_aware - random_uniform": {
+          "diff": -0.009538329801027114,
+          "se": 0.0024775495919623085,
+          "t": -3.849904692915718,
+          "share_positive": 0.2
+        }
+      },
+      "beats_placebo": true,
+      "beats_random_uniform": false
+    }
+  },
+  "p4_rerun": {
+    "A->B forward": {
+      "detect": "A",
+      "out": "B",
+      "timing": "forward",
+      "n_units": 2649,
+      "n_hotels": 791,
+      "delta": 0.1208153233324859,
+      "gamma": {
+        "location": -0.10734687931427275,
+        "cleanliness": 0.06084117044372833,
+        "breakfast": -0.04515797240303412,
+        "service": -0.016469937152019203,
+        "noise": -0.07945610430410407,
+        "room": -0.03527551761889845,
+        "value": -0.02283666806311528
+      },
+      "gamma_se": {
+        "location": 0.09621572988121088,
+        "cleanliness": 0.06296383765811776,
+        "breakfast": 0.06642608528775985,
+        "service": 0.07862001629863868,
+        "noise": 0.06369998440310669,
+        "room": 0.09215508606654059,
+        "value": 0.06884550157341242
+      },
+      "values": {
+        "peer_relative": {
+          "value": -0.0034182093522634955,
+          "se": 0.003862627031902236,
+          "abstain": 0.03850509626274066
+        },
+        "value_aware": {
+          "value": -0.00363225426319898,
+          "se": 0.007871552047788995,
+          "abstain": 0.03850509626274066
+        },
+        "largest_peer_gap": {
+          "value": -0.0026105817752850396,
+          "se": 0.0034760185688580223,
+          "abstain": 0.03850509626274066
+        },
+        "fix_weakest": {
+          "value": -0.004288242912182598,
+          "se": 0.004267392045114751,
+          "abstain": 0.03775009437523594
+        },
+        "random_uniform": {
+          "value": -0.0027859012625138413,
+          "se": 0.0028973235435498126,
+          "abstain": null
+        }
+      },
+      "contrasts": {
+        "value_aware - peer_relative": {
+          "diff": -0.00021404491093548464,
+          "se": 0.004901223083366346,
+          "t": -0.04367173403347119
+        },
+        "value_aware - random_uniform": {
+          "diff": -0.0008463530006851388,
+          "se": 0.006805861278593297,
+          "t": -0.1243564871572098
+        },
+        "peer_relative - random_uniform": {
+          "diff": -0.0006323080897496542,
+          "se": 0.0021375741808484366,
+          "t": -0.2958063843654217
+        }
+      },
+      "location_action_violation_rate": {
+        "peer_relative": 0.0,
+        "value_aware": 0.0,
+        "largest_peer_gap": 0.0,
+        "fix_weakest": 0.0
+      },
+      "agreement_value_vs_peer": 0.48998822143698467
+    },
+    "B->A forward": {
+      "detect": "B",
+      "out": "A",
+      "timing": "forward",
+      "n_units": 2644,
+      "n_hotels": 799,
+      "delta": 0.125,
+      "gamma": {
+        "location": -0.03961171682215359,
+        "cleanliness": 0.028693736347921286,
+        "breakfast": 0.05721663455806764,
+        "service": -0.14282127339767092,
+        "noise": -0.0381617558169613,
+        "room": -0.013523548699983116,
+        "value": 0.0234843248992236
+      },
+      "gamma_se": {
+        "location": 0.0978123981350863,
+        "cleanliness": 0.07149481759020881,
+        "breakfast": 0.06672114738883157,
+        "service": 0.0830687361146514,
+        "noise": 0.06474576269753783,
+        "room": 0.09448667150926512,
+        "value": 0.06184253429033848
+      },
+      "values": {
+        "peer_relative": {
+          "value": -0.0017805111493528173,
+          "se": 0.003900886386970418,
+          "abstain": 0.041225416036308624
+        },
+        "value_aware": {
+          "value": -0.006609105246063394,
+          "se": 0.008375964161329172,
+          "abstain": 0.041225416036308624
+        },
+        "largest_peer_gap": {
+          "value": -0.002633234263868318,
+          "se": 0.0035020556019569877,
+          "abstain": 0.041225416036308624
+        },
+        "fix_weakest": {
+          "value": 0.0002142296266967866,
+          "se": 0.00421152780889746,
+          "abstain": 0.03895612708018154
+        },
+        "random_uniform": {
+          "value": -0.0017731642106125585,
+          "se": 0.0029223321508731995,
+          "abstain": null
+        }
+      },
+      "contrasts": {
+        "value_aware - peer_relative": {
+          "diff": -0.004828594096710577,
+          "se": 0.005430528500223759,
+          "t": -0.8891573069751169
+        },
+        "value_aware - random_uniform": {
+          "diff": -0.004835941035450836,
+          "se": 0.007553672248399462,
+          "t": -0.640210599086493
+        },
+        "peer_relative - random_uniform": {
+          "diff": -7.3469387402587925e-06,
+          "se": 0.0023777609780426057,
+          "t": -0.003089855880428679
+        }
+      },
+      "location_action_violation_rate": {
+        "peer_relative": 0.0,
+        "value_aware": 0.0,
+        "largest_peer_gap": 0.0,
+        "fix_weakest": 0.0
+      },
+      "agreement_value_vs_peer": 0.4844181459566075
+    },
+    "A->B contemp": {
+      "detect": "A",
+      "out": "B",
+      "timing": "contemp",
+      "n_units": 2661,
+      "n_hotels": 798,
+      "delta": 0.12077294685990347,
+      "gamma": {
+        "location": 0.20943140655733533,
+        "cleanliness": 0.02963442981437623,
+        "breakfast": 0.0472336811979442,
+        "service": 0.15581853655856767,
+        "noise": 0.032581631819467084,
+        "room": 0.07406171754626761,
+        "value": -0.005046601160117341
+      },
+      "gamma_se": {
+        "location": 0.09525777157572617,
+        "cleanliness": 0.07496409919942325,
+        "breakfast": 0.066899156342257,
+        "service": 0.08550167862513589,
+        "noise": 0.06537529304375335,
+        "room": 0.08941077881287157,
+        "value": 0.0631661482584671
+      },
+      "values": {
+        "peer_relative": {
+          "value": 0.007572281907383514,
+          "se": 0.0038117442272886,
+          "abstain": 0.040962044344231494
+        },
+        "value_aware": {
+          "value": 0.011912690930470565,
+          "se": 0.007568184944197745,
+          "abstain": 0.040962044344231494
+        },
+        "largest_peer_gap": {
+          "value": 0.008500721106152125,
+          "se": 0.003496466068978473,
+          "abstain": 0.040962044344231494
+        },
+        "fix_weakest": {
+          "value": 0.004748327022901606,
+          "se": 0.004197231731481001,
+          "abstain": 0.04021044720030064
+        },
+        "random_uniform": {
+          "value": 0.006728731799043995,
+          "se": 0.002902366115138393,
+          "abstain": null
+        }
+      },
+      "contrasts": {
+        "value_aware - peer_relative": {
+          "diff": 0.004340409023087051,
+          "se": 0.004589611340871249,
+          "t": 0.9457029584259107
+        },
+        "value_aware - random_uniform": {
+          "diff": 0.00518395913142657,
+          "se": 0.0064216560997342655,
+          "t": 0.8072620288154465
+        },
+        "peer_relative - random_uniform": {
+          "diff": 0.000843550108339519,
+          "se": 0.0020976223766932776,
+          "t": 0.4021458379316603
+        }
+      },
+      "location_action_violation_rate": {
+        "peer_relative": 0.0,
+        "value_aware": 0.0,
+        "largest_peer_gap": 0.0,
+        "fix_weakest": 0.0
+      },
+      "agreement_value_vs_peer": 0.4902037617554859
+    },
+    "B->A contemp": {
+      "detect": "B",
+      "out": "A",
+      "timing": "contemp",
+      "n_units": 2641,
+      "n_hotels": 804,
+      "delta": 0.125,
+      "gamma": {
+        "location": 0.055210990744516755,
+        "cleanliness": -0.04297666970937385,
+        "breakfast": 0.01847624938445337,
+        "service": 0.22767629960272423,
+        "noise": -0.009118179804787145,
+        "room": -0.017256567794181193,
+        "value": 0.04580254394877454
+      },
+      "gamma_se": {
+        "location": 0.09453865095962607,
+        "cleanliness": 0.0794054347848438,
+        "breakfast": 0.06630994124585146,
+        "service": 0.08380129241083846,
+        "noise": 0.06738533288276755,
+        "room": 0.09215785176474423,
+        "value": 0.058721473983545346
+      },
+      "values": {
+        "peer_relative": {
+          "value": 0.004507721903294384,
+          "se": 0.003875549796223038,
+          "abstain": 0.040893600908746684
+        },
+        "value_aware": {
+          "value": 0.007079036557087312,
+          "se": 0.008286023504878224,
+          "abstain": 0.040893600908746684
+        },
+        "largest_peer_gap": {
+          "value": 0.006114621612354903,
+          "se": 0.003507026713189498,
+          "abstain": 0.040893600908746684
+        },
+        "fix_weakest": {
+          "value": 0.001525808855257921,
+          "se": 0.004081491365450083,
+          "abstain": 0.03862173419159409
+        },
+        "random_uniform": {
+          "value": 0.004637576575575207,
+          "se": 0.0029307523127438187,
+          "abstain": null
+        }
+      },
+      "contrasts": {
+        "value_aware - peer_relative": {
+          "diff": 0.0025713146537929285,
+          "se": 0.005165334469422727,
+          "t": 0.4978021595725042
+        },
+        "value_aware - random_uniform": {
+          "diff": 0.002441459981512105,
+          "se": 0.007309317507711538,
+          "t": 0.3340202390902154
+        },
+        "peer_relative - random_uniform": {
+          "diff": -0.00012985467228082345,
+          "se": 0.0024072862736552302,
+          "t": -0.053942347323590954
+        }
+      },
+      "location_action_violation_rate": {
+        "peer_relative": 0.0,
+        "value_aware": 0.0,
+        "largest_peer_gap": 0.0,
+        "fix_weakest": 0.0
+      },
+      "agreement_value_vs_peer": 0.4824318989340703
+    }
+  },
+  "verdict": {
+    "value_vector_status": "REAL_AND_STABLE",
+    "policy_gain_status": "GAIN_BEATS_PLACEBO",
+    "outcome_probe_status": "CONDITIONAL_BEATS_SCRAMBLED",
+    "cv_r2": 0.4412998738092708,
+    "placebo_r2": -0.0014505303208609543,
+    "placebo_ratio_value_vector": 304.233470657366,
+    "half_half_corr": 0.982483752267953,
+    "policy_placebo_ratio": 2.307574806631615,
+    "outcome_probe_conditional": 0.07620803736164708,
+    "outcome_probe_placebo": 0.058028185230587746,
+    "outcome_probe_marginal": 0.03454802030180724,
+    "note": "Cross-sectional level association. NOT a causal or revenue claim; the forward reward in P4 cannot distinguish policies.",
+    "outcome_probe_beats_random_uniform": {
+      "conditional": true,
+      "marginal": false
+    },
+    "specification_note": "Both specifications beat a scrambled-v placebo, but only the CONDITIONAL vector also clears the random-aspect reference on the observed outcome. The marginal vector is nearly flat, so it barely changes which aspect gets picked and inherits the weak largest-deficit behaviour. Ship conditional."
+  }
+}
