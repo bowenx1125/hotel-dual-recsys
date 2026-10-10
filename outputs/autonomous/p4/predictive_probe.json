@@ -1,0 +1,122 @@
+{
+  "periods": [
+    "2016Q1",
+    "2016Q2",
+    "2016Q3",
+    "2016Q4",
+    "2017Q1"
+  ],
+  "min_reviews": 5,
+  "results": {
+    "fold_pure_A->B": {
+      "levels": {
+        "label": "aspect levels only",
+        "n": 5156,
+        "mse_model": 0.3065906957103902,
+        "mse_zero": 0.3074773781019164,
+        "mse_mean": 0.30636691023844714,
+        "r2_vs_zero": 0.0028837321203911692,
+        "r2_vs_mean": -0.0007304492243267457,
+        "last_alpha": 100.0,
+        "corr_pred_true": 0.009997489965120928
+      },
+      "levels_changes": {
+        "label": "levels + changes",
+        "n": 5156,
+        "mse_model": 0.30742135697611755,
+        "mse_zero": 0.3074773781019164,
+        "mse_mean": 0.30636691023844714,
+        "r2_vs_zero": 0.00018219592655777106,
+        "r2_vs_mean": -0.0034417774976081006,
+        "last_alpha": 100.0,
+        "corr_pred_true": -0.005844184650347597
+      }
+    },
+    "fold_pure_B->A": {
+      "levels": {
+        "label": "aspect levels only",
+        "n": 5134,
+        "mse_model": 0.33454460290022364,
+        "mse_zero": 0.335929655436022,
+        "mse_mean": 0.3348983361794878,
+        "r2_vs_zero": 0.004123043361565104,
+        "r2_vs_mean": 0.0010562407783195615,
+        "last_alpha": 100.0,
+        "corr_pred_true": 0.036293054380868287
+      },
+      "levels_changes": {
+        "label": "levels + changes",
+        "n": 5134,
+        "mse_model": 0.3352898032890221,
+        "mse_zero": 0.335929655436022,
+        "mse_mean": 0.3348983361794878,
+        "r2_vs_zero": 0.0019047206361385571,
+        "r2_vs_mean": -0.0011689132708156968,
+        "last_alpha": 100.0,
+        "corr_pred_true": 0.02440680392226025
+      }
+    },
+    "pooled_state_A->B": {
+      "levels": {
+        "label": "aspect levels only",
+        "n": 5156,
+        "mse_model": 0.298291953723589,
+        "mse_zero": 0.3074773781019164,
+        "mse_mean": 0.30636691023844714,
+        "r2_vs_zero": 0.02987349649925386,
+        "r2_vs_mean": 0.02635714316723481,
+        "last_alpha": 100.0,
+        "corr_pred_true": 0.16236451626300588
+      },
+      "levels_changes": {
+        "label": "levels + changes",
+        "n": 5156,
+        "mse_model": 0.29390426152753013,
+        "mse_zero": 0.3074773781019164,
+        "mse_mean": 0.30636691023844714,
+        "r2_vs_zero": 0.0441434640108298,
+        "r2_vs_mean": 0.040678834085630444,
+        "last_alpha": 100.0,
+        "corr_pred_true": 0.20194246230503746
+      }
+    },
+    "pooled_state_B->A": {
+      "levels": {
+        "label": "aspect levels only",
+        "n": 5134,
+        "mse_model": 0.3261132697593049,
+        "mse_zero": 0.335929655436022,
+        "mse_mean": 0.3348983361794878,
+        "r2_vs_zero": 0.02922155135120741,
+        "r2_vs_mean": 0.026232039610595614,
+        "last_alpha": 100.0,
+        "corr_pred_true": 0.162036038779854
+      },
+      "levels_changes": {
+        "label": "levels + changes",
+        "n": 5134,
+        "mse_model": 0.320853537885282,
+        "mse_zero": 0.335929655436022,
+        "mse_mean": 0.3348983361794878,
+        "r2_vs_zero": 0.044878793243698256,
+        "r2_vs_mean": 0.0419374979715591,
+        "last_alpha": 100.0,
+        "corr_pred_true": 0.2049992417080502
+      }
+    }
+  },
+  "hotel_level": {
+    "n_hotels": 1300,
+    "r2_vs_mean": 0.44939618476302134,
+    "rmse": 0.45729818029055347,
+    "sd_target": 0.6165197102675344,
+    "corr_pred_true": 0.6704614322860173,
+    "alphas": [
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.1
+    ]
+  }
+}

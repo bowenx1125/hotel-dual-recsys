@@ -1,0 +1,1165 @@
+{
+  "method": "direct_method_cross_fit",
+  "is_ips_snips": false,
+  "no_logged_policy": true,
+  "spec": {
+    "unit": "hotel x quarter",
+    "treatment": "x_a = smoothed_net_DETECT(a,t) - smoothed_net_DETECT(a,t-1)",
+    "reward_forward": "mean_score_OUT(t+1) - mean_score_OUT(t)",
+    "reward_contemp": "mean_score_OUT(t) - mean_score_OUT(t-1)",
+    "state_fold": "DETECT fold only (no outcome-fold reviews in the state)",
+    "fe": "hotel fixed effects + period dummies",
+    "clusters": "hotel",
+    "directions": [
+      "A->B",
+      "B->A"
+    ],
+    "timings": [
+      "forward",
+      "contemp"
+    ],
+    "min_reviews": 5,
+    "seed": 20260914
+  },
+  "timings": {
+    "forward": {
+      "timing": "forward",
+      "periods": [
+        "2016Q1",
+        "2016Q2",
+        "2016Q3",
+        "2016Q4",
+        "2017Q1"
+      ],
+      "min_reviews": 5,
+      "n_units_per_direction": 2646,
+      "n_hotels_per_direction": 795,
+      "coverage": {
+        "hotels_total": 1493,
+        "hotels_eval": 795,
+        "hotel_share": 0.5325,
+        "min_mentions_state_fold": 5
+      },
+      "delta_reference_improvement": 0.12290766166624295,
+      "gamma": {
+        "location": -0.07347929806821317,
+        "cleanliness": 0.04476745339582481,
+        "breakfast": 0.006029331077516763,
+        "service": -0.07964560527484506,
+        "noise": -0.058808930060532685,
+        "room": -0.024399533159440785,
+        "value": 0.00032382841805415896
+      },
+      "gamma_se": {
+        "location": 0.0686016251730066,
+        "cleanliness": 0.04763390020483059,
+        "breakfast": 0.04707477115063581,
+        "service": 0.05718724045292753,
+        "noise": 0.04541393453622444,
+        "room": 0.06599297496861177,
+        "value": 0.04627148726361198
+      },
+      "gamma_cf": {
+        "location": -0.07407974581387292,
+        "cleanliness": 0.04539654249917964,
+        "breakfast": 0.006348083901907969,
+        "service": -0.07873807651145644,
+        "noise": -0.060222087952123124,
+        "room": -0.02534208374087629,
+        "value": 0.0010595622053329555
+      },
+      "values": {
+        "fix_weakest": {
+          "value": -0.002056021437667139,
+          "se": 0.002998673719202352,
+          "ci95": [
+            -0.007933313975049858,
+            0.00382127109971558
+          ],
+          "shares": {
+            "cleanliness": 0.041454859797168724,
+            "breakfast": 0.13693149106323613,
+            "service": 0.023379541390169442,
+            "noise": 0.16287340344903026,
+            "room": 0.3306537786191126,
+            "value": 0.3047069256812828
+          },
+          "abstain_rate": 0.038353110727708736
+        },
+        "largest_peer_gap": {
+          "value": -0.0026377963601182763,
+          "se": 0.0024680106212297908,
+          "ci95": [
+            -0.007475008329346302,
+            0.0021994156091097498
+          ],
+          "shares": {
+            "cleanliness": 0.14403858350583004,
+            "breakfast": 0.20563117532402664,
+            "service": 0.23120529315147417,
+            "noise": 0.08165796632771355,
+            "room": 0.24439426358426086,
+            "value": 0.09307271810669474
+          },
+          "abstain_rate": 0.039865256149524644
+        },
+        "most_criticized": {
+          "value": -0.002955861678848145,
+          "se": 0.0076171270228179615,
+          "ci95": [
+            -0.017885156426998526,
+            0.011973433069302238
+          ],
+          "shares": {
+            "cleanliness": 0.0011794024062649904,
+            "breakfast": 0.03025424235167807,
+            "service": 0.013944939709053979,
+            "noise": 0.0033383464497270263,
+            "room": 0.9418515552471828,
+            "value": 0.009431513836093173
+          },
+          "abstain_rate": 0.038353110727708736
+        },
+        "peer_relative": {
+          "value": -0.002616420494367193,
+          "se": 0.002745701624704652,
+          "ci95": [
+            -0.00799789683352982,
+            0.002765055844795435
+          ],
+          "shares": {
+            "cleanliness": 0.08520547436013595,
+            "breakfast": 0.1843749346603383,
+            "service": 0.1603675748008447,
+            "noise": 0.09484507821012306,
+            "room": 0.32428265763411185,
+            "value": 0.15092428033444616
+          },
+          "abstain_rate": 0.039865256149524644
+        },
+        "reliability_aware": {
+          "value": -0.001904190384019465,
+          "se": 0.003101020357318639,
+          "ci95": [
+            -0.007982078647631135,
+            0.004173697879592204
+          ],
+          "shares": {
+            "cleanliness": 0.049117887592868864,
+            "breakfast": 0.13888995676862576,
+            "service": 0.023378923821164986,
+            "noise": 0.13832125291164488,
+            "room": 0.35364039173019524,
+            "value": 0.2966515871755003
+          },
+          "abstain_rate": 0.038353110727708736
+        },
+        "wrank_current-default": {
+          "value": -0.002616420494367193,
+          "se": 0.002745701624704652,
+          "ci95": [
+            -0.00799789683352982,
+            0.002765055844795435
+          ],
+          "shares": {
+            "cleanliness": 0.08520547436013595,
+            "breakfast": 0.1843749346603383,
+            "service": 0.1603675748008447,
+            "noise": 0.09484507821012306,
+            "room": 0.32428265763411185,
+            "value": 0.15092428033444616
+          },
+          "abstain_rate": 0.039865256149524644
+        },
+        "wrank_gap-dominant": {
+          "value": -0.0026541992230499746,
+          "se": 0.0025645332116982214,
+          "ci95": [
+            -0.007680591994782868,
+            0.0023721935486829184
+          ],
+          "shares": {
+            "cleanliness": 0.11727824590015402,
+            "breakfast": 0.19579340354007385,
+            "service": 0.20031409501374164,
+            "noise": 0.08833991957123243,
+            "room": 0.2833545905032722,
+            "value": 0.11491974547152584
+          },
+          "abstain_rate": 0.039865256149524644
+        },
+        "wrank_criticism-dominant": {
+          "value": -0.0020901438713044744,
+          "se": 0.0033005755286953796,
+          "ci95": [
+            -0.008559153086828385,
+            0.004378865344219437
+          ],
+          "shares": {
+            "cleanliness": 0.04663590765792451,
+            "breakfast": 0.14757865733674377,
+            "service": 0.039744635178176904,
+            "noise": 0.12200268095891907,
+            "room": 0.39847343318395234,
+            "value": 0.2455646856842834
+          },
+          "abstain_rate": 0.039865256149524644
+        },
+        "wrank_reliability-conservative": {
+          "value": -0.0029964819102504905,
+          "se": 0.0034883363680047836,
+          "ci95": [
+            -0.009833495611430619,
+            0.0038405317909296376
+          ],
+          "shares": {
+            "cleanliness": 0.0617851841010308,
+            "breakfast": 0.16785706818324378,
+            "service": 0.18082928517829305,
+            "noise": 0.05666441317433435,
+            "room": 0.42857846451214215,
+            "value": 0.10428558485095588
+          },
+          "abstain_rate": 0.039865256149524644
+        },
+        "wrank_equal-weight": {
+          "value": -0.0023242620412584213,
+          "se": 0.003400328570809934,
+          "ci95": [
+            -0.008988783628217343,
+            0.0043402595457004995
+          ],
+          "shares": {
+            "cleanliness": 0.06827826216246982,
+            "breakfast": 0.17433899494241978,
+            "service": 0.09601085393420267,
+            "noise": 0.08520082798419304,
+            "room": 0.42662466342814265,
+            "value": 0.14954639754857205
+          },
+          "abstain_rate": 0.039865256149524644
+        },
+        "random_uniform": {
+          "value": -0.002288816293017611,
+          "se": 0.002058171577915435,
+          "ci95": [
+            -0.006322758491555058,
+            0.0017451259055198363
+          ],
+          "shares": {
+            "cleanliness": 0.16666666666666666,
+            "breakfast": 0.16666666666666666,
+            "service": 0.16666666666666666,
+            "noise": 0.16666666666666666,
+            "room": 0.16666666666666666,
+            "value": 0.16666666666666666
+          },
+          "abstain_rate": null
+        },
+        "always_cleanliness": {
+          "value": 0.005502263015633334,
+          "se": 0.005854571290218899,
+          "ci95": [
+            -0.005972485948629259,
+            0.01697701197989593
+          ],
+          "shares": {
+            "cleanliness": 1.0,
+            "breakfast": 0.0,
+            "service": 0.0,
+            "noise": 0.0,
+            "room": 0.0,
+            "value": 0.0
+          },
+          "abstain_rate": null
+        },
+        "always_breakfast": {
+          "value": 0.0007410509841491944,
+          "se": 0.005785850045598161,
+          "ci95": [
+            -0.01059900681462156,
+            0.01208110878291995
+          ],
+          "shares": {
+            "cleanliness": 0.0,
+            "breakfast": 1.0,
+            "service": 0.0,
+            "noise": 0.0,
+            "room": 0.0,
+            "value": 0.0
+          },
+          "abstain_rate": null
+        },
+        "always_service": {
+          "value": -0.009789055106323791,
+          "se": 0.007028750001214499,
+          "ci95": [
+            -0.023565152073704167,
+            0.003987041861056584
+          ],
+          "shares": {
+            "cleanliness": 0.0,
+            "breakfast": 0.0,
+            "service": 1.0,
+            "noise": 0.0,
+            "room": 0.0,
+            "value": 0.0
+          },
+          "abstain_rate": null
+        },
+        "always_noise": {
+          "value": -0.0072280680788336955,
+          "se": 0.00558172050091118,
+          "ci95": [
+            -0.018168039318681575,
+            0.0037119031610141837
+          ],
+          "shares": {
+            "cleanliness": 0.0,
+            "breakfast": 0.0,
+            "service": 0.0,
+            "noise": 1.0,
+            "room": 0.0,
+            "value": 0.0
+          },
+          "abstain_rate": null
+        },
+        "always_room": {
+          "value": -0.002998889566374824,
+          "se": 0.008111042239790976,
+          "ci95": [
+            -0.018896240358844504,
+            0.012898461226094858
+          ],
+          "shares": {
+            "cleanliness": 0.0,
+            "breakfast": 0.0,
+            "service": 0.0,
+            "noise": 0.0,
+            "room": 1.0,
+            "value": 0.0
+          },
+          "abstain_rate": null
+        },
+        "always_value": {
+          "value": 3.980099364411525e-05,
+          "se": 0.005687120301389891,
+          "ci95": [
+            -0.011106750060749222,
+            0.01118635204803745
+          ],
+          "shares": {
+            "cleanliness": 0.0,
+            "breakfast": 0.0,
+            "service": 0.0,
+            "noise": 0.0,
+            "room": 0.0,
+            "value": 1.0
+          },
+          "abstain_rate": null
+        },
+        "oracle_best": {
+          "value": 0.005502263015633334,
+          "se": 0.005854571290218899,
+          "ci95": [
+            -0.005972485948629259,
+            0.01697701197989593
+          ],
+          "shares": {
+            "cleanliness": 1.0,
+            "breakfast": 0.0,
+            "service": 0.0,
+            "noise": 0.0,
+            "room": 0.0,
+            "value": 0.0
+          },
+          "abstain_rate": null
+        },
+        "oracle_worst": {
+          "value": -0.009789055106323791,
+          "se": 0.007028750001214499,
+          "ci95": [
+            -0.023565152073704167,
+            0.003987041861056584
+          ],
+          "shares": {
+            "cleanliness": 0.0,
+            "breakfast": 0.0,
+            "service": 1.0,
+            "noise": 0.0,
+            "room": 0.0,
+            "value": 0.0
+          },
+          "abstain_rate": null
+        },
+        "never_act": {
+          "value": 0.0,
+          "se": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "shares": {
+            "cleanliness": 0.0,
+            "breakfast": 0.0,
+            "service": 0.0,
+            "noise": 0.0,
+            "room": 0.0,
+            "value": 0.0
+          },
+          "abstain_rate": null
+        }
+      },
+      "contrasts": {
+        "always_service - peer_relative": {
+          "diff": -0.007172634611956599,
+          "se": 0.0068929342636734735,
+          "t": -1.0405778348644896,
+          "ci95": [
+            -0.020682537623123116,
+            0.006337268399209917
+          ],
+          "significant_5pct": false,
+          "boot_se": 0.011563883444669394
+        },
+        "largest_peer_gap - peer_relative": {
+          "diff": -2.1375865751083363e-05,
+          "se": 0.0010188208460128081,
+          "t": -0.020980985847255267,
+          "ci95": [
+            -0.0020182280463857307,
+            0.001975476314883564
+          ],
+          "significant_5pct": false,
+          "boot_se": 0.0014883366554799286
+        },
+        "wrank_gap-dominant - wrank_current-default": {
+          "diff": -3.777872868278168e-05,
+          "se": 0.0005537042723720705,
+          "t": -0.06822907202961884,
+          "ci95": [
+            -0.0011230191691782344,
+            0.001047461711812671
+          ],
+          "significant_5pct": false
+        },
+        "peer_relative - random_uniform": {
+          "diff": -0.000327604201349582,
+          "se": 0.0015970224530892343,
+          "t": -0.2051343741071854,
+          "ci95": [
+            -0.00345771071659617,
+            0.002802502313897006
+          ],
+          "significant_5pct": false,
+          "boot_se": 0.0026284064620742745
+        },
+        "oracle_best - random_uniform": {
+          "diff": 0.007791079308650945,
+          "se": 0.005713198825499664,
+          "t": 1.3636982619749023,
+          "ci95": [
+            -0.003406584714170679,
+            0.01898874333147257
+          ],
+          "significant_5pct": false,
+          "boot_se": 0.006116538665247432
+        }
+      },
+      "cov_actionable": [
+        [
+          0.00226898844872376,
+          -2.434816102632898e-05,
+          -0.00017585841567557638,
+          3.792179989827085e-05,
+          -0.0008647188628935618,
+          -7.596062925856615e-05
+        ],
+        [
+          -2.43481610263244e-05,
+          0.0022160340788847334,
+          -0.0003483703506710419,
+          9.543808761095788e-05,
+          -0.00010927598889178984,
+          -0.00027486658056816496
+        ],
+        [
+          -0.00017585841567558064,
+          -0.00034837035067104177,
+          0.003270380470620951,
+          -6.274134759872162e-05,
+          -0.0003327433026710845,
+          -0.00012777384436452548
+        ],
+        [
+          3.7921799898270117e-05,
+          9.543808761095479e-05,
+          -6.27413475987176e-05,
+          0.002062425450060479,
+          -0.00044545476553053303,
+          -0.00010824533853671662
+        ],
+        [
+          -0.0008647188628935562,
+          -0.00010927598889178497,
+          -0.00033274330267109764,
+          -0.00044545476553053455,
+          0.004355072745207819,
+          -0.00029246168138574377
+        ],
+        [
+          -7.596062925856652e-05,
+          -0.00027486658056816653,
+          -0.00012777384436452526,
+          -0.00010824533853670936,
+          -0.0002924616813857405,
+          0.0021410505335866057
+        ]
+      ],
+      "cross_fit_check": {
+        "fix_weakest": -0.0020838842186212698,
+        "largest_peer_gap": -0.002626893066137981,
+        "most_criticized": -0.003061867109605115,
+        "peer_relative": -0.0026251142120184024,
+        "reliability_aware": -0.0019305109358187416,
+        "wrank_current-default": -0.0026251142120184024,
+        "wrank_gap-dominant": -0.0026528945556499005,
+        "wrank_criticism-dominant": -0.0021214695346534686,
+        "wrank_reliability-conservative": -0.0030150194751668857,
+        "wrank_equal-weight": -0.002352141731895889,
+        "random_uniform": -0.002283994297586319,
+        "always_cleanliness": 0.005579582886306391,
+        "always_breakfast": 0.0007802281484446281,
+        "always_service": -0.009677512868120838,
+        "always_noise": -0.007401756010854275,
+        "always_room": -0.0031147362543412194,
+        "always_value": 0.00013022831304740113,
+        "oracle_best": 0.005579582886306391,
+        "oracle_worst": -0.009677512868120838,
+        "never_act": 0.0,
+        "_max_abs_diff_vs_full": 0.00017368793202057926
+      },
+      "power_split_sample": {
+        "n_reps": 20,
+        "mean_gap": 0.026026637788037276,
+        "sd_gap": 0.004984911142123525,
+        "p05": 0.01784650462420806,
+        "p95": 0.03226499048886721,
+        "share_positive": 1.0,
+        "optimistic_in_sample": {
+          "best_aspect": "cleanliness",
+          "worst_aspect": "service",
+          "gap": 0.015291318121957127,
+          "se": 0.009433581991134189
+        }
+      },
+      "placebo_permutation_gap": 0.02161994904379739,
+      "bootstrap_se": {
+        "peer_relative": 0.004481168627586514,
+        "largest_peer_gap": 0.004235128002471833,
+        "always_service": 0.012245478302672993,
+        "random_uniform": 0.0033156118305200663,
+        "oracle_best": 0.0070653245738790576,
+        "oracle_worst": 0.006998711666366233,
+        "_n_boot": 200
+      },
+      "location_action_violation_rate": {
+        "fix_weakest": 0.0,
+        "largest_peer_gap": 0.0,
+        "most_criticized": 0.0,
+        "peer_relative": 0.0,
+        "reliability_aware": 0.0,
+        "wrank_current-default": 0.0,
+        "wrank_gap-dominant": 0.0,
+        "wrank_criticism-dominant": 0.0,
+        "wrank_reliability-conservative": 0.0,
+        "wrank_equal-weight": 0.0
+      },
+      "policies": {
+        "fix_weakest": "fix weakest aspect (diagnostic)",
+        "largest_peer_gap": "largest peer gap (actionable)",
+        "most_criticized": "most criticized",
+        "peer_relative": "peer-relative evidence-weighted (SHIPPED)",
+        "reliability_aware": "reliability-aware",
+        "wrank_current-default": "peer-relative weights: current-default",
+        "wrank_gap-dominant": "peer-relative weights: gap-dominant",
+        "wrank_criticism-dominant": "peer-relative weights: criticism-dominant",
+        "wrank_reliability-conservative": "peer-relative weights: reliability-conservative",
+        "wrank_equal-weight": "peer-relative weights: equal-weight"
+      }
+    },
+    "contemp": {
+      "timing": "contemp",
+      "periods": [
+        "2016Q1",
+        "2016Q2",
+        "2016Q3",
+        "2016Q4",
+        "2017Q1"
+      ],
+      "min_reviews": 5,
+      "n_units_per_direction": 2651,
+      "n_hotels_per_direction": 801,
+      "coverage": {
+        "hotels_total": 1493,
+        "hotels_eval": 801,
+        "hotel_share": 0.5365,
+        "min_mentions_state_fold": 5
+      },
+      "delta_reference_improvement": 0.12288647342995174,
+      "gamma": {
+        "location": 0.13232119865092604,
+        "cleanliness": -0.006671119947498812,
+        "breakfast": 0.03285496529119879,
+        "service": 0.19174741808064594,
+        "noise": 0.01173172600733997,
+        "room": 0.02840257487604321,
+        "value": 0.0203779713943286
+      },
+      "gamma_se": {
+        "location": 0.0671036503679927,
+        "cleanliness": 0.05460045613855037,
+        "breakfast": 0.04709698882979149,
+        "service": 0.05986065831880499,
+        "noise": 0.04694334891195455,
+        "room": 0.06420155179163665,
+        "value": 0.043122423959614214
+      },
+      "gamma_cf": {
+        "location": 0.13209908307365967,
+        "cleanliness": -0.006801310900720524,
+        "breakfast": 0.033453611330619526,
+        "service": 0.19077619821324598,
+        "noise": 0.011037660976580918,
+        "room": 0.027948373734550398,
+        "value": 0.020149197392273326
+      },
+      "values": {
+        "fix_weakest": {
+          "value": 0.003205124073563309,
+          "se": 0.0029296466509021323,
+          "ci95": [
+            -0.002536877894925438,
+            0.008947126042052056
+          ],
+          "shares": {
+            "cleanliness": 0.041628435096904885,
+            "breakfast": 0.13743895928295413,
+            "service": 0.022578472770743513,
+            "noise": 0.16278136250683542,
+            "room": 0.33065740617086065,
+            "value": 0.3049153641717014
+          },
+          "abstain_rate": 0.03941609069594737
+        },
+        "largest_peer_gap": {
+          "value": 0.0073477312555838455,
+          "se": 0.002477277674945889,
+          "ci95": [
+            0.0024923561946862006,
+            0.01220310631648149
+          ],
+          "shares": {
+            "cleanliness": 0.14454552570644297,
+            "breakfast": 0.2059062537514217,
+            "service": 0.23047473970548016,
+            "noise": 0.08141118737368924,
+            "room": 0.24464451682926436,
+            "value": 0.09301777663370159
+          },
+          "abstain_rate": 0.040927822626489085
+        },
+        "most_criticized": {
+          "value": 0.0037615443411414596,
+          "se": 0.00741964591565936,
+          "ci95": [
+            -0.010780694546297922,
+            0.018303783228580842
+          ],
+          "shares": {
+            "cleanliness": 0.0011792543756706268,
+            "breakfast": 0.030628229378932198,
+            "service": 0.013735221538517528,
+            "noise": 0.0033350522761136144,
+            "room": 0.9416951469372233,
+            "value": 0.009427095493542707
+          },
+          "abstain_rate": 0.03941609069594737
+        },
+        "peer_relative": {
+          "value": 0.006082877371955836,
+          "se": 0.002719014301854393,
+          "ci95": [
+            0.0007537072248360926,
+            0.01141204751907558
+          ],
+          "shares": {
+            "cleanliness": 0.08594537991923537,
+            "breakfast": 0.18446374626095416,
+            "service": 0.1596787607344804,
+            "noise": 0.09478844766325878,
+            "room": 0.3240905780376151,
+            "value": 0.1510330873844562
+          },
+          "abstain_rate": 0.040927822626489085
+        },
+        "reliability_aware": {
+          "value": 0.003239236302187141,
+          "se": 0.0030249673654965635,
+          "ci95": [
+            -0.0026895908353609657,
+            0.009168063439735249
+          ],
+          "shares": {
+            "cleanliness": 0.04928780561224537,
+            "breakfast": 0.1393908897471951,
+            "service": 0.02297001544889543,
+            "noise": 0.1382486461012435,
+            "room": 0.35323819211221164,
+            "value": 0.296864450978209
+          },
+          "abstain_rate": 0.03941609069594737
+        },
+        "wrank_current-default": {
+          "value": 0.006082877371955836,
+          "se": 0.002719014301854393,
+          "ci95": [
+            0.0007537072248360926,
+            0.01141204751907558
+          ],
+          "shares": {
+            "cleanliness": 0.08594537991923537,
+            "breakfast": 0.18446374626095416,
+            "service": 0.1596787607344804,
+            "noise": 0.09478844766325878,
+            "room": 0.3240905780376151,
+            "value": 0.1510330873844562
+          },
+          "abstain_rate": 0.040927822626489085
+        },
+        "wrank_gap-dominant": {
+          "value": 0.006806183375298296,
+          "se": 0.00255726639674903,
+          "ci95": [
+            0.0017940332992604797,
+            0.011818333451336113
+          ],
+          "shares": {
+            "cleanliness": 0.11780129253106641,
+            "breakfast": 0.195878819643403,
+            "service": 0.19980025419942649,
+            "noise": 0.08828031117772055,
+            "room": 0.283384249536216,
+            "value": 0.11485507291216754
+          },
+          "abstain_rate": 0.040927822626489085
+        },
+        "wrank_criticism-dominant": {
+          "value": 0.0036548333387365958,
+          "se": 0.0032461691327411533,
+          "ci95": [
+            -0.0027075412993472865,
+            0.010017207976820479
+          ],
+          "shares": {
+            "cleanliness": 0.04680644953695854,
+            "breakfast": 0.14768913971934106,
+            "service": 0.038732384561406985,
+            "noise": 0.12193187851396055,
+            "room": 0.39922629441837953,
+            "value": 0.24561385324995327
+          },
+          "abstain_rate": 0.040927822626489085
+        },
+        "wrank_reliability-conservative": {
+          "value": 0.0067135008126682945,
+          "se": 0.003448568028608232,
+          "ci95": [
+            -4.556837495481043e-05,
+            0.013472570000291399
+          ],
+          "shares": {
+            "cleanliness": 0.06253627663432039,
+            "breakfast": 0.1679619771369026,
+            "service": 0.18032434250340645,
+            "noise": 0.0566262018472155,
+            "room": 0.42832897291798416,
+            "value": 0.10422222896017089
+          },
+          "abstain_rate": 0.040927822626489085
+        },
+        "wrank_equal-weight": {
+          "value": 0.004876988775190872,
+          "se": 0.0033546562977632473,
+          "ci95": [
+            -0.001698016800798373,
+            0.011451994351180116
+          ],
+          "shares": {
+            "cleanliness": 0.06882938317655227,
+            "breakfast": 0.17423597850071842,
+            "service": 0.09515531349818757,
+            "noise": 0.0851484541976939,
+            "room": 0.4269751351130593,
+            "value": 0.14965573551378852
+          },
+          "abstain_rate": 0.040927822626489085
+        },
+        "random_uniform": {
+          "value": 0.005702824025298788,
+          "se": 0.002062913250603983,
+          "ci95": [
+            0.001659588318992003,
+            0.009746059731605573
+          ],
+          "shares": {
+            "cleanliness": 0.16666666666666666,
+            "breakfast": 0.16666666666666666,
+            "service": 0.16666666666666666,
+            "noise": 0.16666666666666666,
+            "room": 0.16666666666666666,
+            "value": 0.16666666666666666
+          },
+          "abstain_rate": null
+        },
+        "always_cleanliness": {
+          "value": -0.0008197904041763337,
+          "se": 0.0067096575025332155,
+          "ci95": [
+            -0.013970477561471345,
+            0.012330896753118678
+          ],
+          "shares": {
+            "cleanliness": 1.0,
+            "breakfast": 0.0,
+            "service": 0.0,
+            "noise": 0.0,
+            "room": 0.0,
+            "value": 0.0
+          },
+          "abstain_rate": null
+        },
+        "always_breakfast": {
+          "value": 0.004037430819298886,
+          "se": 0.005787582866462906,
+          "ci95": [
+            -0.0073060232459852175,
+            0.015380884884582991
+          ],
+          "shares": {
+            "cleanliness": 0.0,
+            "breakfast": 1.0,
+            "service": 0.0,
+            "noise": 0.0,
+            "room": 0.0,
+            "value": 0.0
+          },
+          "abstain_rate": null
+        },
+        "always_service": {
+          "value": 0.023563163997229145,
+          "se": 0.00735606519799325,
+          "ci95": [
+            0.009145541027509503,
+            0.03798078696694879
+          ],
+          "shares": {
+            "cleanliness": 0.0,
+            "breakfast": 0.0,
+            "service": 1.0,
+            "noise": 0.0,
+            "room": 0.0,
+            "value": 0.0
+          },
+          "abstain_rate": null
+        },
+        "always_noise": {
+          "value": 0.0014416704362884571,
+          "se": 0.005768702598781856,
+          "ci95": [
+            -0.009864778984030424,
+            0.01274811985660734
+          ],
+          "shares": {
+            "cleanliness": 0.0,
+            "breakfast": 0.0,
+            "service": 0.0,
+            "noise": 1.0,
+            "room": 0.0,
+            "value": 0.0
+          },
+          "abstain_rate": null
+        },
+        "always_room": {
+          "value": 0.0034902922628470986,
+          "se": 0.007889502288404628,
+          "ci95": [
+            -0.01197284820034359,
+            0.018953432726037788
+          ],
+          "shares": {
+            "cleanliness": 0.0,
+            "breakfast": 0.0,
+            "service": 0.0,
+            "noise": 0.0,
+            "room": 1.0,
+            "value": 0.0
+          },
+          "abstain_rate": null
+        },
+        "always_value": {
+          "value": 0.002504177040305478,
+          "se": 0.005299162606148247,
+          "ci95": [
+            -0.007881990897891265,
+            0.01289034497850222
+          ],
+          "shares": {
+            "cleanliness": 0.0,
+            "breakfast": 0.0,
+            "service": 0.0,
+            "noise": 0.0,
+            "room": 0.0,
+            "value": 1.0
+          },
+          "abstain_rate": null
+        },
+        "oracle_best": {
+          "value": 0.023563163997229145,
+          "se": 0.00735606519799325,
+          "ci95": [
+            0.009145541027509503,
+            0.03798078696694879
+          ],
+          "shares": {
+            "cleanliness": 0.0,
+            "breakfast": 0.0,
+            "service": 1.0,
+            "noise": 0.0,
+            "room": 0.0,
+            "value": 0.0
+          },
+          "abstain_rate": null
+        },
+        "oracle_worst": {
+          "value": -0.0008197904041763337,
+          "se": 0.0067096575025332155,
+          "ci95": [
+            -0.013970477561471345,
+            0.012330896753118678
+          ],
+          "shares": {
+            "cleanliness": 1.0,
+            "breakfast": 0.0,
+            "service": 0.0,
+            "noise": 0.0,
+            "room": 0.0,
+            "value": 0.0
+          },
+          "abstain_rate": null
+        },
+        "never_act": {
+          "value": 0.0,
+          "se": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "shares": {
+            "cleanliness": 0.0,
+            "breakfast": 0.0,
+            "service": 0.0,
+            "noise": 0.0,
+            "room": 0.0,
+            "value": 0.0
+          },
+          "abstain_rate": null
+        }
+      },
+      "contrasts": {
+        "always_service - peer_relative": {
+          "diff": 0.01748028662527331,
+          "se": 0.007126707898983979,
+          "t": 2.45278561617004,
+          "ci95": [
+            0.0035121957047490743,
+            0.031448377545797546
+          ],
+          "significant_5pct": true,
+          "boot_se": 0.011219044635463743
+        },
+        "largest_peer_gap - peer_relative": {
+          "diff": 0.0012648538836280091,
+          "se": 0.0010240791487037169,
+          "t": 1.2351134042999175,
+          "ci95": [
+            -0.0007423043809819227,
+            0.003272012148237941
+          ],
+          "significant_5pct": false,
+          "boot_se": 0.001568076759420199
+        },
+        "wrank_gap-dominant - wrank_current-default": {
+          "diff": 0.0007233060033424599,
+          "se": 0.0005568269601044608,
+          "t": 1.2989780581148003,
+          "ci95": [
+            -0.0003680547926917196,
+            0.0018146667993766395
+          ],
+          "significant_5pct": false
+        },
+        "peer_relative - random_uniform": {
+          "diff": 0.00038005334665704854,
+          "se": 0.0015948541778667924,
+          "t": 0.23829974673006868,
+          "ci95": [
+            -0.0027458034272114613,
+            0.0035059101205255584
+          ],
+          "significant_5pct": false,
+          "boot_se": 0.0023401727963397686
+        },
+        "oracle_best - random_uniform": {
+          "diff": 0.01786033997193036,
+          "se": 0.00673198178418801,
+          "t": 2.653058273847456,
+          "ci95": [
+            0.004665898026266088,
+            0.03105478191759463
+          ],
+          "significant_5pct": true,
+          "boot_se": 0.006399088219051304
+        }
+      },
+      "cov_actionable": [
+        [
+          0.0029812098105377626,
+          -0.0003607893136184511,
+          -0.00023826880293125824,
+          -8.462265917871207e-05,
+          -0.0009362084376661505,
+          -1.3693769272727874e-05
+        ],
+        [
+          -0.00036078931361844657,
+          0.0022181263568335045,
+          -0.00036260888581820177,
+          3.402351706979136e-05,
+          0.00011327972802794976,
+          -0.0005171451994403771
+        ],
+        [
+          -0.0002382688029312602,
+          -0.0003626088858181998,
+          0.003583298414360717,
+          3.68431156105715e-05,
+          -0.0003987993518498096,
+          -2.8387053248993198e-05
+        ],
+        [
+          -8.462265917871177e-05,
+          3.402351706979187e-05,
+          3.6843115610570114e-05,
+          0.0022036780070695044,
+          -0.00034716554481350337,
+          -8.451272420950326e-05
+        ],
+        [
+          -0.0009362084376661515,
+          0.00011327972802795263,
+          -0.0003987993518498185,
+          -0.0003471655448135045,
+          0.004121839252454204,
+          -0.00022324299650600685
+        ],
+        [
+          -1.369376927273106e-05,
+          -0.0005171451994403747,
+          -2.83870532489921e-05,
+          -8.451272420950279e-05,
+          -0.00022324299650600634,
+          0.0018595434481527098
+        ]
+      ],
+      "cross_fit_check": {
+        "fix_weakest": 0.0031709624266669616,
+        "largest_peer_gap": 0.0073098456349366455,
+        "most_criticized": 0.003709029002321784,
+        "peer_relative": 0.006045595077550232,
+        "reliability_aware": 0.0032061073910154268,
+        "wrank_current-default": 0.006045595077550232,
+        "wrank_gap-dominant": 0.006768286890029054,
+        "wrank_criticism-dominant": 0.0036207390181748514,
+        "wrank_reliability-conservative": 0.006671667850936875,
+        "wrank_equal-weight": 0.004842047172013296,
+        "random_uniform": 0.005664323591679034,
+        "always_cleanliness": -0.0008357891112902337,
+        "always_breakfast": 0.004110996319916109,
+        "always_service": 0.023443814212799258,
+        "always_noise": 0.0013563792323274262,
+        "always_room": 0.0034344770863411886,
+        "always_value": 0.0024760638099804487,
+        "oracle_best": 0.023443814212799258,
+        "oracle_worst": -0.0008357891112902337,
+        "never_act": 0.0,
+        "_max_abs_diff_vs_full": 0.00011934978442988686
+      },
+      "power_split_sample": {
+        "n_reps": 20,
+        "mean_gap": 0.03476451707210609,
+        "sd_gap": 0.006376223250455541,
+        "p05": 0.024284640742107552,
+        "p95": 0.043216132012510226,
+        "share_positive": 1.0,
+        "optimistic_in_sample": {
+          "best_aspect": "service",
+          "worst_aspect": "cleanliness",
+          "gap": 0.024382954401405477,
+          "se": 0.010311519483471835
+        }
+      },
+      "placebo_permutation_gap": 0.019937786721036056,
+      "bootstrap_se": {
+        "peer_relative": 0.004069408743111159,
+        "largest_peer_gap": 0.0036386717989290366,
+        "always_service": 0.010878627170545807,
+        "random_uniform": 0.002993530292024471,
+        "oracle_best": 0.007142444593604359,
+        "oracle_worst": 0.007404870169284963,
+        "_n_boot": 200
+      },
+      "location_action_violation_rate": {
+        "fix_weakest": 0.0,
+        "largest_peer_gap": 0.0,
+        "most_criticized": 0.0,
+        "peer_relative": 0.0,
+        "reliability_aware": 0.0,
+        "wrank_current-default": 0.0,
+        "wrank_gap-dominant": 0.0,
+        "wrank_criticism-dominant": 0.0,
+        "wrank_reliability-conservative": 0.0,
+        "wrank_equal-weight": 0.0
+      },
+      "policies": {
+        "fix_weakest": "fix weakest aspect (diagnostic)",
+        "largest_peer_gap": "largest peer gap (actionable)",
+        "most_criticized": "most criticized",
+        "peer_relative": "peer-relative evidence-weighted (SHIPPED)",
+        "reliability_aware": "reliability-aware",
+        "wrank_current-default": "peer-relative weights: current-default",
+        "wrank_gap-dominant": "peer-relative weights: gap-dominant",
+        "wrank_criticism-dominant": "peer-relative weights: criticism-dominant",
+        "wrank_reliability-conservative": "peer-relative weights: reliability-conservative",
+        "wrank_equal-weight": "peer-relative weights: equal-weight"
+      }
+    }
+  },
+  "verdict": {
+    "status": "AMBER_NO_DISCRIMINATION",
+    "discrimination_gap": 0.026026637788037276,
+    "placebo_gap": 0.02161994904379739,
+    "placebo_ratio": 1.2038251216648512,
+    "note": "Direct-method OPE. NOT IPS/SNIPS (no logged policy). Values are model-based; causal content bounded by the P2 finding that the leading (forward) specification is statistically indistinguishable from zero. The discrimination gap is compared against a permutation placebo because a split-sample max-minus-min gap is inflated by construction."
+  }
+}
