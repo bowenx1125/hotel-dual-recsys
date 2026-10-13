@@ -4,7 +4,8 @@
 #
 #   MAYA_SSH_PASSWORD='…' ./deploy/deploy_hotel_demo.sh
 #
-# Password is read from MAYA_SSH_PASSWORD and is never written to disk.
+# Password is read from MAYA_SSH_PASSWORD / SSHPASS and is never written to disk.
+# Prefers sshpass when available (more reliable in headless CI/cloud agents).
 
 set -euo pipefail
 
@@ -15,29 +16,33 @@ PROD_USER="${PROD_USER:-root}"
 REMOTE_DIR="${REMOTE_DIR:-/srv/hotel-demo}"
 SITE_URL="${SITE_URL:-http://app.mayaform.net:8502}"
 
+if [[ -n "${MAYA_SSH_PASSWORD:-}" && -z "${SSHPASS:-}" ]]; then
+  export SSHPASS="$MAYA_SSH_PASSWORD"
+fi
+
 tmp="$(mktemp -d)"
 chmod 700 "$tmp"
 trap 'rm -rf "$tmp"' EXIT
 
-SSH_CONFIG="$tmp/ssh_config"
-ASKPASS="$tmp/askpass"
-umask 077
-cat >"$SSH_CONFIG" <<EOF
-Host hotel-prod
-  HostName ${PROD_HOST}
-  User ${PROD_USER}
-  StrictHostKeyChecking accept-new
-  ServerAliveInterval 30
-  ServerAliveCountMax 240
-  NumberOfPasswordPrompts 1
-EOF
+SSH_BASE=(
+  -o StrictHostKeyChecking=accept-new
+  -o ServerAliveInterval=30
+  -o ServerAliveCountMax=240
+  -o NumberOfPasswordPrompts=1
+)
 
-if [[ -n "${MAYA_SSH_PASSWORD:-}" ]]; then
-  export MAYA_SSH_PASSWORD
-  cat >>"$SSH_CONFIG" <<'EOF'
-  PreferredAuthentications password
-  PubkeyAuthentication no
-EOF
+if [[ -n "${SSHPASS:-}" ]] && command -v sshpass >/dev/null 2>&1; then
+  SSH_BASE+=(
+    -o PreferredAuthentications=password
+    -o PubkeyAuthentication=no
+  )
+  ssh_prod() { sshpass -e ssh "${SSH_BASE[@]}" "${PROD_USER}@${PROD_HOST}" "$@"; }
+  RSYNC_RSH="sshpass -e ssh ${SSH_BASE[*]}"
+elif [[ -n "${SSHPASS:-}" || -n "${MAYA_SSH_PASSWORD:-}" ]]; then
+  # Fallback: SSH_ASKPASS when sshpass is missing.
+  export MAYA_SSH_PASSWORD="${MAYA_SSH_PASSWORD:-$SSHPASS}"
+  ASKPASS="$tmp/askpass"
+  umask 077
   cat >"$ASKPASS" <<'EOF'
 #!/bin/sh
 printf '%s\n' "$MAYA_SSH_PASSWORD"
@@ -46,17 +51,20 @@ EOF
   export SSH_ASKPASS="$ASKPASS"
   export SSH_ASKPASS_REQUIRE=force
   export DISPLAY="${DISPLAY:-:0}"
+  SSH_BASE+=(
+    -o PreferredAuthentications=password
+    -o PubkeyAuthentication=no
+  )
+  ssh_prod() { ssh "${SSH_BASE[@]}" "${PROD_USER}@${PROD_HOST}" "$@"; }
+  RSYNC_RSH="ssh ${SSH_BASE[*]}"
 else
-  cat >>"$SSH_CONFIG" <<'EOF'
-  BatchMode yes
-  PreferredAuthentications publickey
-EOF
+  SSH_BASE+=(
+    -o BatchMode=yes
+    -o PreferredAuthentications=publickey
+  )
+  ssh_prod() { ssh "${SSH_BASE[@]}" "${PROD_USER}@${PROD_HOST}" "$@"; }
+  RSYNC_RSH="ssh ${SSH_BASE[*]}"
 fi
-chmod 600 "$SSH_CONFIG"
-
-ssh_prod() {
-  ssh -F "$SSH_CONFIG" hotel-prod "$@"
-}
 
 step() { printf '\n== %s\n' "$1"; }
 
@@ -68,7 +76,7 @@ ssh_prod "mkdir -p '${REMOTE_DIR}'"
 
 step "Rsync demo sources (excludes venvs, private packs, research tooling)"
 rsync -az --delete \
-  -e "ssh -F ${SSH_CONFIG}" \
+  -e "$RSYNC_RSH" \
   --exclude '.git/' \
   --exclude '.venv*/' \
   --exclude 'venv/' \
@@ -86,7 +94,7 @@ rsync -az --delete \
   --exclude 'outputs/night_demo/' \
   --exclude '*.safetensors' \
   --exclude 'Hotel_Reviews.csv' \
-  ./ "hotel-prod:${REMOTE_DIR}/"
+  ./ "${PROD_USER}@${PROD_HOST}:${REMOTE_DIR}/"
 
 step "Build and start hotel-demo on host port 8502"
 ssh_prod bash -s -- "$REMOTE_DIR" <<'REMOTE'
