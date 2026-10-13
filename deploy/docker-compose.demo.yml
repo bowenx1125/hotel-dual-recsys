@@ -1,0 +1,17 @@
+# Independent hotel demo — does NOT join the MayaForm compose stack.
+# Host port 8502 -> container 8501. Access: http://<host>:8502
+services:
+  hotel-demo:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.demo
+    image: hotel-demo:latest
+    container_name: hotel-demo
+    ports:
+      - "8502:8501"
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
