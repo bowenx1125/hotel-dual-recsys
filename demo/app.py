@@ -271,66 +271,139 @@ def _render_delta_q_chart(st, loc):
     st.bar_chart(chart_df, sort=False)
 
 
-def _render_aspect_peer_chart(st, loc, hotel: dict, cfg: dict, albl) -> None:
-    """Grouped horizontal bars: hotel tendency vs comparison median per aspect."""
-    import pandas as pd
+def _simulate_radar_scenario(hotel: dict, cfg: dict, intensity: float) -> dict[str, float | None]:
+    """Illustrative-only: for each aspect, move the hotel's net sentiment a
+    fraction (``intensity``) of the way toward the peer median, but only in
+    the direction that closes an existing gap (never simulate regression).
 
-    aspect_col = loc.UI["chart_aspect_col"]
-    series_own = loc.UI["chart_series_own"]
-    series_peer = loc.UI["chart_series_peer"]
-    x_title = loc.UI["chart_sentiment_axis"]
-    legend_title = loc.UI["chart_legend"]
-
-    aspect_order = [albl(a) for a in cfg["aspects"]]
-    rows: list[dict] = []
+    This is a pure visualization helper living in the demo layer. It does
+    not call into ``src/recommendation`` or ``src/effect`` and must never be
+    mistaken for a prediction: P1-P5A already established that the causal
+    effect of "closing this gap" on outcomes cannot be reliably estimated
+    from the available data (see docs/fyp1/). The result is only meant to
+    answer "what would the shape look like if the gap were this much
+    smaller", not "what will happen if you do X".
+    """
+    out: dict[str, float | None] = {}
     for a in cfg["aspects"]:
         rec = hotel.get("aspects", {}).get(a, {})
         net = rec.get("net")
-        peer = rec.get("peer_median_net")
-        label = albl(a)
-        if net is not None:
-            rows.append({aspect_col: label, "series": series_own, "value": float(net)})
-        if peer is not None:
-            rows.append({aspect_col: label, "series": series_peer, "value": float(peer)})
+        gap = rec.get("gap")  # peer_median_net - net; see src/recommendation/panel_adapter.py
+        if net is None or gap is None or intensity <= 0.0:
+            out[a] = None
+            continue
+        closable = max(0.0, float(gap))
+        sim = float(net) + intensity * closable
+        out[a] = max(-1.0, min(1.0, sim))
+    return out
 
-    if not rows:
+
+def _render_aspect_radar_chart(
+    st, loc, hotel: dict, cfg: dict, albl, intensity: float
+) -> None:
+    """Radar/polygon chart: one vertex per aspect (7 aspects -> heptagon).
+
+    Series: this hotel (real), comparison-group median (real), and an
+    optional dashed "simulated after improvement" line (illustrative only,
+    see ``_simulate_radar_scenario``). The simulated line is a visual aid,
+    not a prediction, and is only drawn when ``intensity > 0``.
+    """
+    import pandas as pd
+
+    aspects = cfg["aspects"]
+    labels = [albl(a) for a in aspects]
+    own_vals = [hotel.get("aspects", {}).get(a, {}).get("net") for a in aspects]
+    peer_vals = [hotel.get("aspects", {}).get(a, {}).get("peer_median_net") for a in aspects]
+
+    if all(v is None for v in own_vals) and all(v is None for v in peer_vals):
         st.info(loc.UI["chart_no_data"])
         return
 
+    sim_map = _simulate_radar_scenario(hotel, cfg, intensity)
+    sim_vals = [sim_map.get(a) for a in aspects]
+
     try:
-        import altair as alt
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        import numpy as np
+        # Default matplotlib font (DejaVu Sans) has no CJK glyphs, so Chinese
+        # labels/legend text would render as missing-glyph boxes. Use the same
+        # CJK-capable font family already referenced by the app's dark theme
+        # (see demo/assets/dark.css --fyp-font) for visual consistency.
+        plt.rcParams["font.sans-serif"] = [
+            "Microsoft YaHei",
+            "SimHei",
+            "Noto Sans SC",
+            "sans-serif",
+        ]
+        plt.rcParams["axes.unicode_minus"] = False
     except ImportError:
-        st.caption(loc.UI["chart_altair_fallback"])
+        st.caption(loc.UI["radar_mpl_fallback"])
         st.dataframe(
-            pd.DataFrame(rows).pivot_table(
-                index=aspect_col, columns="series", values="value", aggfunc="first"
-            ).reindex(aspect_order),
+            pd.DataFrame(
+                {
+                    loc.UI["chart_aspect_col"]: labels,
+                    loc.UI["chart_series_own"]: own_vals,
+                    loc.UI["chart_series_peer"]: peer_vals,
+                }
+            ),
             use_container_width=True,
+            hide_index=True,
         )
         return
 
-    df = pd.DataFrame(rows)
-    chart = (
-        alt.Chart(df)
-        .mark_bar(height=14)
-        .encode(
-            y=alt.Y(f"{aspect_col}:N", sort=aspect_order, axis=alt.Axis(title=None)),
-            x=alt.X(
-                "value:Q",
-                scale=alt.Scale(domain=[-1, 1], nice=False),
-                title=x_title,
-            ),
-            color=alt.Color("series:N", scale=alt.Scale(domain=[series_own, series_peer], range=["#5EEAD4", "#8DA9D9"]), legend=alt.Legend(title=None, orient="top", columns=1)),
-            yOffset=alt.YOffset("series:N"),
-            tooltip=[
-                alt.Tooltip(f"{aspect_col}:N", title=aspect_col),
-                alt.Tooltip("series:N", title=legend_title),
-                alt.Tooltip("value:Q", title=x_title, format=".3f"),
-            ],
+    n = len(aspects)
+    angles = [2 * np.pi * i / n for i in range(n)] + [0.0]
+
+    def _close(vals: list[float | None]) -> list[float]:
+        closed = list(vals) + [vals[0]]
+        return [np.nan if v is None else float(v) for v in closed]
+
+    bg = "#141e30"
+    fg = "#f1f5f9"
+    grid = "#aab8cb"
+    color_own = "#5eead4"
+    color_peer = "#8da9d9"
+    color_sim = "#fbbf24"
+
+    fig = plt.figure(figsize=(5.4, 5.4), facecolor=bg)
+    ax = fig.add_subplot(111, projection="polar", facecolor=bg)
+    ax.set_theta_offset(np.pi / 2)
+    ax.set_theta_direction(-1)
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels(labels, color=fg, fontsize=10)
+    ax.set_ylim(-1, 1)
+    ax.set_yticks([-1, -0.5, 0, 0.5, 1])
+    ax.set_yticklabels(["-1", "-0.5", "0", "0.5", "1"], color=grid, fontsize=8)
+    ax.spines["polar"].set_color(grid)
+    ax.grid(color=grid, alpha=0.35, linewidth=0.7)
+    ax.tick_params(colors=grid)
+
+    ax.plot(angles, _close(peer_vals), color=color_peer, linewidth=1.8, label=loc.UI["chart_series_peer"])
+    ax.fill(angles, _close(peer_vals), color=color_peer, alpha=0.08)
+    ax.plot(angles, _close(own_vals), color=color_own, linewidth=2.2, label=loc.UI["chart_series_own"])
+    ax.fill(angles, _close(own_vals), color=color_own, alpha=0.12)
+    if intensity > 0.0 and any(v is not None for v in sim_vals):
+        ax.plot(
+            angles,
+            _close(sim_vals),
+            color=color_sim,
+            linewidth=1.8,
+            linestyle="--",
+            label=loc.UI["radar_series_sim"],
         )
-        .properties(height=max(240, len(cfg["aspects"]) * 44))
+
+    ax.legend(
+        loc="upper right",
+        bbox_to_anchor=(1.28, 1.12),
+        frameon=False,
+        fontsize=8.5,
+        labelcolor=fg,
     )
-    st.altair_chart(chart, use_container_width=True)
+    fig.tight_layout()
+    st.pyplot(fig, use_container_width=True)
+    plt.close(fig)
 
 
 def _render_mae_chart(st, loc, models: dict):
@@ -565,10 +638,21 @@ def render_manager_tab(st, loc, snap, cfg):
             loc.UI["col_neg_per_review"]: round(npr, 4) if npr is not None else loc.fmt_na(None),
             loc.UI["col_reliability"]: rec.get("reliability"),
         })
-    _render_aspect_peer_chart(st, loc, hotel, cfg, albl)
+    radar_intensity = st.slider(
+        loc.UI["radar_sim_slider_label"],
+        min_value=0.0,
+        max_value=1.0,
+        value=0.0,
+        step=0.1,
+        help=loc.UI["radar_sim_slider_help"],
+        key="radar_sim_intensity",
+    )
+    _render_aspect_radar_chart(st, loc, hotel, cfg, albl, radar_intensity)
     prior_k = cfg.get("reliability_k", 10)
     st.caption(ui_text(loc, "chart_caption", prior_strength=prior_k))
     st.caption(loc.UI["chart_smoothing_caption"])
+    if radar_intensity > 0.0:
+        st.caption(loc.UI["radar_sim_caption"])
     with st.expander(loc.UI["expander_detail_table"], expanded=False):
         st.dataframe(rows, use_container_width=True, hide_index=True)
 
