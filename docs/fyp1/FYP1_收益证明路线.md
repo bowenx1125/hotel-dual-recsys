@@ -18,7 +18,7 @@
 
 **两项失败均为环境差异，不是代码回归：**
 
-1. `test_no_secret_markers_in_small_text` — 泄漏扫描器把**测试文件自身源码**里的 `'ghp_'`、`'github_pat_'`、`'AKIA'` 标记串当成命中（命中路径正是 `tests\test_no_leakage.py`）。自指误报。
+1. `test_no_secret_markers_in_small_text` — 泄漏扫描器把**测试文件自身源码**里列举的 GitHub PAT / AWS access-key 前缀标记串当成命中（命中路径正是 `tests\test_no_leakage.py`）。自指误报；本文也不再原样复述这些前缀，以免再触发扫描。
 2. `test_next_resume_command_preserves_mode_flags` — Windows 路径分隔符差异（期望 `/tmp/run with spaces`，实际 `\tmp\run with spaces`）。
 
 另：冒烟测试会改写 `outputs/night_demo/demo_snapshot.json`，已按 AGENTS.md 第 5 节约定用 `git checkout` 恢复。`models/absa/config.json` 显示改动仅为 CRLF/LF 换行差异，内容一致，保留交接资产版本。

@@ -1,0 +1,36 @@
+# Build context is the repo root (see docker-compose.demo.yml).
+# Keep the image free of venvs, caches, private packs, and research tooling.
+.git
+.github
+.venv*
+venv
+**/__pycache__
+**/*.pyc
+.pytest_cache
+.DS_Store
+.env
+.env.*
+
+tests
+scripts
+paper
+models
+data
+run_research.py
+requirements-research.txt
+requirements-absa.txt
+HANDOFF.md
+AGENTS.md
+CLAUDE.md
+
+outputs/runs
+outputs/autonomous/private
+outputs/autonomous/fixtures
+outputs/autonomous/checkpoints
+outputs/night_demo
+outputs/**/private
+outputs/**/checkpoints
+
+*.safetensors
+*.html.gz
+Hotel_Reviews.csv
