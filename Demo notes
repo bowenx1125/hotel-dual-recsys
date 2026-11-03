@@ -1,0 +1,171 @@
+Data
+
+2. What is data
+From public data set "515K Hotel Reviews in Europe"
+515k Comment
+1500 Hotel ID
+6 Cities
+London, Paris, Amsterdam
+Barcelona,Mienna, Milan
+2015/8/4 - 2017/8/3 2years
+236MB
+
+Raw data: 
+hotel name, hotel address
+review date, score
+positive or negative comment(raw data/weak evidence label)
+latiude, longitude(location)
+
+one row = one guest review
+
+Quarterly aggregation based on rules
+
+one row = one hotel × one quarter × one aspect
+
+example:
+Hotel A
+2017Q2 (period)
+Breakfast (aspect)
+P = positive_mentions = 1
+N = negative_mentions = 1
+M = P + N = total_mentions = 2 (evidence)
+
+4. What is input
+Research snapshot:
+Hotel Arena
+2017Q2
+Cleanliness
+
+aspect score = -0.22
+mentions = 8
+negative mentions = 6
+negative rate = 0.75
+reliability = 0.44
+peer median = 0.24
+peer gap = 0.46
+peer count = 6
+actionable = yes
+
+
+Model
+
+Use NLP to aspect detection 
+Location
+Cleanliness
+Breakfast
+Service
+Noise
+Room
+Value (money with quality)
+(By keyword check in comment)
+
+Aspect score:
+Calculate Raw net sentiment
+RawNet = P-N / P+N
+To find which is more (p or n) -1 to 0 to 1
+If p = n = 0, it is missing data in this aspect
+
+Bayesian Sheinkage:
+K = 10 prior strength
+shrunk score = q = P-N / P+N+10
+For very few mentions, extreme measurements 
+
+Evidence reliability:
+r = mention / mention +10 
+the aspect mention, it is more, r is bigger
+
+So P, N, M, raw sentiment, shrunk sentiment, reliability
+They are aspect-level measurement
+
+KNN 
+use k = 10 to find nearby hotel 
+location
+Reference Hotels: Check relative performance
+
+To find mean aspect score
+Peer 1 = 0.10
+Peer 2 = 0.20
+Peer 3 = 0.30
+Peer 4 = 0.40
+Peer 5 = 0.50
+median = 0.30
+
+In one aspect:
+Peer gap = PeerMedian - HotelScore
+To find how this hotel good or bad In one aspect
+
+Actionability Filtering
+What to do?
+based on gap, give ranking for aspects
+
+Evidence gate: 
+at least 2 measured peer hotels
+so evidence is too weak, cannot go into aspect ranking 
+
+Strategy:
+A. Fix Weakest
+lowest aspect score 
+
+B. Largest Peer Gap
+biggest peer gap
+
+C. Most Criticized
+biggest Nega mentions
+
+D. What we do
+Priority Score =0.45 * Gap_{norm} + 0.35 * Criticism_{norm} - 0.20 * (1-Reliability)
+
+Criticism is negative rate : Nega / Mentions
+
+Norm: 0-1
+
+it is for one aspect for ranking
+
+5. What is output?
+recommended aspect + priority score + explanation
+
+If there is no aspect ranking, output abstention
+"Insufficient evidence to recommend an action."
+
+Output with why? To show each num in function
+Example with different strag
+Fix weakest
+→ Value
+
+Largest peer gap
+→ Cleanliness
+
+Most criticized
+→ Room
+
+Priority Score
+→ Cleanliness
+
+
+Who Use It
+
+1. What is it
+provider-side recommendation system
+For hotel managers now in Demo
+Which service aspect should be investigated first
+Compare hotel with neaby hotels
+
+6. Why we do this project
+How can we turn noisy hotel review evidence into an explainable and cautious priority recommendation for hotel managers?
+
+A. The whole score is not efficient
+B. For hotel manager
+C. Most nega isnt change first
+D. Aspect Analyse
+E. Explanable Pipeline
+
+
+Recent Work
+
+Split reviews into fold A/B by random
+Why: Cross fitting
+A: detect a change
+B: evaulation the outcome/ validate whether the aspect is noise?
+
+Use the Mean Reviewer Score to be outcome 
+For later prediction 
