@@ -1,0 +1,31 @@
+# Minimal Streamlit demo image for the hotel assistant.
+# Serves only repo-bundled snapshots (no raw reviews / models).
+FROM python:3.12.3-slim-bookworm
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /app
+
+COPY requirements-demo.txt /app/requirements-demo.txt
+RUN python -m pip install --upgrade pip \
+    && python -m pip install -r /app/requirements-demo.txt
+
+# App code + the public demo/research assets the UI reads at runtime.
+COPY demo /app/demo
+COPY src /app/src
+COPY conf /app/conf
+COPY docs/fyp1 /app/docs/fyp1
+COPY .streamlit /app/.streamlit
+COPY outputs/demo /app/outputs/demo
+COPY outputs/autonomous /app/outputs/autonomous
+COPY outputs/overnight /app/outputs/overnight
+
+EXPOSE 8501
+
+CMD ["python", "-m", "streamlit", "run", "demo/app.py", \
+     "--server.headless", "true", \
+     "--server.address", "0.0.0.0", \
+     "--server.port", "8501"]
