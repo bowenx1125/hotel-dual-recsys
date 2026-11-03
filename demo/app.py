@@ -223,7 +223,6 @@ def _render_verdict_event_chart(st, loc, metrics: dict):
     import pandas as pd
 
     df = pd.DataFrame(rows).set_index(loc.UI["chart_verdict_metric_col"])
-    st.caption(loc.UI["chart_verdict_caption"])
     st.bar_chart(df)
 
 
@@ -267,7 +266,6 @@ def _render_delta_q_chart(st, loc):
         index=[loc.format_hist_bin(i) for i in counts.index],
     )
     chart_df.index.name = loc.UI["chart_delta_bin_col"]
-    st.caption(loc.UI["chart_delta_caption"])
     st.bar_chart(chart_df, sort=False)
 
 
@@ -428,10 +426,7 @@ def _render_mae_chart(st, loc, models: dict):
 
 def _render_snapshot_meta(st, loc, snap: dict) -> None:
     period = snap.get("period") or loc.fmt_na(None)
-    schema_v = snap.get("schema_version") or loc.fmt_na(None)
-    scoring_v = snap.get("scoring_version") or loc.fmt_na(None)
     st.caption(ui_text(loc, "data_period_caption", period=period))
-    st.caption(ui_text(loc, "version_caption", schema=schema_v, scoring=scoring_v))
 
 
 def _render_coverage_summary(st, loc, snap: dict) -> None:
@@ -450,30 +445,6 @@ def _render_coverage_summary(st, loc, snap: dict) -> None:
     c1.metric(loc.UI["coverage_total"], total)
     c2.metric(loc.UI["coverage_eligible"], eligible)
     c3.metric(loc.UI["coverage_excluded"], excluded if excluded is not None else loc.fmt_na(None))
-
-    optional_bits: list[str] = []
-    if snap.get("n_hotels_source_panel") is not None:
-        optional_bits.append(
-            ui_text(loc, "coverage_source_panel", count=snap["n_hotels_source_panel"])
-        )
-    if snap.get("absent_selected_period_count") is not None:
-        optional_bits.append(
-            ui_text(
-                loc,
-                "coverage_absent_period",
-                count=snap["absent_selected_period_count"],
-            )
-        )
-    if optional_bits:
-        st.caption(" · ".join(optional_bits))
-
-    counts = snap.get("exclusion_counts") or {}
-    if counts:
-        parts = [
-            f"{loc.ineligible_reason_label(str(reason))}: {count}"
-            for reason, count in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
-        ]
-        st.caption(ui_text(loc, "coverage_exclusion_breakdown", breakdown=" · ".join(parts)))
 
     excluded = excluded_hotels(snap)
     if excluded:
@@ -525,7 +496,6 @@ def render_manager_tab(st, loc, snap, cfg):
 
     _render_snapshot_meta(st, loc, snap)
     _render_coverage_summary(st, loc, snap)
-    st.caption(loc.UI["recommendation_evidence_note"])
 
     lang = st.session_state.get("ui_language", DEFAULT_LANGUAGE)
     city_widget_key = _locale_widget_key(MGR_CITY_CANONICAL, lang)
@@ -650,16 +620,12 @@ def render_manager_tab(st, loc, snap, cfg):
     _render_aspect_radar_chart(st, loc, hotel, cfg, albl, radar_intensity)
     prior_k = cfg.get("reliability_k", 10)
     st.caption(ui_text(loc, "chart_caption", prior_strength=prior_k))
-    st.caption(loc.UI["chart_smoothing_caption"])
-    if radar_intensity > 0.0:
-        st.caption(loc.UI["radar_sim_caption"])
     with st.expander(loc.UI["expander_detail_table"], expanded=False):
         st.dataframe(rows, use_container_width=True, hide_index=True)
 
     render_section_header(st, loc.UI["section_policies"])
     st.caption(loc.UI["policies_caption"])
     with st.expander(loc.UI["expander_scenario_try"], expanded=False):
-        st.caption(loc.UI["expander_scenario_try_caption"])
         intensity = st.slider(
             loc.UI["slider_label"],
             min_value=0.0,
@@ -690,7 +656,6 @@ def render_manager_tab(st, loc, snap, cfg):
             st.markdown(f"**{loc.policy_label(key)}**")
             st.caption(loc.policy_rule(key, policies[key].get("rule"), cfg))
         st.caption(loc.formula_caption(cfg))
-        st.caption(loc.weights_caption(cfg))
         st.markdown(f"**{loc.UI['expander_formula_terms']}**")
         st.markdown(loc.SCORE_TERM_DEFINITIONS)
 
@@ -710,7 +675,6 @@ def render_manager_tab(st, loc, snap, cfg):
             ],
         })
         st.markdown(f"##### {loc.UI['expander_scenario']}")
-        st.caption(loc.UI["expander_scenario_caption"])
         scen_rows = []
         for g in (0.0, 0.25, 0.5, 0.75, 1.0):
             rnk = ranking_under_intensity(hotel, cfg, g)
@@ -790,8 +754,6 @@ def render_manager_tab(st, loc, snap, cfg):
 
 
 def render_temporal_tab(st, loc):
-    st.subheader(loc.UI["temporal_subheader"])
-    st.caption(loc.UI["temporal_caption"])
     waves = _facts_waves(_load_facts())
     w2, w5 = waves.get("2") or {}, waves.get("5") or {}
     legacy_n = _legacy_event_count(loc, waves)
@@ -821,10 +783,6 @@ def render_temporal_tab(st, loc):
         c2.metric(loc.UI["metric_event_hotels"], pm.get("quarter_hotels"))
         c3.metric(loc.UI["city"], pm.get("cities"))
         c4.metric(loc.UI["metric_valid_mentions"], pm.get("valid_mention_cells_quarter"))
-        st.caption(
-            f"prior_strength={pm.get('prior_strength_main')} · "
-            f"sha256 `{str(pm.get('source_sha256', ''))[:12]}…`"
-        )
     else:
         st.info(loc.UI["temporal_panel_missing"])
 
@@ -875,7 +833,6 @@ def render_temporal_tab(st, loc):
             _render_delta_q_chart(st, loc)
 
         with st.expander(loc.UI["expander_raw_feasibility"], expanded=False):
-            st.caption(loc.UI["expander_raw_feasibility_caption"])
             _download_button(
                 st, loc.UI["download_feasibility"], metrics_path, "application/json"
             )
@@ -894,7 +851,6 @@ def render_temporal_tab(st, loc):
                 )
             )
         else:
-            st.info(loc.UI["temporal_predict_info"])
             models = pm.get("models") or {}
             st.dataframe(
                 [
@@ -931,7 +887,6 @@ def render_temporal_tab(st, loc):
     st.markdown(loc.UI["temporal_claims_body"])
     if gate_path.exists():
         with st.expander(loc.UI["expander_go_no_go"], expanded=False):
-            st.caption(loc.UI["expander_go_no_go_caption"])
             _download_button(st, loc.UI["download_go_no_go"], gate_path, "text/markdown")
 
 
@@ -1015,8 +970,6 @@ def _render_revenue_proof_section(st, loc, waves: dict) -> None:
 
 
 def render_research_evidence_tab(st, loc):
-    st.subheader(loc.UI["research_subheader"])
-    st.caption(loc.UI["research_caption"])
     facts_p = ROOT / "outputs" / "autonomous" / "FACTS.json"
     claims_p = ROOT / "outputs" / "autonomous" / "CLAIMS_LEDGER.md"
     facts_sha = ""
@@ -1038,7 +991,6 @@ def render_research_evidence_tab(st, loc):
             waves.get("5") or {},
             waves.get("6") or {},
         )
-        st.info(loc.UI["research_info"])
         c1, c2, c3, c4 = st.columns(4)
         c1.metric(loc.UI["metric_measurement"], loc.measurement_label(w1.get("measurement_verdict")))
         c2.metric(loc.UI["metric_strict_events"], loc.fmt_na(w2.get("strict_crossfit_events")))
@@ -1049,16 +1001,6 @@ def render_research_evidence_tab(st, loc):
             f"{loc.UI['track_prefix']} {track}" if track else loc.fmt_na(None),
         )
         st.caption(loc.UI["metric_strict_events_caption"])
-        st.caption(
-            ui_text(
-                loc,
-                "research_facts_caption",
-                legacy=w2.get(
-                    "legacy_permissive_event_count",
-                    w0.get("legacy_event_count_reproduced", loc.fmt_na(None)),
-                ),
-            )
-        )
 
         st.markdown(f"#### {loc.UI['research_summary_heading']}")
         summary_rows = [
@@ -1131,14 +1073,12 @@ def render_research_evidence_tab(st, loc):
         else:
             st.info(loc.UI["research_claims_empty"])
         with st.expander(loc.UI["expander_claims_raw"], expanded=False):
-            st.caption(loc.UI["expander_claims_caption"])
             _download_button(st, loc.UI["download_claims"], claims_p, "text/markdown")
     else:
         st.warning(loc.UI["research_claims_missing"])
 
     if facts_p.exists():
         with st.expander(loc.UI["expander_facts_raw"], expanded=False):
-            st.caption(ui_text(loc, "research_facts_sha_caption", sha=facts_sha))
             _download_button(st, loc.UI["download_facts"], facts_p, "application/json")
 
     _render_model_annotation_section(st, loc)
@@ -1170,11 +1110,6 @@ def _render_model_annotation_section(st, loc):
             report.get("cohen_kappa"),
         )
     )
-    st.caption(
-        f"{loc.model_annotation_status_label(report.get('status'))} · "
-        f"`{str(report.get('source_hash') or '')[:12]}…` · "
-        f"`{str(report.get('sample_hash') or '')[:12]}…`"
-    )
     per_aspect = report.get("per_aspect_final_label_counts") or {}
     if per_aspect:
         import pandas as pd
@@ -1187,9 +1122,6 @@ def _render_model_annotation_section(st, loc):
             rows.append(row)
         st.markdown(f"##### {loc.UI['model_annotation_per_aspect']}")
         st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
-    st.caption(
-        ui_text(loc, "model_annotation_footer", path=loc.MODEL_ANNOTATION_PRIVATE_CSV)
-    )
 
 
 def _render_language_selector(st):
@@ -1217,7 +1149,7 @@ def main():
     render_header(
         st,
         loc.UI["header_title"],
-        loc.UI["header_desc"],
+        "",
         loc.UI["header_badge"],
     )
     try:

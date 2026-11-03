@@ -30,14 +30,16 @@ def apply_theme(st) -> None:
 def render_header(st, title: str, description: str, badge: str) -> None:
     """Render branded page header with subdued description and evidence badge."""
     safe_title = html.escape(title or "", quote=True)
-    safe_desc = html.escape(description or "", quote=True)
     safe_badge = html.escape(badge or "", quote=True)
+    desc_block = ""
+    if description:
+        safe_desc = html.escape(description, quote=True)
+        desc_block = f'\n    <p class="fyp-header__desc">{safe_desc}</p>'
     _inject_html(
         st,
         f"""<header class="fyp-header" role="banner">
   <div class="fyp-header__brand">
-    <h1 class="fyp-header__title">{safe_title}</h1>
-    <p class="fyp-header__desc">{safe_desc}</p>
+    <h1 class="fyp-header__title">{safe_title}</h1>{desc_block}
   </div>
   <span class="fyp-header__badge" role="status">{safe_badge}</span>
 </header>""",
