@@ -21,6 +21,11 @@ from demo.scoring import (
     ranking_under_intensity,
 )
 from demo.theme import apply_theme, render_header, render_recommendation, render_section_header
+from src.recommendation.tourist import (
+    STATUS_OK as TOURIST_STATUS_OK,
+    rank_hotels_for_tourist,
+    tourist_weights_all_zero,
+)
 
 SNAPSHOT_PATH = ROOT / "outputs" / "demo" / "research_snapshot.json"
 BUILD_SNAPSHOT_CMD = ".venv-fyp/bin/python scripts/build_research_demo.py"
@@ -34,6 +39,13 @@ PRED_METRICS_PATH = ROOT / "outputs" / "overnight" / "predictive_pilot" / "metri
 
 MGR_CITY_CANONICAL = "mgr_city"
 MGR_CS_CANONICAL = "mgr_cs"
+
+TOUR_CITY_CANONICAL = "tour_city"
+TOUR_DETAIL_CANONICAL = "tour_detail"
+TOUR_WEIGHT_PREFIX = "tour_w_"
+TOUR_WEIGHT_OPTIONS = list(range(0, 6))
+TOUR_WEIGHT_DEFAULT = 3
+TOURIST_TOP_N = 10
 
 
 def hydrate_locale_select_state(
@@ -753,6 +765,175 @@ def render_manager_tab(st, loc, snap, cfg):
         st.markdown(loc.LIMITATIONS_ZH)
 
 
+def tourist_weight_canonical_key(aspect: str) -> str:
+    return f"{TOUR_WEIGHT_PREFIX}{aspect}"
+
+
+def render_tourist_tab(st, loc, snap, cfg):
+    """Tourist view: city + aspect weights -> reliability-weighted net match.
+
+    Uses ``src.recommendation.tourist`` only (no gap / peer-relative scores).
+    """
+    import pandas as pd
+
+    labels = cfg.get("aspect_labels") or {}
+    aspects = list(cfg["aspects"])
+    hotels = eligible_hotels(snap)
+
+    def albl(a: str | None) -> str:
+        if not a:
+            return "—"
+        return loc.aspect_label(a, labels.get(a, a))
+
+    period = snap.get("period") or loc.fmt_na(None)
+    st.caption(ui_text(loc, "tourist_intro", period=period))
+
+    lang = st.session_state.get("ui_language", DEFAULT_LANGUAGE)
+    cities = sorted({h["city"] for h in hotels})
+    if not cities:
+        st.info(loc.UI["tourist_no_hotels"])
+        return
+
+    controls, results = st.columns([1, 2], gap="large")
+    with controls:
+        city_widget_key = _locale_widget_key(TOUR_CITY_CANONICAL, lang)
+        hydrate_locale_select_state(
+            st.session_state, TOUR_CITY_CANONICAL, city_widget_key, cities, cities[0]
+        )
+        st.selectbox(
+            loc.UI["city"],
+            cities,
+            key=city_widget_key,
+            format_func=loc.city_label,
+            on_change=_make_locale_sync(st, TOUR_CITY_CANONICAL, city_widget_key),
+        )
+        st.markdown(f"**{loc.UI['tourist_weights_heading']}**")
+        st.caption(loc.UI["tourist_weights_help"])
+        weights: dict[str, int] = {}
+        for a in aspects:
+            canonical = tourist_weight_canonical_key(a)
+            widget_key = _locale_widget_key(canonical, lang)
+            hydrate_locale_select_state(
+                st.session_state, canonical, widget_key, TOUR_WEIGHT_OPTIONS, TOUR_WEIGHT_DEFAULT
+            )
+            st.slider(
+                albl(a),
+                min_value=TOUR_WEIGHT_OPTIONS[0],
+                max_value=TOUR_WEIGHT_OPTIONS[-1],
+                step=1,
+                key=widget_key,
+                on_change=_make_locale_sync(st, canonical, widget_key),
+            )
+            weights[a] = int(st.session_state[canonical])
+
+    city = st.session_state[TOUR_CITY_CANONICAL]
+    with results:
+        if tourist_weights_all_zero(weights):
+            st.warning(loc.UI["tourist_zero_weights"])
+            return
+        ranked_all = rank_hotels_for_tourist(hotels, city, weights, cfg)
+        ranked = [r for r in ranked_all if r["status"] == TOURIST_STATUS_OK]
+        n_insufficient = len(ranked_all) - len(ranked)
+        top = ranked[:TOURIST_TOP_N]
+
+        render_section_header(
+            st, ui_text(loc, "tourist_results_heading", n=len(top) or TOURIST_TOP_N)
+        )
+        caption = ui_text(
+            loc,
+            "tourist_results_caption",
+            city=loc.city_label(city),
+            total=len(ranked_all),
+            ranked=len(ranked),
+        )
+        if n_insufficient:
+            caption += " " + ui_text(loc, "tourist_insufficient_note", n=n_insufficient)
+        st.caption(caption)
+        if not top:
+            st.info(loc.UI["tourist_no_ranked"])
+            return
+
+        names = hotel_display_labels([h for h in hotels if h["city"] == city])
+        col_name = loc.UI["col_hotel_name"]
+        col_score = loc.UI["tourist_col_score"]
+        col_cov = loc.UI["tourist_col_coverage"]
+        list_df = pd.DataFrame(
+            [
+                {
+                    loc.UI["tourist_col_rank"]: r["rank"],
+                    col_name: names.get(r["hotel_id"], r.get("hotel_name") or r["hotel_id"]),
+                    col_score: round(r["score"], 3),
+                    loc.UI["tourist_col_strongest"]: albl(r["strongest_aspect"]),
+                    loc.UI["tourist_col_weakest"]: albl(r["weakest_aspect"]),
+                    col_cov: round(100.0 * r["weight_coverage"]),
+                }
+                for r in top
+            ]
+        )
+        st.dataframe(
+            list_df,
+            hide_index=True,
+            use_container_width=True,
+            column_config={
+                col_score: st.column_config.NumberColumn(
+                    col_score, help=loc.UI["tourist_score_help"], format="%.2f"
+                ),
+                col_cov: st.column_config.NumberColumn(
+                    col_cov, help=loc.UI["tourist_coverage_help"], format="%d%%"
+                ),
+            },
+        )
+
+        top_ids = [r["hotel_id"] for r in top]
+        by_id = {r["hotel_id"]: r for r in top}
+        detail_widget_key = _locale_widget_key(TOUR_DETAIL_CANONICAL, lang)
+        hydrate_locale_select_state(
+            st.session_state, TOUR_DETAIL_CANONICAL, detail_widget_key, top_ids, top_ids[0]
+        )
+        st.selectbox(
+            loc.UI["tourist_detail_select"],
+            top_ids,
+            key=detail_widget_key,
+            format_func=lambda hid: f"{by_id[hid]['rank']}. {names.get(hid, hid)}",
+            on_change=_make_locale_sync(st, TOUR_DETAIL_CANONICAL, detail_widget_key),
+        )
+        chosen = by_id[st.session_state[TOUR_DETAIL_CANONICAL]]
+        col_net = loc.UI["tourist_col_net"]
+        col_rel = loc.UI["col_reliability"]
+        col_contrib = loc.UI["tourist_col_contribution"]
+        detail_rows = []
+        for a in aspects:
+            row = chosen["aspects"][a]
+            detail_rows.append(
+                {
+                    loc.UI["col_aspect"]: albl(a),
+                    loc.UI["tourist_col_weight"]: int(row["weight"]),
+                    col_net: row["net"] if row["measured"] else None,
+                    col_rel: row["reliability"] if row["measured"] else None,
+                    loc.UI["col_mentions"]: row["mention_count"],
+                    loc.UI["tourist_col_used"]: loc.fmt_bool(row["used"]),
+                    col_contrib: row["contribution"],
+                }
+            )
+        st.dataframe(
+            pd.DataFrame(detail_rows),
+            hide_index=True,
+            use_container_width=True,
+            column_config={
+                col_net: st.column_config.ProgressColumn(
+                    col_net, min_value=-1.0, max_value=1.0, format="%.2f"
+                ),
+                col_rel: st.column_config.ProgressColumn(
+                    col_rel, min_value=0.0, max_value=1.0, format="%.2f"
+                ),
+                col_contrib: st.column_config.NumberColumn(col_contrib, format="%.3f"),
+            },
+        )
+
+        with st.expander(loc.UI["tourist_formula_expander"], expanded=False):
+            st.markdown(loc.UI["tourist_formula_body"])
+
+
 def render_temporal_tab(st, loc):
     waves = _facts_waves(_load_facts())
     w2, w5 = waves.get("2") or {}, waves.get("5") or {}
@@ -1167,10 +1348,11 @@ def main():
     except ValueError:
         st.error(ui_text(loc, "snapshot_config_error", cmd=BUILD_SNAPSHOT_CMD))
         return
-    tab1, tab2, tab3 = st.tabs([
+    tab1, tab2, tab3, tab4 = st.tabs([
         loc.UI["tab_improvement"],
         loc.UI["tab_history"],
         loc.UI["tab_research"],
+        loc.UI["tab_tourist"],
     ])
     with tab1:
         render_manager_tab(st, loc, snap, cfg)
@@ -1178,6 +1360,8 @@ def main():
         render_temporal_tab(st, loc)
     with tab3:
         render_research_evidence_tab(st, loc)
+    with tab4:
+        render_tourist_tab(st, loc, snap, cfg)
 
 
 if __name__ == "__main__":
