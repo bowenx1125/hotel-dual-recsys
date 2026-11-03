@@ -292,6 +292,36 @@ UI: dict[str, str] = {
     "download_p4": "Download the P4 offline policy evaluation report",
     "download_p3": "Download the P3 aspect value vector report",
     "download_p5a": "Download the P5-A revealed-intervention report",
+    "tab_tourist": "Choose a hotel",
+    "tourist_intro": "Weight the aspects you care about to see which hotels in the city match best in guest reviews. Based on {period} historical reviews; no live prices, availability or bookings.",
+    "tourist_weights_heading": "How much do you care about each aspect?",
+    "tourist_weights_help": "0 = ignore, 5 = care a lot; only the relative sizes matter.",
+    "tourist_zero_weights": "Every aspect is set to 0, so there is nothing to rank by. Raise at least one aspect.",
+    "tourist_no_hotels": "No displayable hotels in this city.",
+    "tourist_no_ranked": "No hotel in this city has review evidence for the aspects you chose.",
+    "tourist_results_heading": "Top {n} matches",
+    "tourist_results_caption": "{city}: {total} displayable hotels, {ranked} ranked.",
+    "tourist_insufficient_note": "{n} more have no review evidence for the aspects you chose and are not ranked.",
+    "tourist_col_rank": "Rank",
+    "tourist_col_score": "Match score",
+    "tourist_col_strongest": "Strongest aspect",
+    "tourist_col_weakest": "Weakest aspect",
+    "tourist_col_coverage": "Weight with reviews",
+    "tourist_score_help": "From -1 to 1; higher means more positive reviews on the aspects you care about.",
+    "tourist_coverage_help": "Share of your weight that falls on aspects this hotel has review evidence for. Below 100% means some aspects were not reviewed.",
+    "tourist_detail_select": "Aspect details for",
+    "tourist_col_weight": "Your weight",
+    "tourist_col_net": "Review balance",
+    "tourist_col_used": "In match score",
+    "tourist_col_contribution": "Contribution to score",
+    "tourist_formula_expander": "How the match score works, and what it cannot show",
+    "tourist_formula_body": (
+        "Match score = sum(your weight x reliability x review balance) / sum(your weight x reliability), over measured aspects only. "
+        "Reliability grows with mention count, so thinly reviewed aspects count less.\n\n"
+        "- Uses the same review measurement as the manager view, but **not** the gap to nearby hotels; that answers \"what to fix first\", not \"where to stay\".\n"
+        "- This matches historical reviews; it is not live booking, price or availability data.\n"
+        "- There are no user click or booking logs, so it is not shown to raise conversion or revenue, and it is not a full personalised recommender."
+    ),
 }
 
 

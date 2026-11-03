@@ -289,6 +289,36 @@ UI: dict[str, str] = {
     "download_p4": "下载 P4 离线策略评估报告",
     "download_p3": "下载 P3 方面价值向量报告",
     "download_p5a": "下载 P5-A 揭示性干预报告",
+    "tab_tourist": "游客选酒店",
+    "tourist_intro": "按你在乎的方面，看城内哪几家的住客评价更匹配。依据是 {period} 的历史评论，不含实时价格、空房或预订。",
+    "tourist_weights_heading": "你有多在乎这些方面？",
+    "tourist_weights_help": "0 = 不考虑，5 = 很在乎；只看各方面之间的相对大小。",
+    "tourist_zero_weights": "所有方面都设成了 0，无法排序。请至少调高一个方面。",
+    "tourist_no_hotels": "该城市没有可展示的酒店。",
+    "tourist_no_ranked": "该城市没有酒店在你选的方面上有评论证据。",
+    "tourist_results_heading": "最匹配的 {n} 家",
+    "tourist_results_caption": "{city} 共 {total} 家可展示酒店，{ranked} 家进入排名。",
+    "tourist_insufficient_note": "另有 {n} 家在你选的方面上没有评论证据，未排名。",
+    "tourist_col_rank": "排名",
+    "tourist_col_score": "匹配分",
+    "tourist_col_strongest": "最好的方面",
+    "tourist_col_weakest": "最弱的方面",
+    "tourist_col_coverage": "有评论的权重占比",
+    "tourist_score_help": "−1 到 1，越高表示你在乎的方面好评越多。",
+    "tourist_coverage_help": "你给的权重里，有多少落在这家有评论证据的方面上。低于 100% 表示部分方面没有被评论到。",
+    "tourist_detail_select": "查看各方面明细",
+    "tourist_col_weight": "你的权重",
+    "tourist_col_net": "好评倾向",
+    "tourist_col_used": "计入匹配分",
+    "tourist_col_contribution": "对匹配分的贡献",
+    "tourist_formula_expander": "匹配分怎么算、不能说明什么",
+    "tourist_formula_body": (
+        "匹配分 = Σ(你的权重 × 可靠性 × 好评倾向) ÷ Σ(你的权重 × 可靠性)，只计入有评论测量的方面。"
+        "可靠性随提及次数增加，评论少的方面影响更小。\n\n"
+        "- 与经理端用同一套评论测量，但**不用**与附近酒店的差距；那是“先改善哪”的依据，不是“住哪家”的依据。\n"
+        "- 这是历史评论的匹配，不是实时预订、价格或空房信息。\n"
+        "- 没有用户点击或预订记录，未验证能提高转化或收益；也不是完整的个性化推荐系统。"
+    ),
 }
 
 

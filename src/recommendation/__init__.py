@@ -27,6 +27,14 @@ from .scoring import (
     reliability,
     sanitize_hotel_numbers,
 )
+from .tourist import (
+    ZeroTouristWeightsError,
+    rank_hotels_for_tourist,
+    tourist_match_scores,
+    tourist_weights_all_zero,
+    uniform_tourist_weights,
+    validate_tourist_weights,
+)
 
 __all__ = [
     "ASPECTS_DEFAULT",
@@ -54,4 +62,10 @@ __all__ = [
     "ranking_under_intensity",
     "reliability",
     "sanitize_hotel_numbers",
+    "ZeroTouristWeightsError",
+    "rank_hotels_for_tourist",
+    "tourist_match_scores",
+    "tourist_weights_all_zero",
+    "uniform_tourist_weights",
+    "validate_tourist_weights",
 ]
