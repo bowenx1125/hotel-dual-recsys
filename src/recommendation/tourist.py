@@ -206,3 +206,119 @@ def rank_hotels_for_tourist(
     for r in insufficient:
         r["rank"] = None
     return ok + insufficient
+
+
+# ---------------------------------------------------------------------------
+# Illustrative personas and a what-if "this hotel improved one aspect" scenario.
+# Both are demo aids built on design assumptions, not data: persona weights are
+# hand-picked examples, and the simulated hotel is a modified copy whose net
+# sentiment is raised by hand. Neither is a prediction or causal estimate.
+# ---------------------------------------------------------------------------
+
+TOURIST_PERSONAS: dict[str, dict[str, int]] = {
+    "balanced": {
+        "location": 3, "cleanliness": 3, "breakfast": 3, "service": 3,
+        "noise": 3, "room": 3, "value": 3,
+    },
+    "business": {
+        "location": 5, "cleanliness": 4, "breakfast": 2, "service": 4,
+        "noise": 4, "room": 3, "value": 1,
+    },
+    "family": {
+        "location": 3, "cleanliness": 5, "breakfast": 4, "service": 3,
+        "noise": 3, "room": 5, "value": 3,
+    },
+    "budget": {
+        "location": 4, "cleanliness": 3, "breakfast": 1, "service": 1,
+        "noise": 2, "room": 1, "value": 5,
+    },
+    "couple": {
+        "location": 4, "cleanliness": 3, "breakfast": 3, "service": 4,
+        "noise": 5, "room": 4, "value": 2,
+    },
+}
+
+
+def persona_for_weights(weights: dict | None) -> str | None:
+    """Return the persona id whose weights equal ``weights`` exactly, else None."""
+    if not isinstance(weights, dict):
+        return None
+    nonzero = {k for k, v in weights.items() if (_finite(v) or 0.0) != 0.0}
+    for pid, pw in TOURIST_PERSONAS.items():
+        same = all(_finite(weights.get(a, 0)) == float(v) for a, v in pw.items())
+        if same and nonzero <= set(pw):
+            return pid
+    return None
+
+
+def simulate_aspect_improvement(hotel: dict, aspect: str, delta: float) -> dict:
+    """Return a copy of ``hotel`` with ``net`` on ``aspect`` raised by ``delta``.
+
+    The new net is capped at 1.0; reliability and mention counts are kept, so
+    the scenario reads "the same number of guests now speak more positively".
+    The copy carries ``simulated`` metadata. The input is not mutated.
+    Raises ``ValueError`` when ``delta`` is negative / non-finite or the
+    aspect has no usable measurement to start from.
+    """
+    d = _finite(delta)
+    if d is None or d < 0.0:
+        raise ValueError(f"delta must be finite and nonnegative, got {delta!r}")
+    recs = hotel.get("aspects") if isinstance(hotel.get("aspects"), dict) else {}
+    usable = _usable_aspect(recs.get(aspect))
+    if usable is None:
+        raise ValueError(f"aspect {aspect!r} has no usable measurement to improve")
+    net, _rel = usable
+    new_net = min(1.0, net + d)
+    new_aspects = {k: (dict(v) if isinstance(v, dict) else v) for k, v in recs.items()}
+    new_aspects[aspect]["net"] = new_net
+    out = dict(hotel)
+    out["aspects"] = new_aspects
+    out["simulated"] = {
+        "aspect": aspect,
+        "delta": d,
+        "net_before": net,
+        "net_after": new_net,
+    }
+    return out
+
+
+def simulate_rank_change(
+    hotels: list[dict],
+    city: str,
+    hotel_id: str,
+    aspect: str,
+    delta: float,
+    weights: dict | None,
+    cfg: dict | None = None,
+) -> dict:
+    """Rank ``city`` before and after simulating one hotel's aspect improvement.
+
+    Returns ranks (None when insufficient evidence), scores, net before/after
+    and the number of ranked hotels. Only the chosen hotel is modified.
+    """
+    target = next(
+        (h for h in hotels if h.get("hotel_id") == hotel_id and h.get("city") == city),
+        None,
+    )
+    if target is None:
+        raise ValueError(f"hotel {hotel_id!r} not found in city {city!r}")
+    sim = simulate_aspect_improvement(target, aspect, delta)
+    swapped = [sim if h is target else h for h in hotels]
+
+    def _find(ranked: list[dict]) -> dict:
+        return next(r for r in ranked if r.get("hotel_id") == hotel_id)
+
+    before_all = rank_hotels_for_tourist(hotels, city, weights, cfg)
+    after_all = rank_hotels_for_tourist(swapped, city, weights, cfg)
+    b, a = _find(before_all), _find(after_all)
+    return {
+        "hotel_id": hotel_id,
+        "aspect": aspect,
+        "net_before": sim["simulated"]["net_before"],
+        "net_after": sim["simulated"]["net_after"],
+        "rank_before": b["rank"],
+        "rank_after": a["rank"],
+        "score_before": b["score"],
+        "score_after": a["score"],
+        "n_ranked": sum(1 for r in after_all if r["rank"] is not None),
+    }
