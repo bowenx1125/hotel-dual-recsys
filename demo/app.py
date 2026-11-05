@@ -21,12 +21,24 @@ from demo.scoring import (
     ranking_under_intensity,
 )
 from demo.theme import apply_theme, render_header, render_recommendation, render_section_header
+from src.recommendation.simulation import (
+    DEFAULT_ASSUMPTIONS as SIM_DEFAULTS,
+    candidate_aspects as sim_candidate_aspects,
+    city_experiment as sim_city_experiment,
+    compare_actions as sim_compare_actions,
+    follow_recommendations as sim_follow_recommendations,
+    improve_hotel as sim_improve_hotel,
+    improve_mentions as sim_improve_mentions,
+    outcome as sim_outcome,
+    recommended_aspect as sim_recommended_aspect,
+    synthesize_mentions as sim_synthesize_mentions,
+)
 from src.recommendation.tourist import (
     STATUS_OK as TOURIST_STATUS_OK,
     TOURIST_PERSONAS,
     persona_for_weights,
+    rank_change_with_replacement,
     rank_hotels_for_tourist,
-    simulate_rank_change,
     tourist_weights_all_zero,
 )
 
@@ -49,13 +61,18 @@ TOUR_WEIGHT_PREFIX = "tour_w_"
 TOUR_WEIGHT_OPTIONS = list(range(0, 6))
 TOUR_WEIGHT_DEFAULT = 3
 TOURIST_TOP_N = 10
+ISIM_ASPECT_CANONICAL = "isim_aspect"
+ISIM_ASPECT_FOR_KEY = "isim_aspect_for"
+ISIM_FLIP_CANONICAL = "isim_flip"
+ISIM_FLIP_OPTIONS = [round(0.1 * i, 1) for i in range(1, 11)]
+ISIM_RATING_CANONICAL = "isim_rating"
+ISIM_RATING_OPTIONS = [round(0.5 * i, 1) for i in range(1, 11)]
+ISIM_REVENUE_CANONICAL = "isim_revenue"
+ISIM_REVENUE_OPTIONS = list(range(1, 16))
+ISIM_SEED = 2017
+ISIM_ROUNDS = 3
 TOUR_PERSONA_KEY = "tour_persona"
 TOUR_PERSONA_CUSTOM = "custom"
-TOUR_SIM_HOTEL_CANONICAL = "tour_sim_hotel"
-TOUR_SIM_ASPECT_CANONICAL = "tour_sim_aspect"
-TOUR_SIM_DELTA_CANONICAL = "tour_sim_delta"
-TOUR_SIM_DELTA_OPTIONS = [round(0.1 * i, 1) for i in range(1, 11)]
-TOUR_SIM_DELTA_DEFAULT = 0.3
 
 
 def hydrate_locale_select_state(
@@ -795,109 +812,282 @@ def _make_persona_apply(st, widget_key: str, aspects: list[str]):
     return _apply
 
 
-def _render_tourist_simulation(st, loc, hotels, city, ranked, weights, cfg, albl, lang, names):
-    """Illustrative what-if: raise one hotel's net on one aspect, compare ranks.
+def _locale_select_slider(st, loc_label, canonical, lang, options, default, fmt, help_text=None):
+    widget_key = _locale_widget_key(canonical, lang)
+    hydrate_locale_select_state(st.session_state, canonical, widget_key, options, default)
+    st.select_slider(
+        loc_label,
+        options=options,
+        key=widget_key,
+        format_func=fmt,
+        help=help_text,
+        on_change=_make_locale_sync(st, canonical, widget_key),
+    )
+    return st.session_state[canonical]
 
-    Only a copy of the chosen hotel is modified; nothing is written back.
+
+def render_improvement_sim_tab(st, loc, snap, cfg):
+    """Simulated "hotel improved an aspect" chain on review records.
+
+    Real counts -> synthetic mention records -> assumed share of complaints
+    turn positive -> same formulas recompute measures -> recommendation reruns
+    -> assumed rating / revenue change -> traveller ranking. Nothing is
+    written back to the snapshot.
     """
     import pandas as pd
 
-    aspects = list(cfg["aspects"])
-    render_section_header(st, loc.UI["tourist_sim_heading"])
-    st.caption(loc.UI["tourist_sim_note"])
+    labels = cfg.get("aspect_labels") or {}
+    hotels = eligible_hotels(snap)
+    by_id_all = {h["hotel_id"]: h for h in (snap.get("hotels") or [])}
+    eligible_ids = {h["hotel_id"] for h in hotels}
 
-    ranked_ids = [r["hotel_id"] for r in ranked]
-    by_id = {r["hotel_id"]: r for r in ranked}
-    default_hid = ranked_ids[min(TOURIST_TOP_N, len(ranked_ids) - 1)]
-    c1, c2, c3 = st.columns([2, 1, 1])
-    with c1:
-        hotel_widget_key = _locale_widget_key(TOUR_SIM_HOTEL_CANONICAL, lang)
-        hydrate_locale_select_state(
-            st.session_state, TOUR_SIM_HOTEL_CANONICAL, hotel_widget_key, ranked_ids, default_hid
-        )
-        st.selectbox(
-            loc.UI["tourist_sim_hotel"],
-            ranked_ids,
-            key=hotel_widget_key,
-            format_func=lambda hid: f"{by_id[hid]['rank']}. {names.get(hid, hid)}",
-            on_change=_make_locale_sync(st, TOUR_SIM_HOTEL_CANONICAL, hotel_widget_key),
-        )
-    hid = st.session_state[TOUR_SIM_HOTEL_CANONICAL]
-    row = by_id[hid]
-    measured = [a for a in aspects if row["aspects"][a]["measured"]]
-    if not measured:
-        st.info(loc.UI["tourist_sim_no_aspect"])
+    def albl(a: str | None) -> str:
+        if not a:
+            return "—"
+        return loc.aspect_label(a, labels.get(a, a))
+
+    st.info(loc.UI["isim_banner"])
+    if not hotels:
+        st.info(loc.UI["isim_no_hotel"])
         return
-    default_aspect = row["weakest_aspect"] or row["strongest_aspect"] or measured[0]
-    if default_aspect not in measured:
-        default_aspect = measured[0]
-    with c2:
-        aspect_widget_key = _locale_widget_key(TOUR_SIM_ASPECT_CANONICAL, lang)
+    hid = st.session_state.get(MGR_HOTEL_KEY)
+    if hid not in eligible_ids:
+        hid = hotels[0]["hotel_id"]
+    hotel = by_id_all[hid]
+    city = hotel["city"]
+    city_hotels = [h for h in hotels if h["city"] == city]
+    names = hotel_display_labels(city_hotels)
+    st.caption(
+        ui_text(loc, "isim_target", hotel=names.get(hid, hotel.get("hotel_name") or hid), city=loc.city_label(city))
+    )
+
+    candidates = sim_candidate_aspects(hotel, cfg)
+    if not candidates:
+        st.info(loc.UI["isim_no_candidates"])
+        return
+    rec_now = sim_recommended_aspect(hotel, cfg)
+    lang = st.session_state.get("ui_language", DEFAULT_LANGUAGE)
+
+    # Controls: aspect (defaults to the recommendation for each new hotel) + flip share.
+    if st.session_state.get(ISIM_ASPECT_FOR_KEY) != hid:
+        st.session_state[ISIM_ASPECT_CANONICAL] = rec_now if rec_now in candidates else candidates[0]
+        st.session_state[ISIM_ASPECT_FOR_KEY] = hid
+    c1, c2 = st.columns(2)
+    with c1:
+        aspect_widget_key = _locale_widget_key(ISIM_ASPECT_CANONICAL, lang)
         hydrate_locale_select_state(
-            st.session_state, TOUR_SIM_ASPECT_CANONICAL, aspect_widget_key, measured, default_aspect
+            st.session_state, ISIM_ASPECT_CANONICAL, aspect_widget_key, candidates,
+            rec_now if rec_now in candidates else candidates[0],
         )
         st.selectbox(
-            loc.UI["tourist_sim_aspect"],
-            measured,
+            loc.UI["isim_aspect"],
+            candidates,
             key=aspect_widget_key,
-            format_func=albl,
-            on_change=_make_locale_sync(st, TOUR_SIM_ASPECT_CANONICAL, aspect_widget_key),
+            format_func=lambda a: ui_text(loc, "isim_aspect_recommended", aspect=albl(a))
+            if a == rec_now
+            else albl(a),
+            on_change=_make_locale_sync(st, ISIM_ASPECT_CANONICAL, aspect_widget_key),
         )
-    with c3:
-        delta_widget_key = _locale_widget_key(TOUR_SIM_DELTA_CANONICAL, lang)
-        hydrate_locale_select_state(
-            st.session_state,
-            TOUR_SIM_DELTA_CANONICAL,
-            delta_widget_key,
-            TOUR_SIM_DELTA_OPTIONS,
-            TOUR_SIM_DELTA_DEFAULT,
+    with c2:
+        flip = _locale_select_slider(
+            st, loc.UI["isim_flip"], ISIM_FLIP_CANONICAL, lang, ISIM_FLIP_OPTIONS,
+            SIM_DEFAULTS["flip_share"], lambda v: f"{v:.0%}", loc.UI["isim_flip_help"],
         )
-        st.select_slider(
-            loc.UI["tourist_sim_delta"],
-            options=TOUR_SIM_DELTA_OPTIONS,
-            key=delta_widget_key,
-            format_func=lambda v: f"+{v:.1f}",
-            help=loc.UI["tourist_sim_delta_help"],
-            on_change=_make_locale_sync(st, TOUR_SIM_DELTA_CANONICAL, delta_widget_key),
-        )
-    aspect = st.session_state[TOUR_SIM_ASPECT_CANONICAL]
-    delta = float(st.session_state[TOUR_SIM_DELTA_CANONICAL])
+    with st.expander(loc.UI["isim_assumptions"], expanded=False):
+        a1, a2 = st.columns(2)
+        with a1:
+            rating_per_net = _locale_select_slider(
+                st, loc.UI["isim_rating_per_net"], ISIM_RATING_CANONICAL, lang,
+                ISIM_RATING_OPTIONS, SIM_DEFAULTS["rating_per_net"], lambda v: f"{v:.1f}",
+            )
+        with a2:
+            revenue_per_rating = _locale_select_slider(
+                st, loc.UI["isim_revenue_per_rating"], ISIM_REVENUE_CANONICAL, lang,
+                ISIM_REVENUE_OPTIONS, int(SIM_DEFAULTS["revenue_pct_per_rating"]), lambda v: f"{v}%",
+            )
+        st.caption(loc.UI["isim_assumptions_note"])
+    aspect = st.session_state[ISIM_ASPECT_CANONICAL]
+    assumptions = {
+        "flip_share": float(flip),
+        "rating_per_net": float(st.session_state.get(ISIM_RATING_CANONICAL, rating_per_net)),
+        "revenue_pct_per_rating": float(st.session_state.get(ISIM_REVENUE_CANONICAL, revenue_per_rating)),
+    }
 
-    mine = simulate_rank_change(hotels, city, hid, aspect, delta, weights, cfg)
-    m1, m2 = st.columns(2)
-    m1.metric(
-        ui_text(loc, "tourist_sim_metric_net", aspect=albl(aspect)),
-        f"{mine['net_after']:.2f}",
-        delta=f"{mine['net_after'] - mine['net_before']:+.2f}",
-    )
-    gained = (mine["rank_before"] or 0) - (mine["rank_after"] or 0)
-    m2.metric(
-        loc.UI["tourist_sim_metric_rank"],
-        ui_text(loc, "tourist_sim_rank_value", rank=mine["rank_after"]),
-        delta=ui_text(loc, "tourist_sim_rank_delta", n=gained) if gained > 0 else None,
-    )
+    # 1. Now
+    if rec_now:
+        r = hotel["aspects"][rec_now]
+        render_section_header(st, ui_text(loc, "isim_step_now", aspect=albl(rec_now)))
+        st.caption(
+            ui_text(
+                loc, "isim_now_detail", aspect=albl(rec_now), net=f"{r['net']:.2f}",
+                gap=f"{r['gap']:.2f}" if is_finite(r.get("gap")) else loc.fmt_na(None),
+                neg=r["neg_mentions"], m=r["mention_count"],
+            )
+        )
+    else:
+        render_section_header(st, loc.UI["isim_step_now_none"])
 
-    profiles = [("__current__", weights)] + list(TOURIST_PERSONAS.items())
-    col_top = ui_text(loc, "tourist_sim_col_top", n=TOURIST_TOP_N)
-    rows = []
-    for pid, pw in profiles:
-        res = simulate_rank_change(hotels, city, hid, aspect, delta, pw, cfg)
-        before, after = res["rank_before"], res["rank_after"]
-        rows.append(
+    # 2. Reviews
+    records = sim_synthesize_mentions(hotel, cfg, seed=ISIM_SEED)
+    improved = sim_improve_mentions(records, aspect, assumptions["flip_share"], seed=ISIM_SEED)
+    after = sim_improve_hotel(hotel, aspect, assumptions["flip_share"], cfg, by_id_all)
+    r0, r1 = hotel["aspects"][aspect], after["aspects"][aspect]
+    flipped = after["simulated_improvements"][-1]["flipped"]
+    render_section_header(st, ui_text(loc, "isim_step_reviews", aspect=albl(aspect)))
+    m1, m2, m3 = st.columns(3)
+    m1.metric(loc.UI["isim_metric_neg"], r1["neg_mentions"], delta=-flipped, delta_color="inverse")
+    m2.metric(loc.UI["isim_metric_pos"], r1["pos_mentions"], delta=flipped)
+    m3.metric(loc.UI["isim_metric_flipped"], flipped)
+    sent = {"pos": loc.UI["isim_sent_pos"], "neg": loc.UI["isim_sent_neg"], "neu": loc.UI["isim_sent_neu"]}
+    with st.expander(loc.UI["isim_records_expander"], expanded=False):
+        st.caption(loc.UI["isim_records_caption"])
+        rows = [
             {
-                loc.UI["tourist_sim_col_profile"]: loc.UI["tourist_sim_row_current"]
-                if pid == "__current__"
-                else loc.UI[f"tourist_persona_{pid}"],
-                loc.UI["tourist_sim_col_before"]: before if before is not None else loc.fmt_na(None),
-                loc.UI["tourist_sim_col_after"]: after if after is not None else loc.fmt_na(None),
-                loc.UI["tourist_sim_col_change"]: (before - after)
-                if before is not None and after is not None
-                else loc.fmt_na(None),
-                col_top: loc.fmt_bool(after is not None and after <= TOURIST_TOP_N),
+                loc.UI["isim_col_review"]: rr["review_id"],
+                loc.UI["isim_col_before"]: sent[rr.get("sentiment_before", rr["sentiment"])],
+                loc.UI["isim_col_after"]: sent[rr["sentiment"]],
+                "_changed": "sentiment_before" in rr,
             }
+            for rr in improved
+            if rr["aspect"] == aspect
+        ]
+        rows.sort(key=lambda x: (not x["_changed"], x[loc.UI["isim_col_review"]]))
+        st.dataframe(
+            pd.DataFrame(rows).drop(columns="_changed"), hide_index=True, use_container_width=True
         )
-    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
-    st.caption(loc.UI["tourist_sim_table_caption"])
+
+    # 3. Recompute
+    render_section_header(st, loc.UI["isim_step_recompute"])
+
+    def _fmt(v, pct=False):
+        if not is_finite(v):
+            return loc.fmt_na(None)
+        return f"{v:.0%}" if pct else f"{v:.3f}"
+
+    st.dataframe(
+        pd.DataFrame(
+            [
+                {loc.UI["isim_col_measure"]: loc.UI["isim_row_net"],
+                 loc.UI["isim_col_before"]: _fmt(r0["net"]), loc.UI["isim_col_after"]: _fmt(r1["net"])},
+                {loc.UI["isim_col_measure"]: loc.UI["isim_row_gap"],
+                 loc.UI["isim_col_before"]: _fmt(r0.get("gap")), loc.UI["isim_col_after"]: _fmt(r1.get("gap"))},
+                {loc.UI["isim_col_measure"]: loc.UI["isim_row_percentile"],
+                 loc.UI["isim_col_before"]: _fmt((r0.get("percentile") or 0) / 100, True) if is_finite(r0.get("percentile")) else loc.fmt_na(None),
+                 loc.UI["isim_col_after"]: _fmt((r1.get("percentile") or 0) / 100, True) if is_finite(r1.get("percentile")) else loc.fmt_na(None)},
+                {loc.UI["isim_col_measure"]: loc.UI["isim_row_neg_rate"],
+                 loc.UI["isim_col_before"]: _fmt(r0.get("neg_rate"), True), loc.UI["isim_col_after"]: _fmt(r1.get("neg_rate"), True)},
+            ]
+        ),
+        hide_index=True,
+        use_container_width=True,
+    )
+    rec_next = sim_recommended_aspect(after, cfg)
+    if rec_next is None:
+        st.markdown(loc.UI["isim_next_none"])
+    elif rec_next == aspect:
+        st.markdown(ui_text(loc, "isim_next_same", aspect=albl(rec_next)))
+    else:
+        st.markdown(ui_text(loc, "isim_next_rec", aspect=albl(rec_next)))
+
+    # 4. Outcome
+    render_section_header(st, loc.UI["isim_step_outcome"])
+    out = sim_outcome(hotel, after, cfg, assumptions)
+    balanced = TOURIST_PERSONAS["balanced"]
+    tr = rank_change_with_replacement(hotels, city, after, balanced, cfg)
+    o1, o2, o3, o4 = st.columns(4)
+    if out["balance_after"] is not None:
+        o1.metric(loc.UI["isim_metric_balance"], f"{out['balance_after']:.3f}", delta=f"{out['d_balance']:+.3f}")
+    o2.metric(loc.UI["isim_metric_rating"], ui_text(loc, "isim_points", v=out["d_rating"]))
+    o3.metric(loc.UI["isim_metric_revenue"], f"{out['d_revenue_pct']:+.2f}%")
+    if tr["rank_after"] is not None:
+        gained = (tr["rank_before"] or 0) - tr["rank_after"]
+        o4.metric(
+            loc.UI["isim_metric_tourist"],
+            ui_text(loc, "isim_rank_value", rank=tr["rank_after"]),
+            delta=ui_text(loc, "isim_rank_delta", n=gained) if gained > 0 else None,
+        )
+    tour_weights = {
+        a: int(st.session_state.get(tourist_weight_canonical_key(a), TOUR_WEIGHT_DEFAULT))
+        for a in cfg["aspects"]
+    }
+    profiles = [("__current__", tour_weights)] + list(TOURIST_PERSONAS.items())
+    col_top = ui_text(loc, "isim_col_top", n=TOURIST_TOP_N)
+    prow = []
+    for pid, pw in profiles:
+        if tourist_weights_all_zero(pw):
+            continue
+        res = rank_change_with_replacement(hotels, city, after, pw, cfg)
+        b, a_ = res["rank_before"], res["rank_after"]
+        prow.append({
+            loc.UI["isim_col_profile"]: loc.UI["isim_row_current"] if pid == "__current__" else loc.UI[f"tourist_persona_{pid}"],
+            loc.UI["isim_col_rank_before"]: b if b is not None else loc.fmt_na(None),
+            loc.UI["isim_col_rank_after"]: a_ if a_ is not None else loc.fmt_na(None),
+            loc.UI["isim_col_rank_change"]: (b - a_) if b is not None and a_ is not None else loc.fmt_na(None),
+            col_top: loc.fmt_bool(a_ is not None and a_ <= TOURIST_TOP_N),
+        })
+    st.dataframe(pd.DataFrame(prow), hide_index=True, use_container_width=True)
+    st.caption(loc.UI["isim_tourist_caption"])
+
+    # 5. Compare aspects
+    render_section_header(st, loc.UI["isim_step_compare"])
+    cmp_rows = sim_compare_actions(hotel, cfg, assumptions, by_id_all)
+    st.dataframe(
+        pd.DataFrame([
+            {
+                loc.UI["isim_col_aspect"]: albl(r["aspect"]),
+                loc.UI["isim_col_recommended"]: "★" if r["recommended"] else "",
+                loc.UI["isim_col_flipped"]: r["flipped"],
+                loc.UI["isim_col_rating"]: round(r["d_rating"], 3),
+                loc.UI["isim_col_revenue"]: round(r["d_revenue_pct"], 2),
+            }
+            for r in cmp_rows
+        ]),
+        hide_index=True,
+        use_container_width=True,
+    )
+    st.caption(loc.UI["isim_compare_caption"])
+
+    # 6. Follow recommendations
+    render_section_header(st, loc.UI["isim_step_follow"])
+    steps = sim_follow_recommendations(hotel, cfg, ISIM_ROUNDS, assumptions, by_id_all)
+    st.dataframe(
+        pd.DataFrame([
+            {
+                loc.UI["isim_col_round"]: ui_text(loc, "isim_round_value", n=sp["round"]),
+                loc.UI["isim_col_aspect"]: (
+                    albl(sp["aspect"]) + (loc.UI["isim_follow_stalled"] if sp.get("stalled") else "")
+                )
+                if sp["aspect"]
+                else loc.UI["isim_follow_stop"],
+                loc.UI["isim_col_flipped"]: sp["flipped"],
+                loc.UI["isim_col_cum_rating"]: round(sp["d_rating"], 3) if sp["aspect"] else None,
+                loc.UI["isim_col_cum_revenue"]: round(sp["d_revenue_pct"], 2) if sp["aspect"] else None,
+            }
+            for sp in steps
+        ]),
+        hide_index=True,
+        use_container_width=True,
+    )
+
+    # 7. City experiment
+    render_section_header(st, ui_text(loc, "isim_step_city", city=loc.city_label(city)))
+    exp = sim_city_experiment(hotels, city, cfg, assumptions, by_id_all)
+    if exp["n_hotels"]:
+        md = exp["mean_d_rating"]
+        e1, e2, e3, e4 = st.columns(4)
+        e1.metric(loc.UI["isim_city_rec"], ui_text(loc, "isim_points", v=md["recommended"]))
+        e2.metric(loc.UI["isim_city_random"], ui_text(loc, "isim_points", v=md["random"]))
+        e3.metric(loc.UI["isim_city_best_reviewed"], ui_text(loc, "isim_points", v=md["best_reviewed"]))
+        e4.metric(loc.UI["isim_city_oracle"], ui_text(loc, "isim_points", v=md["oracle"]))
+        st.caption(
+            ui_text(
+                loc, "isim_city_caption", n=exp["n_hotels"],
+                ge=exp["share_recommended_ge_random"], best=exp["share_recommended_is_best"],
+            )
+        )
+
+    with st.expander(loc.UI["isim_limits_expander"], expanded=False):
+        st.markdown(loc.UI["isim_limits_body"])
 
 
 def render_tourist_tab(st, loc, snap, cfg):
@@ -1083,10 +1273,6 @@ def render_tourist_tab(st, loc, snap, cfg):
 
         with st.expander(loc.UI["tourist_formula_expander"], expanded=False):
             st.markdown(loc.UI["tourist_formula_body"])
-
-    _render_tourist_simulation(
-        st, loc, hotels, city, ranked, weights, cfg, albl, lang, names
-    )
 
 
 def render_temporal_tab(st, loc):
@@ -1503,14 +1689,17 @@ def main():
     except ValueError:
         st.error(ui_text(loc, "snapshot_config_error", cmd=BUILD_SNAPSHOT_CMD))
         return
-    tab1, tab2, tab3, tab4 = st.tabs([
+    tab1, tab_sim, tab2, tab3, tab4 = st.tabs([
         loc.UI["tab_improvement"],
+        loc.UI["tab_improvement_sim"],
         loc.UI["tab_history"],
         loc.UI["tab_research"],
         loc.UI["tab_tourist"],
     ])
     with tab1:
         render_manager_tab(st, loc, snap, cfg)
+    with tab_sim:
+        render_improvement_sim_tab(st, loc, snap, cfg)
     with tab2:
         render_temporal_tab(st, loc)
     with tab3:
