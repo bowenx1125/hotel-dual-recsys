@@ -28,7 +28,11 @@ from .scoring import (
     sanitize_hotel_numbers,
 )
 from .tourist import (
+    TOURIST_PERSONAS,
     ZeroTouristWeightsError,
+    persona_for_weights,
+    simulate_aspect_improvement,
+    simulate_rank_change,
     rank_hotels_for_tourist,
     tourist_match_scores,
     tourist_weights_all_zero,
@@ -62,7 +66,11 @@ __all__ = [
     "ranking_under_intensity",
     "reliability",
     "sanitize_hotel_numbers",
+    "TOURIST_PERSONAS",
     "ZeroTouristWeightsError",
+    "persona_for_weights",
+    "simulate_aspect_improvement",
+    "simulate_rank_change",
     "rank_hotels_for_tourist",
     "tourist_match_scores",
     "tourist_weights_all_zero",

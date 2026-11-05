@@ -12,7 +12,11 @@ sys.path.insert(0, str(ROOT))
 from src.recommendation.tourist import (
     STATUS_INSUFFICIENT,
     STATUS_OK,
+    TOURIST_PERSONAS,
     ZeroTouristWeightsError,
+    persona_for_weights,
+    simulate_aspect_improvement,
+    simulate_rank_change,
     rank_hotels_for_tourist,
     tourist_match_scores,
     tourist_weights_all_zero,
@@ -211,6 +215,74 @@ class RankingOrderTests(unittest.TestCase):
         out = tourist_match_scores(h, None, CFG)
         self.assertEqual(out["strongest_aspect"], "cleanliness")
         self.assertEqual(out["weakest_aspect"], "service")
+
+
+class PersonaTests(unittest.TestCase):
+    def test_personas_cover_all_aspects_with_valid_weights(self):
+        for pid, pw in TOURIST_PERSONAS.items():
+            self.assertEqual(set(pw), set(CFG["aspects"]), msg=pid)
+            self.assertTrue(all(isinstance(v, int) and 0 <= v <= 5 for v in pw.values()), msg=pid)
+            self.assertEqual(validate_tourist_weights(pw, CFG), {a: float(v) for a, v in pw.items()})
+
+    def test_personas_are_distinct(self):
+        seen = [tuple(sorted(pw.items())) for pw in TOURIST_PERSONAS.values()]
+        self.assertEqual(len(seen), len(set(seen)))
+
+    def test_persona_for_weights_round_trip(self):
+        for pid, pw in TOURIST_PERSONAS.items():
+            self.assertEqual(persona_for_weights(dict(pw)), pid)
+        custom = dict(TOURIST_PERSONAS["business"], value=4)
+        self.assertIsNone(persona_for_weights(custom))
+        self.assertIsNone(persona_for_weights(None))
+
+
+class SimulationTests(unittest.TestCase):
+    def _city(self):
+        return [
+            _hotel("a", "Alpha", cleanliness=_rec(0.6, 0.8), breakfast=_rec(0.5, 0.8)),
+            _hotel("b", "Beta", cleanliness=_rec(0.4, 0.8), breakfast=_rec(0.4, 0.8)),
+            _hotel("c", "Gamma", cleanliness=_rec(0.6, 0.8), breakfast=_rec(-0.3, 0.6)),
+        ]
+
+    def test_simulation_copies_and_caps_net(self):
+        h = _hotel("c", "Gamma", breakfast=_rec(0.8, 0.6))
+        sim = simulate_aspect_improvement(h, "breakfast", 0.5)
+        self.assertEqual(sim["aspects"]["breakfast"]["net"], 1.0)
+        self.assertEqual(sim["aspects"]["breakfast"]["reliability"], 0.6)
+        self.assertEqual(sim["simulated"]["net_before"], 0.8)
+        self.assertEqual(h["aspects"]["breakfast"]["net"], 0.8)
+        self.assertNotIn("simulated", h)
+
+    def test_simulation_refuses_unmeasured_or_negative(self):
+        h = _hotel("c", "Gamma", breakfast=_rec(None, None, measured=False), room=_rec(0.1, 0.5))
+        with self.assertRaises(ValueError):
+            simulate_aspect_improvement(h, "breakfast", 0.3)
+        with self.assertRaises(ValueError):
+            simulate_aspect_improvement(h, "room", -0.1)
+        with self.assertRaises(ValueError):
+            simulate_aspect_improvement(h, "room", float("nan"))
+
+    def test_improvement_moves_hotel_up(self):
+        out = simulate_rank_change(self._city(), "Paris", "c", "breakfast", 0.9, None, CFG)
+        self.assertEqual(out["rank_before"], 3)
+        self.assertEqual(out["rank_after"], 1)
+        self.assertGreater(out["score_after"], out["score_before"])
+        self.assertAlmostEqual(out["net_after"], 0.6, places=12)
+        self.assertEqual(out["n_ranked"], 3)
+
+    def test_improvement_never_moves_hotel_down(self):
+        for delta in (0.0, 0.1, 0.3, 0.6, 1.0):
+            out = simulate_rank_change(self._city(), "Paris", "b", "cleanliness", delta, None, CFG)
+            self.assertLessEqual(out["rank_after"], out["rank_before"], msg=delta)
+
+    def test_improving_unweighted_aspect_changes_nothing(self):
+        out = simulate_rank_change(self._city(), "Paris", "c", "breakfast", 0.9, {"cleanliness": 5}, CFG)
+        self.assertEqual(out["rank_before"], out["rank_after"])
+        self.assertEqual(out["score_before"], out["score_after"])
+
+    def test_unknown_hotel_raises(self):
+        with self.assertRaises(ValueError):
+            simulate_rank_change(self._city(), "London", "c", "breakfast", 0.3, None, CFG)
 
 
 if __name__ == "__main__":

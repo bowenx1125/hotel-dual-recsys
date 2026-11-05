@@ -23,7 +23,10 @@ from demo.scoring import (
 from demo.theme import apply_theme, render_header, render_recommendation, render_section_header
 from src.recommendation.tourist import (
     STATUS_OK as TOURIST_STATUS_OK,
+    TOURIST_PERSONAS,
+    persona_for_weights,
     rank_hotels_for_tourist,
+    simulate_rank_change,
     tourist_weights_all_zero,
 )
 
@@ -46,6 +49,13 @@ TOUR_WEIGHT_PREFIX = "tour_w_"
 TOUR_WEIGHT_OPTIONS = list(range(0, 6))
 TOUR_WEIGHT_DEFAULT = 3
 TOURIST_TOP_N = 10
+TOUR_PERSONA_KEY = "tour_persona"
+TOUR_PERSONA_CUSTOM = "custom"
+TOUR_SIM_HOTEL_CANONICAL = "tour_sim_hotel"
+TOUR_SIM_ASPECT_CANONICAL = "tour_sim_aspect"
+TOUR_SIM_DELTA_CANONICAL = "tour_sim_delta"
+TOUR_SIM_DELTA_OPTIONS = [round(0.1 * i, 1) for i in range(1, 11)]
+TOUR_SIM_DELTA_DEFAULT = 0.3
 
 
 def hydrate_locale_select_state(
@@ -769,6 +779,127 @@ def tourist_weight_canonical_key(aspect: str) -> str:
     return f"{TOUR_WEIGHT_PREFIX}{aspect}"
 
 
+def apply_tourist_persona(session_state: dict, persona_id: str, aspects: list[str]) -> None:
+    """Write a persona's weights into the language-neutral weight keys."""
+    weights = TOURIST_PERSONAS.get(persona_id)
+    if not weights:
+        return
+    for a in aspects:
+        session_state[tourist_weight_canonical_key(a)] = int(weights.get(a, 0))
+
+
+def _make_persona_apply(st, widget_key: str, aspects: list[str]):
+    def _apply() -> None:
+        apply_tourist_persona(st.session_state, st.session_state[widget_key], aspects)
+
+    return _apply
+
+
+def _render_tourist_simulation(st, loc, hotels, city, ranked, weights, cfg, albl, lang, names):
+    """Illustrative what-if: raise one hotel's net on one aspect, compare ranks.
+
+    Only a copy of the chosen hotel is modified; nothing is written back.
+    """
+    import pandas as pd
+
+    aspects = list(cfg["aspects"])
+    render_section_header(st, loc.UI["tourist_sim_heading"])
+    st.caption(loc.UI["tourist_sim_note"])
+
+    ranked_ids = [r["hotel_id"] for r in ranked]
+    by_id = {r["hotel_id"]: r for r in ranked}
+    default_hid = ranked_ids[min(TOURIST_TOP_N, len(ranked_ids) - 1)]
+    c1, c2, c3 = st.columns([2, 1, 1])
+    with c1:
+        hotel_widget_key = _locale_widget_key(TOUR_SIM_HOTEL_CANONICAL, lang)
+        hydrate_locale_select_state(
+            st.session_state, TOUR_SIM_HOTEL_CANONICAL, hotel_widget_key, ranked_ids, default_hid
+        )
+        st.selectbox(
+            loc.UI["tourist_sim_hotel"],
+            ranked_ids,
+            key=hotel_widget_key,
+            format_func=lambda hid: f"{by_id[hid]['rank']}. {names.get(hid, hid)}",
+            on_change=_make_locale_sync(st, TOUR_SIM_HOTEL_CANONICAL, hotel_widget_key),
+        )
+    hid = st.session_state[TOUR_SIM_HOTEL_CANONICAL]
+    row = by_id[hid]
+    measured = [a for a in aspects if row["aspects"][a]["measured"]]
+    if not measured:
+        st.info(loc.UI["tourist_sim_no_aspect"])
+        return
+    default_aspect = row["weakest_aspect"] or row["strongest_aspect"] or measured[0]
+    if default_aspect not in measured:
+        default_aspect = measured[0]
+    with c2:
+        aspect_widget_key = _locale_widget_key(TOUR_SIM_ASPECT_CANONICAL, lang)
+        hydrate_locale_select_state(
+            st.session_state, TOUR_SIM_ASPECT_CANONICAL, aspect_widget_key, measured, default_aspect
+        )
+        st.selectbox(
+            loc.UI["tourist_sim_aspect"],
+            measured,
+            key=aspect_widget_key,
+            format_func=albl,
+            on_change=_make_locale_sync(st, TOUR_SIM_ASPECT_CANONICAL, aspect_widget_key),
+        )
+    with c3:
+        delta_widget_key = _locale_widget_key(TOUR_SIM_DELTA_CANONICAL, lang)
+        hydrate_locale_select_state(
+            st.session_state,
+            TOUR_SIM_DELTA_CANONICAL,
+            delta_widget_key,
+            TOUR_SIM_DELTA_OPTIONS,
+            TOUR_SIM_DELTA_DEFAULT,
+        )
+        st.select_slider(
+            loc.UI["tourist_sim_delta"],
+            options=TOUR_SIM_DELTA_OPTIONS,
+            key=delta_widget_key,
+            format_func=lambda v: f"+{v:.1f}",
+            help=loc.UI["tourist_sim_delta_help"],
+            on_change=_make_locale_sync(st, TOUR_SIM_DELTA_CANONICAL, delta_widget_key),
+        )
+    aspect = st.session_state[TOUR_SIM_ASPECT_CANONICAL]
+    delta = float(st.session_state[TOUR_SIM_DELTA_CANONICAL])
+
+    mine = simulate_rank_change(hotels, city, hid, aspect, delta, weights, cfg)
+    m1, m2 = st.columns(2)
+    m1.metric(
+        ui_text(loc, "tourist_sim_metric_net", aspect=albl(aspect)),
+        f"{mine['net_after']:.2f}",
+        delta=f"{mine['net_after'] - mine['net_before']:+.2f}",
+    )
+    gained = (mine["rank_before"] or 0) - (mine["rank_after"] or 0)
+    m2.metric(
+        loc.UI["tourist_sim_metric_rank"],
+        ui_text(loc, "tourist_sim_rank_value", rank=mine["rank_after"]),
+        delta=ui_text(loc, "tourist_sim_rank_delta", n=gained) if gained > 0 else None,
+    )
+
+    profiles = [("__current__", weights)] + list(TOURIST_PERSONAS.items())
+    col_top = ui_text(loc, "tourist_sim_col_top", n=TOURIST_TOP_N)
+    rows = []
+    for pid, pw in profiles:
+        res = simulate_rank_change(hotels, city, hid, aspect, delta, pw, cfg)
+        before, after = res["rank_before"], res["rank_after"]
+        rows.append(
+            {
+                loc.UI["tourist_sim_col_profile"]: loc.UI["tourist_sim_row_current"]
+                if pid == "__current__"
+                else loc.UI[f"tourist_persona_{pid}"],
+                loc.UI["tourist_sim_col_before"]: before if before is not None else loc.fmt_na(None),
+                loc.UI["tourist_sim_col_after"]: after if after is not None else loc.fmt_na(None),
+                loc.UI["tourist_sim_col_change"]: (before - after)
+                if before is not None and after is not None
+                else loc.fmt_na(None),
+                col_top: loc.fmt_bool(after is not None and after <= TOURIST_TOP_N),
+            }
+        )
+    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
+    st.caption(loc.UI["tourist_sim_table_caption"])
+
+
 def render_tourist_tab(st, loc, snap, cfg):
     """Tourist view: city + aspect weights -> reliability-weighted net match.
 
@@ -807,15 +938,36 @@ def render_tourist_tab(st, loc, snap, cfg):
             format_func=loc.city_label,
             on_change=_make_locale_sync(st, TOUR_CITY_CANONICAL, city_widget_key),
         )
-        st.markdown(f"**{loc.UI['tourist_weights_heading']}**")
-        st.caption(loc.UI["tourist_weights_help"])
         weights: dict[str, int] = {}
         for a in aspects:
             canonical = tourist_weight_canonical_key(a)
-            widget_key = _locale_widget_key(canonical, lang)
             hydrate_locale_select_state(
-                st.session_state, canonical, widget_key, TOUR_WEIGHT_OPTIONS, TOUR_WEIGHT_DEFAULT
+                st.session_state,
+                canonical,
+                _locale_widget_key(canonical, lang),
+                TOUR_WEIGHT_OPTIONS,
+                TOUR_WEIGHT_DEFAULT,
             )
+            weights[a] = int(st.session_state[canonical])
+
+        persona_options = list(TOURIST_PERSONAS) + [TOUR_PERSONA_CUSTOM]
+        persona_widget_key = _locale_widget_key(TOUR_PERSONA_KEY, lang)
+        # The persona is derived from the weights, so it stays language-neutral.
+        st.session_state[persona_widget_key] = persona_for_weights(weights) or TOUR_PERSONA_CUSTOM
+        st.selectbox(
+            loc.UI["tourist_persona_label"],
+            persona_options,
+            key=persona_widget_key,
+            format_func=lambda pid: loc.UI[f"tourist_persona_{pid}"],
+            help=loc.UI["tourist_persona_help"],
+            on_change=_make_persona_apply(st, persona_widget_key, aspects),
+        )
+
+        st.markdown(f"**{loc.UI['tourist_weights_heading']}**")
+        st.caption(loc.UI["tourist_weights_help"])
+        for a in aspects:
+            canonical = tourist_weight_canonical_key(a)
+            widget_key = _locale_widget_key(canonical, lang)
             st.slider(
                 albl(a),
                 min_value=TOUR_WEIGHT_OPTIONS[0],
@@ -824,7 +976,6 @@ def render_tourist_tab(st, loc, snap, cfg):
                 key=widget_key,
                 on_change=_make_locale_sync(st, canonical, widget_key),
             )
-            weights[a] = int(st.session_state[canonical])
 
     city = st.session_state[TOUR_CITY_CANONICAL]
     with results:
@@ -932,6 +1083,10 @@ def render_tourist_tab(st, loc, snap, cfg):
 
         with st.expander(loc.UI["tourist_formula_expander"], expanded=False):
             st.markdown(loc.UI["tourist_formula_body"])
+
+    _render_tourist_simulation(
+        st, loc, hotels, city, ranked, weights, cfg, albl, lang, names
+    )
 
 
 def render_temporal_tab(st, loc):
