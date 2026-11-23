@@ -1,0 +1,39 @@
+name: thesis-pdf
+
+on:
+  push:
+    paths:
+      - "thesis/**"
+      - ".github/workflows/thesis-pdf.yml"
+  pull_request:
+    paths:
+      - "thesis/**"
+      - ".github/workflows/thesis-pdf.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build thesis PDF
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: thesis
+          compiler: latexmk
+          args: "-pdf -file-line-error -halt-on-error -interaction=nonstopmode"
+
+      - name: Copy PDF for the artifact
+        run: cp thesis/main.pdf thesis/thesis.pdf
+
+      - name: Upload thesis.pdf
+        uses: actions/upload-artifact@v4
+        with:
+          name: thesis.pdf
+          path: thesis/thesis.pdf
+          if-no-files-found: error
