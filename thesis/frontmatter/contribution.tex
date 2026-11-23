@@ -1,0 +1,82 @@
+\chapter*{CONTRIBUTION TABLE}
+\phantomsection
+\addcontentsline{toc}{chapter}{CONTRIBUTION TABLE}
+
+% Blank Member(s) and Signature cells are closed boxes for handwriting.
+% longtable keeps both tables inside the 2 cm side margins.
+\newcommand{\rowstrut}{\rule[-0.32cm]{0pt}{0.9cm}}
+\newcommand{\handbox}{\fbox{\rule[-0.32cm]{0pt}{0.9cm}\hspace{2.35cm}}}
+
+\begingroup
+\renewcommand{\ttdefault}{lmtt} % T1 cmtt metrics are not installed; Latin Modern is
+\setlength{\tabcolsep}{3.5pt}
+\begin{longtable}{@{}p{3.5cm}p{6.15cm}p{3.15cm}p{3.15cm}@{}}
+\caption{Thesis sections}\\
+\toprule
+\textbf{Item} & \textbf{Description} & \textbf{Member(s)} & \textbf{Signature} \\
+\midrule
+\endfirsthead
+\caption[]{Thesis sections (continued)}\\
+\toprule
+\textbf{Item} & \textbf{Description} & \textbf{Member(s)} & \textbf{Signature} \\
+\midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+Abstract\rowstrut & Abstract & \handbox & \handbox \\
+1.1 & Background and Motivation & \handbox & \handbox \\
+1.2 & Problem Statement & \handbox & \handbox \\
+1.3 & Contributions & \handbox & \handbox \\
+1.4 & Thesis Organization & \handbox & \handbox \\
+2.1 & Aspect-Based Sentiment Analysis of Reviews & \handbox & \handbox \\
+2.2 & Review-Based and Explainable Recommendation & \handbox & \handbox \\
+2.3 & Multi-Stakeholder Recommendation & \handbox & \handbox \\
+2.4 & Online Reviews and Hotel Performance & \handbox & \handbox \\
+3.1 & Dataset & \handbox & \handbox \\
+3.2 & Preprocessing and Aspect Panel & \handbox & \handbox \\
+3.3 & Snapshot and Eligibility & \handbox & \handbox \\
+4.1 & Aspect Detection and Sentiment & \handbox & \handbox \\
+4.2 & Aspect Metrics & \handbox & \handbox \\
+4.3 & Provider-Side Improvement Recommendation & \handbox & \handbox \\
+4.4 & Tourist-Side Hotel Ranking & \handbox & \handbox \\
+4.5 & Improvement Simulation & \handbox & \handbox \\
+4.6 & System Implementation & \handbox & \handbox \\
+5.1 & Experimental Setup & \handbox & \handbox \\
+5.2 & Results & \handbox & \handbox \\
+5.3 & Discussion & \handbox & \handbox \\
+6 Limitations and Future Work & Limitations and Future Work & \handbox & \handbox \\
+7 Conclusion & Conclusion & \handbox & \handbox \\
+References & References & \handbox & \handbox \\
+Appendix & Appendix & \handbox & \handbox \\
+\end{longtable}
+
+\begin{longtable}{@{}p{4.7cm}p{4.95cm}p{3.15cm}p{3.15cm}@{}}
+\caption{Code modules}\\
+\toprule
+\textbf{Item} & \textbf{Description} & \textbf{Member(s)} & \textbf{Signature} \\
+\midrule
+\endfirsthead
+\caption[]{Code modules (continued)}\\
+\toprule
+\textbf{Item} & \textbf{Description} & \textbf{Member(s)} & \textbf{Signature} \\
+\midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{src/\allowbreak temporal/}\rowstrut & data parsing, aspect gate, feasibility gates, geo parsing & \handbox & \handbox \\
+\texttt{src/\allowbreak autonomous/} & ABSA, aspect panel, inference, reports & \handbox & \handbox \\
+\texttt{src/\allowbreak recommendation/\allowbreak scoring.py} \& \texttt{panel\_adapter.py} & provider-side improvement recommendation and panel-to-snapshot adapter & \handbox & \handbox \\
+\texttt{src/\allowbreak recommendation/\allowbreak value\_policy.py} & value-aware policy & \handbox & \handbox \\
+\texttt{src/\allowbreak recommendation/\allowbreak tourist.py} & tourist-side ranking & \handbox & \handbox \\
+\texttt{src/\allowbreak recommendation/\allowbreak simulation.py} & improvement simulation & \handbox & \handbox \\
+\texttt{src/\allowbreak effect/} & effect estimation experiments P2--P5A, OPE, baselines & \handbox & \handbox \\
+\texttt{scripts/} & data audit, panel/snapshot building, annotation, evaluation & \handbox & \handbox \\
+\texttt{demo/} & Streamlit demo app, i18n, charts & \handbox & \handbox \\
+\texttt{tests/} & unit tests & \handbox & \handbox \\
+\texttt{thesis/} & LaTeX thesis and PDF build & \handbox & \handbox \\
+\end{longtable}
+\endgroup
