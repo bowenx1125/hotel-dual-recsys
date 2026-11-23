@@ -1,0 +1,14 @@
+# Build products next to main.tex. CI uploads the PDF; do not commit it.
+/main.pdf
+/thesis.pdf
+/main.aux
+/main.bbl
+/main.blg
+/main.fdb_latexmk
+/main.fls
+/main.log
+/main.out
+/main.toc
+/main.lof
+/main.lot
+/main.synctex.gz
