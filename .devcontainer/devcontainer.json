@@ -1,0 +1,48 @@
+{
+  "name": "FYP thesis LaTeX",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "remoteUser": "vscode",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "James-Yu.latex-workshop"
+      ],
+      "settings": {
+        "latex-workshop.latex.autoBuild.run": "onSave",
+        "latex-workshop.latex.recipe.default": "latexmk",
+        "latex-workshop.latex.outDir": "%DIR%",
+        "latex-workshop.view.pdf.viewer": "tab",
+        "latex-workshop.latex.rootFile.doNotPrompt": true,
+        "latex-workshop.latex.search.rootFiles.include": [
+          "thesis/main.tex"
+        ],
+        "latex-workshop.latex.tools": [
+          {
+            "name": "latexmk",
+            "command": "latexmk",
+            "args": [
+              "-pdf",
+              "-interaction=nonstopmode",
+              "-file-line-error",
+              "-synctex=1",
+              "-cd",
+              "-outdir=%OUTDIR%",
+              "%DOC%"
+            ]
+          }
+        ],
+        "latex-workshop.latex.recipes": [
+          {
+            "name": "latexmk",
+            "tools": [
+              "latexmk"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
