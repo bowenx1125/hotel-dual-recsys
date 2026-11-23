@@ -1,0 +1,77 @@
+% BNBU FYP-1 Thesis template (LaTeX port of "FYP-1 Projects 20XX.docx")
+% Format per template Section 3: Times New Roman 12pt text, Heading 1 16pt, Heading 2 14pt,
+% justified text, left/right margins 2 cm, top/bottom margins 2.5 cm.
+\documentclass[12pt,a4paper]{report}
+\usepackage[left=2cm,right=2cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{newtxtext,newtxmath} % Times New Roman equivalent (pdfLaTeX)
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+\usepackage[numbers]{natbib}
+\usepackage{caption}
+\captionsetup{labelsep=colon}    % captions go below figures
+
+% Heading 1 = 16pt, Heading 2 = 14pt, Heading 3 = 12pt; numbering max 3 levels
+\titleformat{\chapter}[hang]{\fontsize{16}{20}\selectfont\bfseries}{\thechapter}{1em}{}
+\titlespacing*{\chapter}{0pt}{0pt}{12pt}
+\titleformat{\section}{\fontsize{14}{18}\selectfont\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\fontsize{12}{15}\selectfont\bfseries}{\thesubsection}{1em}{}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+% ---------- Fill in ----------
+\newcommand{\thesistitle}{[Thesis Title]}
+\newcommand{\memberA}{[Member A Name]} \newcommand{\idA}{[Student ID]}
+\newcommand{\memberB}{[Member B Name]} \newcommand{\idB}{[Student ID]}
+\newcommand{\memberC}{[Member C Name]} \newcommand{\idC}{[Student ID]}
+\newcommand{\supervisor}{[Supervisor Name]}
+\newcommand{\thesisdate}{Nov, 2026}
+% -----------------------------
+
+\begin{document}
+
+% ===== Title page =====
+\input{frontmatter/titlepage}
+
+\pagenumbering{roman}
+
+% ===== Declaration =====
+\input{frontmatter/declaration}
+
+% ===== Acceptance page =====
+\input{frontmatter/acceptance}
+
+% ===== Acknowledgement =====
+\input{frontmatter/acknowledgement}
+
+% ===== Abstract (<= 250 words) =====
+\input{frontmatter/abstract}
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\clearpage
+\pagenumbering{arabic}
+
+% ===== Main text =====
+\input{chapters/01-introduction}
+\input{chapters/02-literature-review}
+\input{chapters/03-data}
+\input{chapters/04-methodology}
+\input{chapters/05-experiments}
+\input{chapters/06-limitations}
+\input{chapters/07-conclusion}
+
+% ===== References =====
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+% ===== Appendices (optional) =====
+\appendix
+\input{chapters/appendix}
+
+\end{document}
